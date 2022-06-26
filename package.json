@@ -1,5 +1,5 @@
 {
-    "name": "template-fe",
+    "name": "dashboard",
     "private": true,
     "version": "0.0.0",
     "scripts": {
@@ -12,9 +12,13 @@
         "lint:auto": "yarn eslint ./src/** --fix --no-color && yarn prettier --write --no-color ."
     },
     "dependencies": {
+        "@ant-design/icons": "^4.7.0",
+        "antd": "^4.21.3",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
-        "react-router-dom": "^6.3.0"
+        "react-router-dom": "^6.3.0",
+        "react-toastify": "^9.0.5",
+        "universal-cookie": "^4.0.4"
     },
     "devDependencies": {
         "@types/react": "^18.0.0",
@@ -32,6 +36,7 @@
         "eslint-plugin-react-hooks": "^4.3.0",
         "git-format-staged": "^3.0.0",
         "husky": "^8.0.0",
+        "less": "^4.1.3",
         "lint-staged": "^13.0.1",
         "postcss": "^8.4.14",
         "prettier": "2.6.2",
@@ -41,8 +46,7 @@
     },
     "lint-staged": {
         "**/*.{js,jsx,ts,tsx}": [
-            "yarn lint:auto",
-            "git add ."
+            "yarn lint:auto"
         ]
     },
     "husky": {
