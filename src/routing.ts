@@ -6,6 +6,12 @@ const DefPage = React.lazy(() =>
     }))
 );
 
+const TopicPage = React.lazy(() =>
+    import('./pages/Topic').then((module) => ({
+        default: module.Topic,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -29,6 +35,11 @@ export const Routing: PageRouting[] = [
         title: 'Default Page',
         path: '/',
         component: DefPage,
+    },
+    {
+        title: 'Topic List',
+        path: '/topic',
+        component: TopicPage,
     },
     PageNotFoundRouting,
 ];
