@@ -1,6 +1,7 @@
 import { Button, Space, Table } from 'antd';
 import { PlusOutlined, FormOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/lib/table';
+import { Link } from 'react-router-dom';
 import { StandardLayout } from '../layout/StandardLayout';
 
 interface TopicData {
@@ -46,9 +47,11 @@ const data: TopicData[] = [
 export const Topic = () => (
     <StandardLayout>
         <div className="mb-5">
-            <Button icon={<PlusOutlined />} size="large" type="primary">
-                Create
-            </Button>
+            <Link to={"create"}>
+                <Button icon={<PlusOutlined />} size="large" type="primary">
+                    Create
+                </Button>
+            </Link>
         </div>
         <Table columns={columns} dataSource={data} />
     </StandardLayout>

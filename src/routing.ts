@@ -18,6 +18,12 @@ const CreateTopicPage = React.lazy(() =>
     }))
 );
 
+const EditTopicPage = React.lazy(() =>
+    import('./pages/EditTopic').then((module) => ({
+        default: module.EditTopic,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -55,7 +61,7 @@ export const Routing: PageRouting[] = [
     {
         title: 'Edit Topic',
         path: '/topic/:id',
-        component: DefPage,
+        component: EditTopicPage,
     },
     PageNotFoundRouting,
 ];
