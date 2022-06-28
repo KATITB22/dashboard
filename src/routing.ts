@@ -7,26 +7,32 @@ const DefPage = React.lazy(() =>
 );
 
 const TopicPage = React.lazy(() =>
-    import('./pages/Topic').then((module) => ({
+    import('./pages/Topic/Topic').then((module) => ({
         default: module.Topic,
     }))
 );
 
 const CreateTopicPage = React.lazy(() =>
-    import('./pages/CreateTopic').then((module) => ({
+    import('./pages/Topic/CreateTopic').then((module) => ({
         default: module.CreateTopic,
     }))
 );
 
 const EditTopicPage = React.lazy(() =>
-    import('./pages/EditTopic').then((module) => ({
+    import('./pages/Topic/EditTopic').then((module) => ({
         default: module.EditTopic,
     }))
 );
 
 const SubmissionListPage = React.lazy(() =>
-    import('./pages/SubmissionList').then((module) => ({
+    import('./pages/Submission/SubmissionList').then((module) => ({
         default: module.SubmissionList,
+    }))
+);
+
+const SubmissionDetailsPage = React.lazy(() =>
+    import('./pages/Submission/SubmissionDetails').then((module) => ({
+        default: module.SubmissionDetails,
     }))
 );
 
@@ -71,8 +77,13 @@ export const Routing: PageRouting[] = [
     },
     {
         title: 'Submission List',
-        path: '/topic/submissions/:id',
+        path: '/topic/:id/submissions',
         component: SubmissionListPage,
+    },
+    {
+        title: 'Submission Details',
+        path: '/submissions/:id',
+        component: SubmissionDetailsPage,
     },
     PageNotFoundRouting,
 ];
