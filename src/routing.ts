@@ -24,6 +24,12 @@ const EditTopicPage = React.lazy(() =>
     }))
 );
 
+const SubmissionListPage = React.lazy(() =>
+    import('./pages/SubmissionList').then((module) => ({
+        default: module.SubmissionList,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -62,6 +68,11 @@ export const Routing: PageRouting[] = [
         title: 'Edit Topic',
         path: '/topic/:id',
         component: EditTopicPage,
+    },
+    {
+        title: 'Submission List',
+        path: '/topic/submissions/:id',
+        component: SubmissionListPage,
     },
     PageNotFoundRouting,
 ];
