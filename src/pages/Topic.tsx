@@ -34,14 +34,16 @@ const columns: ColumnsType<TopicData> = [
                         Edit
                     </Button>
                 </Link>
-                <Button
-                    type="primary"
-                    icon={<ContainerOutlined />}
-                    size="large"
-                    className="bg-red-600 hover:bg-red-500"
-                >
-                    Submissions
-                </Button>
+                <Link to={`submissions/${record.id}`}>
+                    <Button
+                        type="primary"
+                        icon={<ContainerOutlined />}
+                        size="large"
+                        className="bg-red-600 hover:bg-red-500"
+                    >
+                        Submissions
+                    </Button>
+                </Link>
             </Space>
         ),
     },
