@@ -1,5 +1,9 @@
 import { Button, Space, Table } from 'antd';
-import { PlusOutlined, FormOutlined } from '@ant-design/icons';
+import {
+    PlusOutlined,
+    FormOutlined,
+    ContainerOutlined,
+} from '@ant-design/icons';
 import type { ColumnsType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
 import { StandardLayout } from '../layout/StandardLayout';
@@ -23,10 +27,20 @@ const columns: ColumnsType<TopicData> = [
     {
         title: 'Action',
         key: 'action',
-        render: () => (
+        render: (_, record) => (
             <Space size="middle">
-                <Button type="primary" icon={<FormOutlined />} size="large">
-                    Edit
+                <Link to={`${record.id}`}>
+                    <Button type="primary" icon={<FormOutlined />} size="large">
+                        Edit
+                    </Button>
+                </Link>
+                <Button
+                    type="primary"
+                    icon={<ContainerOutlined />}
+                    size="large"
+                    className="bg-red-600 hover:bg-red-500"
+                >
+                    Submissions
                 </Button>
             </Space>
         ),
@@ -47,7 +61,7 @@ const data: TopicData[] = [
 export const Topic = () => (
     <StandardLayout>
         <div className="mb-5">
-            <Link to={"create"}>
+            <Link to="create">
                 <Button icon={<PlusOutlined />} size="large" type="primary">
                     Create
                 </Button>
