@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
-import { StandardLayout } from '../layout/StandardLayout';
+import { StandardLayout } from '../../layout/StandardLayout';
 
 interface TopicData {
     id: number;
@@ -34,7 +34,7 @@ const columns: ColumnsType<TopicData> = [
                         Edit
                     </Button>
                 </Link>
-                <Link to={`submissions/${record.id}`}>
+                <Link to={`${record.id}/submissions`}>
                     <Button
                         type="primary"
                         icon={<ContainerOutlined />}

@@ -1,7 +1,7 @@
 import { Divider, List, PageHeader } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { StandardLayout } from '../layout/StandardLayout';
-import { TopicForm } from '../components/TopicForm';
+import { StandardLayout } from '../../layout/StandardLayout';
+import { TopicForm } from '../../components/TopicForm';
 
 export const EditTopic = () => {
     const navigate = useNavigate();

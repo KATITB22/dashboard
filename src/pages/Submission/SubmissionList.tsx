@@ -2,7 +2,7 @@ import { Table, PageHeader, Space, Button } from 'antd';
 import { FolderOpenOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/lib/table';
 import { useNavigate, Link } from 'react-router-dom';
-import { StandardLayout } from '../layout/StandardLayout';
+import { StandardLayout } from '../../layout/StandardLayout';
 
 interface DataType {
     id: number;
@@ -50,7 +50,7 @@ const columns: ColumnsType<DataType> = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <Link to={`${record.id}`}>
+                <Link to={`/submissions/${record.id}`}>
                     <Button
                         type="primary"
                         icon={<FolderOpenOutlined />}
