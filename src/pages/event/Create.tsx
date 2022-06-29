@@ -1,49 +1,49 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { DatePickerProps } from 'antd';
-import { Button, Form, Input, DatePicker, TimePicker, Select } from 'antd';
+import { Button, Form, Input, DatePicker, Select, PageHeader } from 'antd';
 import { StandardLayout } from '../../layout/StandardLayout';
 
 export const CreateEvent = () => {
+    const navigate = useNavigate();
     const [data, setData] = useState({
-        eventName: '',
-        date: '',
-        startTime: '',
-        endTime: '',
-        method: '',
+        event_name: '',
+        attendance_start: '',
+        attendance_end: '',
+        attendance_type: '',
     });
 
-    const handleChange = (e: any) => {
+    const handleEventNameChange = (e: any) => {
         setData({
             ...data,
-            [e.target.name]: e.target.value,
+            event_name: e.target.value,
         });
     };
 
-    const handleDateChange: DatePickerProps['onChange'] = (_, dateString) => {
+    const handleAttendanceStartChange = (
+        _: DatePickerProps['value'],
+        dateString: string
+    ) => {
         setData({
             ...data,
-            date: dateString,
+            attendance_start: dateString,
         });
     };
 
-    const handleStartTimeChange = (_: any, timeString: string) => {
+    const handleAttendanceEndChange = (
+        _: DatePickerProps['value'],
+        dateString: string
+    ) => {
         setData({
             ...data,
-            startTime: timeString,
+            attendance_end: dateString,
         });
     };
 
-    const handleEndTimeChange = (_: any, timeString: string) => {
+    const handleAttendanceTypeChange = (value: string) => {
         setData({
             ...data,
-            endTime: timeString,
-        });
-    };
-
-    const handleMethodChange = (value: string) => {
-        setData({
-            ...data,
-            method: value,
+            attendance_type: value,
         });
     };
 
@@ -53,7 +53,7 @@ export const CreateEvent = () => {
 
     return (
         <StandardLayout>
-            <h1 className="font-bold mb-3">Create Event</h1>
+            <PageHeader onBack={() => navigate(-1)} title="Create Event" />
             <Form
                 layout="vertical"
                 labelCol={{ span: 5 }}
@@ -69,66 +69,53 @@ export const CreateEvent = () => {
                         },
                     ]}
                 >
-                    <Input name="eventName" onChange={handleChange} />
+                    <Input name="eventName" onChange={handleEventNameChange} />
                 </Form.Item>
                 <Form.Item
-                    label="Date"
-                    name="date"
+                    label="Attendance Start"
+                    name="attendance-start"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input the event date!',
+                            message: 'Please input attendance start time!',
                         },
                     ]}
                 >
                     <DatePicker
-                        onChange={handleDateChange}
+                        showTime
+                        onChange={handleAttendanceStartChange}
                         style={{ width: '100%' }}
                     />
                 </Form.Item>
                 <Form.Item
-                    label="Start Time"
-                    name="start-time"
+                    label="Attendance End"
+                    name="attendance-end"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input presence start time!',
+                            message: 'Please input attendance end time!',
                         },
                     ]}
                 >
-                    <TimePicker
-                        onChange={handleStartTimeChange}
+                    <DatePicker
+                        showTime
+                        onChange={handleAttendanceEndChange}
                         style={{ width: '100%' }}
                     />
                 </Form.Item>
                 <Form.Item
-                    label="End Time"
-                    name="end-time"
+                    label="Attendance Type"
+                    name="attendance-type"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input presence end time!',
-                        },
-                    ]}
-                >
-                    <TimePicker
-                        onChange={handleEndTimeChange}
-                        style={{ width: '100%' }}
-                    />
-                </Form.Item>
-                <Form.Item
-                    label="Presence Method"
-                    name="presence-method"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please pick presence method!',
+                            message: 'Please pick attendance type!',
                         },
                     ]}
                 >
                     <Select
                         placeholder="Pick a method"
-                        onChange={handleMethodChange}
+                        onChange={handleAttendanceTypeChange}
                     >
                         <Select.Option value="group">
                             Group Presence
@@ -142,7 +129,6 @@ export const CreateEvent = () => {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        style={{ background: '#1890ff' }}
                         onClick={handleSubmit}
                     >
                         Submit

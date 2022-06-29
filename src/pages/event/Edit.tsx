@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Form, Input, DatePicker, TimePicker, Select } from 'antd';
+import { Button, Form, Input, DatePicker, Select } from 'antd';
 import { StandardLayout } from '../../layout/StandardLayout';
 
 export const EditEvent = () => {
@@ -23,68 +23,53 @@ export const EditEvent = () => {
                         },
                     ]}
                 >
-                    <Input defaultValue={id} />
+                    <Input name="eventName" defaultValue={id} />
                 </Form.Item>
                 <Form.Item
-                    label="Date"
-                    name="date"
+                    label="Attendance Start"
+                    name="attendance-start"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input the event date!',
+                            message: 'Please input attendance start time!',
                         },
                     ]}
                 >
-                    <DatePicker style={{ width: '100%' }} />
+                    <DatePicker showTime style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
-                    label="Start Time"
-                    name="start-time"
+                    label="Attendance End"
+                    name="attendance-end"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input presence start time!',
+                            message: 'Please input attendance end time!',
                         },
                     ]}
                 >
-                    <TimePicker style={{ width: '100%' }} />
+                    <DatePicker showTime style={{ width: '100%' }} />
                 </Form.Item>
                 <Form.Item
-                    label="End Time"
-                    name="end-time"
+                    label="Attendance Type"
+                    name="attendance-type"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input presence end time!',
-                        },
-                    ]}
-                >
-                    <TimePicker style={{ width: '100%' }} />
-                </Form.Item>
-                <Form.Item
-                    label="Presence Method"
-                    name="presence-method"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please pick presence method!',
+                            message: 'Please pick attendance type!',
                         },
                     ]}
                 >
                     <Select placeholder="Pick a method">
-                        <Select.Option value="group presence">
+                        <Select.Option value="group">
                             Group Presence
                         </Select.Option>
-                        <Select.Option value="self presence">
+                        <Select.Option value="self">
                             Self Presence
                         </Select.Option>
                     </Select>
                 </Form.Item>
                 <Form.Item>
-                    <Button
-                        type="primary"
-                        style={{ background: '#1890ff', marginRight: 10 }}
-                    >
+                    <Button type="primary" style={{ marginRight: 10 }}>
                         Save
                     </Button>
                     <Button
