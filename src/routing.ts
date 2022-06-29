@@ -36,6 +36,18 @@ const SubmissionDetailsPage = React.lazy(() =>
     }))
 );
 
+const GroupListPage = React.lazy(() =>
+    import('./pages/Group/GroupList').then((module) => ({
+        default: module.GroupList,
+    }))
+);
+
+const GroupDetailPage = React.lazy(() =>
+    import('./pages/Group/GroupDetail').then((module) => ({
+        default: module.GroupDetail,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -84,6 +96,16 @@ export const Routing: PageRouting[] = [
         title: 'Submission Details',
         path: '/submissions/:id',
         component: SubmissionDetailsPage,
+    },
+    {
+        title: 'Group List',
+        path: '/groups',
+        component: GroupListPage,
+    },
+    {
+        title: 'Group List',
+        path: '/groups/:id',
+        component: GroupDetailPage,
     },
     PageNotFoundRouting,
 ];
