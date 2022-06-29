@@ -91,12 +91,12 @@ export const EventList = () => {
         {
             title: 'Name',
             dataIndex: 'eventName',
-            width: 450,
+            width: 550,
         },
         {
             title: 'Date',
             dataIndex: 'date',
-            width: 450,
+            width: 550,
         },
         {
             title: 'Details',
@@ -105,7 +105,8 @@ export const EventList = () => {
                     <Button
                         type="primary"
                         size="large"
-                        icon={<InfoCircleOutlined />}
+                        icon={<InfoCircleOutlined className="align-baseline" />}
+                        className="bg-blue-500 hover:bg-blue-350"
                     >
                         Details
                     </Button>
@@ -118,7 +119,12 @@ export const EventList = () => {
         <StandardLayout>
             <div className="mb-5">
                 <Link to="create">
-                    <Button icon={<PlusOutlined />} size="large" type="primary">
+                    <Button
+                        icon={<PlusOutlined className="align-baseline" />}
+                        size="large"
+                        type="primary"
+                        className="bg-blue-500 hover:bg-blue-350"
+                    >
                         Create
                     </Button>
                 </Link>
