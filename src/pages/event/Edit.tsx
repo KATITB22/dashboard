@@ -8,7 +8,11 @@ export const EditEvent = () => {
     return (
         <StandardLayout>
             <h1 className="font-bold mb-3">Edit Event</h1>
-            <Form layout="vertical">
+            <Form
+                layout="vertical"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 8 }}
+            >
                 <Form.Item
                     label="Event Name"
                     name="event-name"
@@ -79,16 +83,14 @@ export const EditEvent = () => {
                 <Form.Item>
                     <Button
                         type="primary"
-                        style={{ background: '#1890ff', float: 'right' }}
+                        style={{ background: '#1890ff', marginRight: 10 }}
                     >
                         Save
                     </Button>
                     <Button
                         style={{
                             color: '#000',
-                            marginRight: 10,
                             borderColor: '#1890ff',
-                            float: 'right',
                         }}
                     >
                         Cancel

@@ -9,7 +9,11 @@ export const EventDetail = () => {
     return (
         <StandardLayout>
             <h1 className="font-bold mb-3">Event Detail</h1>
-            <Form layout="vertical">
+            <Form
+                layout="vertical"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 8 }}
+            >
                 <Form.Item label="Event Name" name="event-name">
                     <Input defaultValue={id} disabled />
                 </Form.Item>
@@ -28,16 +32,12 @@ export const EventDetail = () => {
                 <Form.Item>
                     <Button
                         type="primary"
-                        style={{ background: '#1890ff', float: 'right' }}
+                        style={{ background: '#1890ff', marginRight: 10 }}
                         onClick={() => navigate(`/event/${id}/edit`)}
                     >
                         Edit
                     </Button>
-                    <Button
-                        type="primary"
-                        danger
-                        style={{ marginRight: 10, float: 'right' }}
-                    >
+                    <Button type="primary" danger>
                         Delete
                     </Button>
                 </Form.Item>

@@ -54,7 +54,11 @@ export const CreateEvent = () => {
     return (
         <StandardLayout>
             <h1 className="font-bold mb-3">Create Event</h1>
-            <Form layout="vertical">
+            <Form
+                layout="vertical"
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 8 }}
+            >
                 <Form.Item
                     label="Event Name"
                     name="event-name"
@@ -138,7 +142,7 @@ export const CreateEvent = () => {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        style={{ background: '#1890ff', float: 'right' }}
+                        style={{ background: '#1890ff' }}
                         onClick={handleSubmit}
                     >
                         Submit
