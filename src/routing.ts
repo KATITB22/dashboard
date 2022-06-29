@@ -36,6 +36,12 @@ const SubmissionDetailsPage = React.lazy(() =>
     }))
 );
 
+const GroupUploadPage = React.lazy(() =>
+    import('./pages/Group/GroupUpload').then((module) => ({
+        default: module.GroupUpload,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -84,6 +90,11 @@ export const Routing: PageRouting[] = [
         title: 'Submission Details',
         path: '/submissions/:id',
         component: SubmissionDetailsPage,
+    },
+    {
+        title: 'Group Upload',
+        path: '/group/upload',
+        component: GroupUploadPage,
     },
     PageNotFoundRouting,
 ];
