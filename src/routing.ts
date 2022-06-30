@@ -54,6 +54,12 @@ const SubmissionDetailsPage = React.lazy(() =>
     }))
 );
 
+const GroupUploadPage = React.lazy(() =>
+    import('./pages/Group/GroupUpload').then((module) => ({
+        default: module.GroupUpload,
+    }))
+);
+
 const EventListPage = React.lazy(() =>
     import('./pages/Event/EventList').then((module) => ({
         default: module.EventList,
@@ -128,6 +134,11 @@ export const Routing: PageRouting[] = [
         title: 'Event List',
         path: '/event',
         component: EventListPage,
+    },
+    {
+        title: 'Group Upload',
+        path: '/group/upload',
+        component: GroupUploadPage,
     },
     PageNotFoundRouting,
 ];

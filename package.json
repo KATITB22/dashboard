@@ -18,6 +18,7 @@
         "react-dom": "^18.0.0",
         "react-router-dom": "^6.3.0",
         "react-toastify": "^9.0.5",
+        "read-excel-file": "^5.3.5",
         "universal-cookie": "^4.0.4"
     },
     "devDependencies": {
