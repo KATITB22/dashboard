@@ -36,6 +36,12 @@ const SubmissionDetailsPage = React.lazy(() =>
     }))
 );
 
+const EventListPage = React.lazy(() =>
+    import('./pages/Event/EventList').then((module) => ({
+        default: module.EventList,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -84,6 +90,11 @@ export const Routing: PageRouting[] = [
         title: 'Submission Details',
         path: '/submissions/:id',
         component: SubmissionDetailsPage,
+    },
+    {
+        title: 'Event List',
+        path: '/event',
+        component: EventListPage,
     },
     PageNotFoundRouting,
 ];
