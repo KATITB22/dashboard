@@ -1,5 +1,5 @@
 import type { BadgeProps } from 'antd';
-import { Alert, Badge, Calendar, PageHeader } from 'antd';
+import { Alert, Badge, Button, Calendar, PageHeader, Modal } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState } from 'react';
@@ -49,12 +49,31 @@ const getMonthData = (value: Moment) => value.month() === moment().month();
 export const ParticipantAttendance = () => {
     const navigate = useNavigate();
 
+    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
     const [value, setValue] = useState(moment());
     const [selectedValue, setSelectedValue] = useState(moment());
+
+    const showModal = () => {
+        setVisible(true);
+    };
+
+    const handleOk = () => {
+        setLoading(true);
+        setTimeout(() => {
+            setVisible(false);
+            setLoading(false);
+        }, 1000);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
 
     const onSelect = (newValue: Moment) => {
         setValue(newValue);
         setSelectedValue(newValue);
+        showModal();
     };
 
     const onPanelChange = (newValue: Moment) => {
@@ -64,9 +83,7 @@ export const ParticipantAttendance = () => {
     const monthCellRender = (newValue: Moment) => {
         const isAvailable = getMonthData(newValue);
 
-        return isAvailable ? (
-            <text className="font-bold justify-center text-lg">KAT</text>
-        ) : null;
+        return isAvailable ? <h1>KAT</h1> : null;
     };
 
     const dateCellRender = (newValue: Moment) => {
@@ -104,6 +121,29 @@ export const ParticipantAttendance = () => {
                 dateCellRender={dateCellRender}
                 monthCellRender={monthCellRender}
             />
+            <Modal
+                visible={visible}
+                title="Absensi"
+                onOk={handleOk}
+                onCancel={handleCancel}
+                footer={[
+                    <Button key="back" onClick={handleCancel}>
+                        Kembali
+                    </Button>,
+                    <Button
+                        key="submit"
+                        type="primary"
+                        loading={loading}
+                        onClick={handleOk}
+                    >
+                        Tandai Hadir
+                    </Button>,
+                ]}
+            >
+                <text>
+                    You selected date: {selectedValue?.format('YYYY-MM-DD')}
+                </text>
+            </Modal>
         </StandardLayout>
     );
 };
