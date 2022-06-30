@@ -6,6 +6,24 @@ const DefPage = React.lazy(() =>
     }))
 );
 
+const CreateEventPage = React.lazy(() =>
+    import('./pages/Event/Create').then((module) => ({
+        default: module.CreateEvent,
+    }))
+);
+
+const EventDetailPage = React.lazy(() =>
+    import('./pages/Event/Detail').then((module) => ({
+        default: module.EventDetail,
+    }))
+);
+
+const EditEventPage = React.lazy(() =>
+    import('./pages/Event/Edit').then((module) => ({
+        default: module.EditEvent,
+    }))
+);
+
 const TopicPage = React.lazy(() =>
     import('./pages/Topic/Topic').then((module) => ({
         default: module.Topic,
@@ -65,6 +83,21 @@ export const Routing: PageRouting[] = [
         title: 'Default Page',
         path: '/',
         component: DefPage,
+    },
+    {
+        title: 'New Event',
+        path: '/event/create',
+        component: CreateEventPage,
+    },
+    {
+        title: 'Event Detail',
+        path: '/event/:id',
+        component: EventDetailPage,
+    },
+    {
+        title: 'Edit Event',
+        path: '/event/:id/edit',
+        component: EditEventPage,
     },
     {
         title: 'Topic List',
