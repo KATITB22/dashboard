@@ -36,6 +36,18 @@ const SubmissionDetailsPage = React.lazy(() =>
     }))
 );
 
+const ParticipantAttendancePage = React.lazy(() =>
+    import('./pages/Attendance/ParticipantAttendance').then((module) => ({
+        default: module.ParticipantAttendance,
+    }))
+);
+
+const MentorAttendancePage = React.lazy(() =>
+    import('./pages/Attendance/MentorAttendance').then((module) => ({
+        default: module.MentorAttendance,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -84,6 +96,16 @@ export const Routing: PageRouting[] = [
         title: 'Submission Details',
         path: '/submissions/:id',
         component: SubmissionDetailsPage,
+    },
+    {
+        title: 'Participant Attendance',
+        path: '/attendance/participant',
+        component: ParticipantAttendancePage,
+    },
+    {
+        title: 'Mentor Attendance',
+        path: '/attendance/mentor',
+        component: MentorAttendancePage,
     },
     PageNotFoundRouting,
 ];
