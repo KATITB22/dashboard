@@ -4,8 +4,15 @@ import readXlsxFile from 'read-excel-file';
 
 export const GroupUploadForm = () => {
     const handleChange = async (file: any) => {
-        const data = await readXlsxFile(file.originFileObj);
-        console.log(data.splice(1, data.length));
+        const data = await (
+            await readXlsxFile(file.originFileObj)
+        ).map((row: any) => ({
+            nim: row[0],
+            kelompok: row[1],
+            role: row[2],
+        }));
+        const res = data.slice(1, data.length);
+        console.log(res);
     };
 
     return (
