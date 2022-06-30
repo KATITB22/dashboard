@@ -6,6 +6,24 @@ const DefPage = React.lazy(() =>
     }))
 );
 
+const CreateEventPage = React.lazy(() =>
+    import('./pages/Event/Create').then((module) => ({
+        default: module.CreateEvent,
+    }))
+);
+
+const EventDetailPage = React.lazy(() =>
+    import('./pages/Event/Detail').then((module) => ({
+        default: module.EventDetail,
+    }))
+);
+
+const EditEventPage = React.lazy(() =>
+    import('./pages/Event/Edit').then((module) => ({
+        default: module.EditEvent,
+    }))
+);
+
 const TopicPage = React.lazy(() =>
     import('./pages/Topic/Topic').then((module) => ({
         default: module.Topic,
@@ -42,6 +60,12 @@ const GroupUploadPage = React.lazy(() =>
     }))
 );
 
+const EventListPage = React.lazy(() =>
+    import('./pages/Event/EventList').then((module) => ({
+        default: module.EventList,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -67,6 +91,21 @@ export const Routing: PageRouting[] = [
         component: DefPage,
     },
     {
+        title: 'New Event',
+        path: '/event/create',
+        component: CreateEventPage,
+    },
+    {
+        title: 'Event Detail',
+        path: '/event/:id',
+        component: EventDetailPage,
+    },
+    {
+        title: 'Edit Event',
+        path: '/event/:id/edit',
+        component: EditEventPage,
+    },
+    {
         title: 'Topic List',
         path: '/topic',
         component: TopicPage,
@@ -90,6 +129,11 @@ export const Routing: PageRouting[] = [
         title: 'Submission Details',
         path: '/submissions/:id',
         component: SubmissionDetailsPage,
+    },
+    {
+        title: 'Event List',
+        path: '/event',
+        component: EventListPage,
     },
     {
         title: 'Group Upload',
