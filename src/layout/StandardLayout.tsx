@@ -68,12 +68,6 @@ export const StandardLayout = ({
                 />
             </Sider>
             <Layout>
-                <Header style={{ padding: 0 }}>
-                    <Breadcrumb style={{ margin: '16px 0' }} className="pl-5">
-                        <Breadcrumb.Item>User</Breadcrumb.Item>
-                        <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                    </Breadcrumb>
-                </Header>
                 <Content style={{ margin: '0 16px' }}>
                     <div
                         className="text-xl"

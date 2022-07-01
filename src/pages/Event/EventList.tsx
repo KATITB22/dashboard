@@ -99,6 +99,7 @@ export const EventList = () => {
     const navigate = useNavigate();
     return (
         <StandardLayout>
+            <PageHeader onBack={() => navigate(-1)} title="List Event" />
             <div className="mb-5">
                 <Link to="create">
                     <Button
@@ -110,7 +111,6 @@ export const EventList = () => {
                     </Button>
                 </Link>
             </div>
-            <PageHeader onBack={() => navigate(-1)} title="List Event" />
             <Table columns={columns} dataSource={dataDummy} />
         </StandardLayout>
     );
