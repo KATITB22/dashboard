@@ -16,19 +16,19 @@ interface GetParticipantResponse {
 const getParticipantData = (value: Moment) => {
     const participantData: GetParticipantResponse[] = [
         {
-            eventName: 'Djakarta Warehouse Project',
+            eventName: 'KAT',
             eventStartDate: new Date(),
             eventEndDate: new Date(Date.now() + 1000 * 60),
             isFilled: false,
         },
         {
-            eventName: 'Bandoeng Warehouse Project',
+            eventName: 'DikPus',
             eventStartDate: new Date(Date.now() - 1000 * 60 * 60 * 25),
             eventEndDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
-            isFilled: false,
+            isFilled: true,
         },
         {
-            eventName: 'Tangerang Warehouse Project',
+            eventName: 'OSKM',
             eventStartDate: new Date(Date.now() + 1000 * 60 * 60 * 23),
             eventEndDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
             isFilled: false,
@@ -121,6 +121,15 @@ export const ParticipantAttendance = () => {
         return isAvailable ? <h1>Dikpus/KAT</h1> : null;
     };
 
+    const disableButton = (participant: GetParticipantResponse) => {
+        const currentDate = new Date();
+
+        return (
+            currentDate < participant.eventStartDate ||
+            currentDate > participant.eventEndDate
+        );
+    };
+
     const dateCellRender = (newValue: Moment) => {
         const participantData = getParticipantData(newValue);
 
@@ -134,6 +143,7 @@ export const ParticipantAttendance = () => {
                             onClick={() => {
                                 handleClick(participant);
                             }}
+                            disabled={disableButton(participant)}
                             block
                         >
                             <Badge
@@ -177,7 +187,7 @@ export const ParticipantAttendance = () => {
             />
             <Modal
                 visible={visibleModal}
-                title="Absensi"
+                title={selectedParticipant?.eventName}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
@@ -194,11 +204,16 @@ export const ParticipantAttendance = () => {
                     </Button>,
                 ]}
             >
-                <h1>Nama : {selectedParticipant?.eventName}</h1>
                 <h1>
-                    Start : {selectedParticipant?.eventStartDate.toString()}
+                    Start :{' '}
+                    {selectedParticipant?.eventStartDate.toLocaleString(
+                        'id-ID'
+                    )}
                 </h1>
-                <h1>End : {selectedParticipant?.eventEndDate.toString()}</h1>
+                <h1>
+                    End :{' '}
+                    {selectedParticipant?.eventEndDate.toLocaleString('id-ID')}
+                </h1>
             </Modal>
         </StandardLayout>
     );
