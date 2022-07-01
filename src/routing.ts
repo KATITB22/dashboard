@@ -6,6 +6,24 @@ const DefPage = React.lazy(() =>
     }))
 );
 
+const CreateEventPage = React.lazy(() =>
+    import('./pages/Event/Create').then((module) => ({
+        default: module.CreateEvent,
+    }))
+);
+
+const EventDetailPage = React.lazy(() =>
+    import('./pages/Event/Detail').then((module) => ({
+        default: module.EventDetail,
+    }))
+);
+
+const EditEventPage = React.lazy(() =>
+    import('./pages/Event/Edit').then((module) => ({
+        default: module.EditEvent,
+    }))
+);
+
 const TopicPage = React.lazy(() =>
     import('./pages/Topic/Topic').then((module) => ({
         default: module.Topic,
@@ -36,15 +54,15 @@ const SubmissionDetailsPage = React.lazy(() =>
     }))
 );
 
-const ParticipantAttendancePage = React.lazy(() =>
-    import('./pages/Attendance/ParticipantAttendance').then((module) => ({
-        default: module.ParticipantAttendance,
+const GroupUploadPage = React.lazy(() =>
+    import('./pages/Group/GroupUpload').then((module) => ({
+        default: module.GroupUpload,
     }))
 );
 
-const MentorAttendancePage = React.lazy(() =>
-    import('./pages/Attendance/MentorAttendance').then((module) => ({
-        default: module.MentorAttendance,
+const EventListPage = React.lazy(() =>
+    import('./pages/Event/EventList').then((module) => ({
+        default: module.EventList,
     }))
 );
 
@@ -73,6 +91,21 @@ export const Routing: PageRouting[] = [
         component: DefPage,
     },
     {
+        title: 'New Event',
+        path: '/event/create',
+        component: CreateEventPage,
+    },
+    {
+        title: 'Event Detail',
+        path: '/event/:id',
+        component: EventDetailPage,
+    },
+    {
+        title: 'Edit Event',
+        path: '/event/:id/edit',
+        component: EditEventPage,
+    },
+    {
         title: 'Topic List',
         path: '/topic',
         component: TopicPage,
@@ -98,14 +131,14 @@ export const Routing: PageRouting[] = [
         component: SubmissionDetailsPage,
     },
     {
-        title: 'Participant Attendance',
-        path: '/attendance/participant/:nim',
-        component: ParticipantAttendancePage,
+        title: 'Event List',
+        path: '/event',
+        component: EventListPage,
     },
     {
-        title: 'Mentor Attendance',
-        path: '/attendance/mentor/:group',
-        component: MentorAttendancePage,
+        title: 'Group Upload',
+        path: '/group/upload',
+        component: GroupUploadPage,
     },
     PageNotFoundRouting,
 ];

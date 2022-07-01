@@ -68,22 +68,17 @@ export const StandardLayout = ({
                 />
             </Sider>
             <Layout>
-                <Header className="bg-gray-100" style={{ padding: 0 }}>
-                    <Breadcrumb style={{ margin: '16px 0' }} className="pl-5">
-                        <Breadcrumb.Item>User</Breadcrumb.Item>
-                        <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                    </Breadcrumb>
-                </Header>
                 <Content style={{ margin: '0 16px' }}>
                     <div
-                        className="bg-white text-xl"
+                        className="text-xl"
                         style={{ padding: 24, minHeight: 360 }}
                     >
                         {children}
                     </div>
                 </Content>
+                <hr />
                 <Footer style={{ textAlign: 'center' }}>
-                    Ant Design ©2018 Created by Ant UED
+                    Dashboard KAT ©2022<br /> Created by Tim IT KAT '22
                 </Footer>
             </Layout>
         </Layout>
