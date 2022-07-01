@@ -1,28 +1,21 @@
 import { Divider, List, PageHeader } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { TopicForm } from '../../components/TopicForm';
 
 export const EditTopic = () => {
     const navigate = useNavigate();
-
-    const data = [
-        'Pertanyaan XX',
-        'Pertanyaan XX',
-        'Pertanyaan XX',
-        'Pertanyaan XX',
-        'Pertanyaan XX',
-    ];
+    const { id } = useParams();
 
     return (
         <StandardLayout>
             <PageHeader onBack={() => navigate(-1)} title="Edit Topic" />
-            <TopicForm isCreating={false} />
+            <TopicForm id={id} />
             <Divider orientation="left">Pertanyaan</Divider>
             <List
                 size="large"
                 bordered
-                dataSource={data}
+                dataSource={[]}
                 renderItem={(item) => <List.Item>{item}</List.Item>}
             />
         </StandardLayout>

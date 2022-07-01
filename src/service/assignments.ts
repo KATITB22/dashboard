@@ -27,9 +27,18 @@ export interface ListTopic {
     page: number;
     pageCount: number;
     pageSize: number;
+    total: number;
 }
 
 class AssignmentsService extends GenericService {
+    public async getTopic(
+        id: string,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.GET(`/topics/${id}`);
+        this.handleResponse(response, onSuccess, onFail);
+    }
     public async createTopic(
         item: RTopic,
         onSuccess?: SuccessCallbackFunction,
@@ -74,15 +83,15 @@ class AssignmentsService extends GenericService {
         }
 
         const rawTopics: any[] = response.data;
-        const { page, pageCount, pageSize }: { [key: string]: number } =
+        const { page, pageCount, pageSize, total }: { [key: string]: number } =
             response.meta.pagination;
         const topics: ITopic[] = rawTopics.map((eachRaw, eachIdx) => {
             const each: any = eachRaw.attributes;
             return {
                 id: each.id,
                 title: each.title,
-                start: moment(each.start).format('DD MMM YY HH:MM:SS'),
-                end: moment(each.end).format('DD MMM YY HH:MM:SS'),
+                start: moment(each.start).format('DD MMM YY HH:mm:ss'),
+                end: moment(each.end).format('DD MMM YY HH:mm:ss'),
                 idx: eachIdx + 1 + (page - 1) * pageSize,
             };
         });
@@ -90,6 +99,7 @@ class AssignmentsService extends GenericService {
             topics,
             page,
             pageCount,
+            total,
             pageSize,
         };
         if (onSuccess) onSuccess(mappedResponse);
