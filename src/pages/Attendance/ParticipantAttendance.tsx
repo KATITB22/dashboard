@@ -1,61 +1,57 @@
 import type { BadgeProps } from 'antd';
-import { Badge, Button, Calendar, PageHeader, Modal } from 'antd';
+import { Badge, Button, Calendar, Modal, PageHeader } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 
-interface GetParticipantResponse {
-    eventName: string;
-    eventStartDate: Date;
-    eventEndDate: Date;
+interface EventResponse {
+    name: string;
+    startDate: Date;
+    endDate: Date;
     isFilled: boolean;
 }
 
-const getParticipantData = (value: Moment) => {
-    const participantData: GetParticipantResponse[] = [
+const getEventData = (value: Moment) => {
+    const eventData: EventResponse[] = [
         {
-            eventName: 'KAT',
-            eventStartDate: new Date(),
-            eventEndDate: new Date(Date.now() + 1000 * 60),
-            isFilled: false,
-        },
-        {
-            eventName: 'DikPus',
-            eventStartDate: new Date(Date.now() - 1000 * 60 * 60 * 25),
-            eventEndDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
+            name: 'KAT',
+            startDate: new Date(),
+            endDate: new Date(Date.now() + 1000 * 60),
             isFilled: true,
         },
         {
-            eventName: 'OSKM',
-            eventStartDate: new Date(Date.now() + 1000 * 60 * 60 * 23),
-            eventEndDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
+            name: 'DikPus',
+            startDate: new Date(Date.now() - 1000 * 60 * 60 * 25),
+            endDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
+            isFilled: true,
+        },
+        {
+            name: 'OSKM',
+            startDate: new Date(Date.now() + 1000 * 60 * 60 * 23),
+            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
             isFilled: false,
         },
     ];
 
-    const filteredParticipantData: GetParticipantResponse[] =
-        participantData.filter(
-            (participant) =>
-                participant.eventStartDate.getDate() === value.date() &&
-                participant.eventStartDate.getMonth() === value.month() &&
-                participant.eventStartDate.getFullYear() === value.year()
-        );
+    const filteredEventData: EventResponse[] = eventData.filter(
+        (event) =>
+            event.startDate.getDate() === value.date() &&
+            event.startDate.getMonth() === value.month() &&
+            event.startDate.getFullYear() === value.year()
+    );
 
-    return filteredParticipantData;
+    return filteredEventData;
 };
 
-const getType = (participant: GetParticipantResponse) => {
+const getType = (event: EventResponse) => {
     const currentDate = new Date();
 
-    if (participant.isFilled) {
+    if (event.isFilled) {
         return 'success';
     }
-    if (
-        currentDate >= participant.eventStartDate &&
-        currentDate <= participant.eventEndDate
-    ) {
+    if (currentDate >= event.startDate && currentDate <= event.endDate) {
         return 'warning';
     }
     return 'error';
@@ -71,8 +67,8 @@ export const ParticipantAttendance = () => {
         new Map()
     );
     const [visibleModal, setVisibleModal] = useState(false);
-    const [selectedParticipant, setSelectedParticipant] = useState<
-        GetParticipantResponse | undefined
+    const [selectedEvent, setSelectedEvent] = useState<
+        EventResponse | undefined
     >(undefined);
     const [date, setDate] = useState(moment());
     const [selectedDate, setSelectedDate] = useState(moment());
@@ -86,20 +82,20 @@ export const ParticipantAttendance = () => {
         setTimeout(() => {
             setVisibleModal(false);
             setLoadingOk(false);
-            setSelectedParticipant(undefined);
+            setSelectedEvent(undefined);
         }, 1000);
     };
 
     const handleCancel = () => {
         setVisibleModal(false);
-        setSelectedParticipant(undefined);
+        setSelectedEvent(undefined);
     };
 
-    const handleClick = (participant: GetParticipantResponse) => {
-        setSelectedParticipant(participant);
+    const handleClick = (event: EventResponse) => {
+        setSelectedEvent(event);
         setLoadingModal((prevLoadingModal) => {
             const newLoadingModal = new Map(prevLoadingModal);
-            newLoadingModal.set(participant.eventName, true);
+            newLoadingModal.set(event.name, true);
 
             return newLoadingModal;
         });
@@ -107,7 +103,7 @@ export const ParticipantAttendance = () => {
         setTimeout(() => {
             setLoadingModal((prevLoadingModal) => {
                 const newLoadingModal = new Map(prevLoadingModal);
-                newLoadingModal.set(participant.eventName, false);
+                newLoadingModal.set(event.name, false);
 
                 return newLoadingModal;
             });
@@ -121,36 +117,35 @@ export const ParticipantAttendance = () => {
         return isAvailable ? <h1>Dikpus/KAT</h1> : null;
     };
 
-    const disableButton = (participant: GetParticipantResponse) => {
+    const disableButton = (participant: EventResponse) => {
         const currentDate = new Date();
 
         return (
-            currentDate < participant.eventStartDate ||
-            currentDate > participant.eventEndDate
+            currentDate < participant.startDate ||
+            currentDate > participant.endDate ||
+            participant.isFilled
         );
     };
 
     const dateCellRender = (newValue: Moment) => {
-        const participantData = getParticipantData(newValue);
+        const eventData = getEventData(newValue);
 
         return (
             <ul>
-                {participantData.map((participant) => (
-                    <li key={participant.eventName}>
+                {eventData.map((event) => (
+                    <li key={event.name}>
                         <Button
                             type="primary"
-                            loading={loadingModal.get(participant.eventName)}
+                            loading={loadingModal.get(event.name)}
                             onClick={() => {
-                                handleClick(participant);
+                                handleClick(event);
                             }}
-                            disabled={disableButton(participant)}
+                            disabled={disableButton(event)}
                             block
                         >
                             <Badge
-                                status={
-                                    getType(participant) as BadgeProps['status']
-                                }
-                                text={participant.eventName}
+                                status={getType(event) as BadgeProps['status']}
+                                text={event.name}
                             />
                         </Button>
                     </li>
@@ -159,7 +154,7 @@ export const ParticipantAttendance = () => {
         );
     };
 
-    const onSelect = (newDate: Moment) => {
+    const onSelectCell = (newDate: Moment) => {
         setDate(newDate);
         setSelectedDate(newDate);
     };
@@ -179,7 +174,7 @@ export const ParticipantAttendance = () => {
             />
             <Calendar
                 value={date}
-                onSelect={onSelect}
+                onSelect={onSelectCell}
                 onPanelChange={onPanelChange}
                 disabledDate={disableDate}
                 dateCellRender={dateCellRender}
@@ -187,7 +182,7 @@ export const ParticipantAttendance = () => {
             />
             <Modal
                 visible={visibleModal}
-                title={selectedParticipant?.eventName}
+                title={selectedEvent?.name}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
@@ -205,15 +200,9 @@ export const ParticipantAttendance = () => {
                 ]}
             >
                 <h1>
-                    Start :{' '}
-                    {selectedParticipant?.eventStartDate.toLocaleString(
-                        'id-ID'
-                    )}
+                    Start : {selectedEvent?.startDate.toLocaleString('id-ID')}
                 </h1>
-                <h1>
-                    End :{' '}
-                    {selectedParticipant?.eventEndDate.toLocaleString('id-ID')}
-                </h1>
+                <h1>End : {selectedEvent?.endDate.toLocaleString('id-ID')}</h1>
             </Modal>
         </StandardLayout>
     );

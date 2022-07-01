@@ -1,47 +1,105 @@
 import type { BadgeProps } from 'antd';
-import { Alert, Badge, Button, Calendar, PageHeader, Modal } from 'antd';
+import { Alert, Badge, Button, Calendar, Modal, PageHeader, Table } from 'antd';
+import type { ColumnsType } from 'antd/lib/table';
+import { TableRowSelection } from 'antd/lib/table/interface';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 
-interface AttendanceData {
-    type: string;
-    content: string;
+interface EventResponse {
+    name: string;
+    startDate: Date;
+    endDate: Date;
 }
 
-const getListData = (value: Moment) => {
-    let listData: AttendanceData[] = [];
+interface ParticipantResponse {
+    key: React.Key;
+    nim: string;
+    name: string;
+    isFilled: boolean;
+}
 
-    switch (value.date()) {
-        case 8:
-            listData = [
-                { type: 'warning', content: 'Event 1' },
-                { type: 'success', content: 'Event 2' },
-            ];
-            break;
-        case 10:
-            listData = [
-                { type: 'warning', content: 'Event 3' },
-                { type: 'success', content: 'Event 4' },
-                { type: 'error', content: 'Event 5' },
-            ];
-            break;
-        case 15:
-            listData = [
-                { type: 'warning', content: 'Event 6' },
-                { type: 'success', content: 'Event 7' },
-                { type: 'error', content: 'Event 8' },
-                { type: 'error', content: 'Event 9' },
-                { type: 'error', content: 'Event 10' },
-                { type: 'error', content: 'Event 11' },
-            ];
-            break;
-        default:
+const columns: ColumnsType<ParticipantResponse> = [
+    {
+        title: 'NIM',
+        dataIndex: 'nim',
+    },
+    {
+        title: 'Nama',
+        dataIndex: 'name',
+    },
+];
+
+const getEventData = (value: Moment) => {
+    const eventData: EventResponse[] = [
+        {
+            name: 'KAT',
+            startDate: new Date(),
+            endDate: new Date(Date.now() + 1000 * 60),
+        },
+        {
+            name: 'DikPus',
+            startDate: new Date(Date.now() - 1000 * 60 * 60 * 25),
+            endDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
+        },
+        {
+            name: 'OSKM',
+            startDate: new Date(Date.now() + 1000 * 60 * 60 * 23),
+            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        },
+    ];
+
+    const filteredEventData: EventResponse[] = eventData.filter(
+        (event) =>
+            event.startDate.getDate() === value.date() &&
+            event.startDate.getMonth() === value.month() &&
+            event.startDate.getFullYear() === value.year()
+    );
+
+    return filteredEventData;
+};
+
+const getType = (event: EventResponse) => {
+    const currentDate = new Date();
+
+    if (currentDate < event.startDate) {
+        return 'error';
+    }
+    if (currentDate >= event.startDate && currentDate <= event.endDate) {
+        return 'warning';
+    }
+    return 'success';
+};
+
+const getParticipantResponse = (event: EventResponse | undefined) => {
+    const participantData: ParticipantResponse[] = [];
+
+    if (event?.name) {
+        participantData.push(
+            {
+                key: 1,
+                nim: '13520065',
+                name: 'Kinan',
+                isFilled: true,
+            },
+            {
+                key: 2,
+                nim: '13520101',
+                name: 'Aira',
+                isFilled: false,
+            },
+            {
+                key: 3,
+                nim: '13520056',
+                name: 'Fikron',
+                isFilled: true,
+            }
+        );
     }
 
-    return listData;
+    return participantData;
 };
 
 const getMonthData = (value: Moment) => value.month() === moment().month();
@@ -49,35 +107,62 @@ const getMonthData = (value: Moment) => value.month() === moment().month();
 export const MentorAttendance = () => {
     const navigate = useNavigate();
 
-    const [loading, setLoading] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [value, setValue] = useState(moment());
-    const [selectedValue, setSelectedValue] = useState(moment());
+    const [loadingOk, setLoadingOk] = useState(false);
+    const [loadingModal, setLoadingModal] = useState<Map<string, boolean>>(
+        new Map()
+    );
+    const [visibleModal, setVisibleModal] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<
+        EventResponse | undefined
+    >(undefined);
+    const [date, setDate] = useState(moment());
+    const [selectedDate, setSelectedDate] = useState(moment());
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
     const showModal = () => {
-        setVisible(true);
+        setVisibleModal(true);
+
+        const participantData = getParticipantResponse(selectedEvent);
+        const newSelectedRowKeys: React.Key[] = participantData
+            .filter((participant) => participant.isFilled)
+            .map((participant) => participant.key);
+
+        setSelectedRowKeys(newSelectedRowKeys);
     };
 
     const handleOk = () => {
-        setLoading(true);
+        setLoadingOk(true);
         setTimeout(() => {
-            setVisible(false);
-            setLoading(false);
+            setVisibleModal(false);
+            setLoadingOk(false);
+            setSelectedEvent(undefined);
+            setSelectedRowKeys([]);
         }, 1000);
     };
 
     const handleCancel = () => {
-        setVisible(false);
+        setVisibleModal(false);
+        setSelectedEvent(undefined);
     };
 
-    const onSelect = (newValue: Moment) => {
-        setValue(newValue);
-        setSelectedValue(newValue);
-        showModal();
-    };
+    const handleClick = (event: EventResponse) => {
+        setSelectedEvent(event);
+        setLoadingModal((prevLoadingModal) => {
+            const newLoadingModal = new Map(prevLoadingModal);
+            newLoadingModal.set(event.name, true);
 
-    const onPanelChange = (newValue: Moment) => {
-        setValue(newValue);
+            return newLoadingModal;
+        });
+
+        setTimeout(() => {
+            setLoadingModal((prevLoadingModal) => {
+                const newLoadingModal = new Map(prevLoadingModal);
+                newLoadingModal.set(event.name, false);
+
+                return newLoadingModal;
+            });
+            showModal();
+        }, 1000);
     };
 
     const monthCellRender = (newValue: Moment) => {
@@ -85,42 +170,71 @@ export const MentorAttendance = () => {
 
         return isAvailable ? <h1>KAT</h1> : null;
     };
-
     const dateCellRender = (newValue: Moment) => {
-        const listData = getListData(newValue);
+        const eventData = getEventData(newValue);
 
         return (
             <ul>
-                {listData.map((item) => (
-                    <li key={item.content}>
-                        <Badge
-                            status={item.type as BadgeProps['status']}
-                            text={item.content}
-                        />
+                {eventData.map((event) => (
+                    <li key={event.name}>
+                        <Button
+                            type="primary"
+                            loading={loadingModal.get(event.name)}
+                            onClick={() => {
+                                handleClick(event);
+                            }}
+                            block
+                        >
+                            <Badge
+                                status={getType(event) as BadgeProps['status']}
+                                text={event.name}
+                            />
+                        </Button>
                     </li>
                 ))}
             </ul>
         );
     };
 
+    const onSelectCell = (newDate: Moment) => {
+        setDate(newDate);
+        setSelectedDate(newDate);
+    };
+
+    const onPanelChange = (newDate: Moment) => {
+        setDate(newDate);
+    };
+
+    const disableDate = (newDate: Moment) =>
+        !newDate.isSame(selectedDate, 'month');
+
+    const onSelectParticipant = (newSelectedRowKeys: React.Key[]) => {
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+
+    const rowSelection: TableRowSelection<ParticipantResponse> = {
+        selectedRowKeys,
+        onChange: onSelectParticipant,
+    };
+
     return (
         <StandardLayout>
-            <PageHeader onBack={() => navigate(-1)} title="Mentor Attendance" />
-            <Alert
-                message={`You selected date: ${selectedValue?.format(
-                    'YYYY-MM-DD'
-                )}`}
+            <PageHeader
+                onBack={() => navigate(-1)}
+                title="Participant Attendance"
             />
+            <Alert message={selectedRowKeys.toString()} />
             <Calendar
-                value={value}
-                onSelect={onSelect}
+                value={date}
+                onSelect={onSelectCell}
                 onPanelChange={onPanelChange}
+                disabledDate={disableDate}
                 dateCellRender={dateCellRender}
                 monthCellRender={monthCellRender}
             />
             <Modal
-                visible={visible}
-                title="Absensi"
+                visible={visibleModal}
+                title={selectedEvent?.name}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
@@ -130,56 +244,22 @@ export const MentorAttendance = () => {
                     <Button
                         key="submit"
                         type="primary"
-                        loading={loading}
+                        loading={loadingOk}
                         onClick={handleOk}
                     >
-                        Tandai 0
-                    </Button>,
-                    <Button
-                        key="submit"
-                        type="primary"
-                        loading={loading}
-                        onClick={handleOk}
-                    >
-                        Tandai 1
-                    </Button>,
-                    <Button
-                        key="submit"
-                        type="primary"
-                        loading={loading}
-                        onClick={handleOk}
-                    >
-                        Tandai 2
-                    </Button>,
-                    <Button
-                        key="submit"
-                        type="primary"
-                        loading={loading}
-                        onClick={handleOk}
-                    >
-                        Tandai 3
-                    </Button>,
-                    <Button
-                        key="submit"
-                        type="primary"
-                        loading={loading}
-                        onClick={handleOk}
-                    >
-                        Tandai 4
-                    </Button>,
-                    <Button
-                        key="submit"
-                        type="primary"
-                        loading={loading}
-                        onClick={handleOk}
-                    >
-                        Tandai 5
+                        Tandai Hadir
                     </Button>,
                 ]}
             >
-                <text>
-                    You selected date: {selectedValue?.format('YYYY-MM-DD')}
-                </text>
+                <h1>
+                    Start : {selectedEvent?.startDate.toLocaleString('id-ID')}
+                </h1>
+                <h1>End : {selectedEvent?.endDate.toLocaleString('id-ID')}</h1>
+                <Table
+                    rowSelection={rowSelection}
+                    columns={columns}
+                    dataSource={getParticipantResponse(selectedEvent)}
+                />
             </Modal>
         </StandardLayout>
     );
