@@ -76,8 +76,9 @@ export const StandardLayout = ({
                         {children}
                     </div>
                 </Content>
+                <hr />
                 <Footer style={{ textAlign: 'center' }}>
-                    Ant Design ©2018 Created by Ant UED
+                    Dashboard KAT ©2022<br /> Created by Tim IT KAT '22
                 </Footer>
             </Layout>
         </Layout>
