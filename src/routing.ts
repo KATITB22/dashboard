@@ -99,12 +99,12 @@ export const Routing: PageRouting[] = [
     },
     {
         title: 'Participant Attendance',
-        path: '/attendance/participant',
+        path: '/attendance/participant/:nim',
         component: ParticipantAttendancePage,
     },
     {
         title: 'Mentor Attendance',
-        path: '/attendance/mentor',
+        path: '/attendance/mentor/:group',
         component: MentorAttendancePage,
     },
     PageNotFoundRouting,

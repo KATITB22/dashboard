@@ -1,47 +1,64 @@
 import type { BadgeProps } from 'antd';
-import { Alert, Badge, Button, Calendar, PageHeader, Modal } from 'antd';
+import { Badge, Button, Calendar, PageHeader, Modal } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 
-interface AttendanceData {
-    type: string;
-    content: string;
+interface GetParticipantResponse {
+    eventName: string;
+    eventStartDate: Date;
+    eventEndDate: Date;
+    isFilled: boolean;
 }
 
-const getListData = (value: Moment) => {
-    let listData: AttendanceData[] = [];
+const getParticipantData = (value: Moment) => {
+    const participantData: GetParticipantResponse[] = [
+        {
+            eventName: 'Djakarta Warehouse Project',
+            eventStartDate: new Date(),
+            eventEndDate: new Date(Date.now() + 1000 * 60),
+            isFilled: false,
+        },
+        {
+            eventName: 'Bandoeng Warehouse Project',
+            eventStartDate: new Date(Date.now() - 1000 * 60 * 60 * 25),
+            eventEndDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
+            isFilled: false,
+        },
+        {
+            eventName: 'Tangerang Warehouse Project',
+            eventStartDate: new Date(Date.now() + 1000 * 60 * 60 * 23),
+            eventEndDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
+            isFilled: false,
+        },
+    ];
 
-    switch (value.date()) {
-        case 8:
-            listData = [
-                { type: 'warning', content: 'Event 1' },
-                { type: 'success', content: 'Event 2' },
-            ];
-            break;
-        case 10:
-            listData = [
-                { type: 'warning', content: 'Event 3' },
-                { type: 'success', content: 'Event 4' },
-                { type: 'error', content: 'Event 5' },
-            ];
-            break;
-        case 15:
-            listData = [
-                { type: 'warning', content: 'Event 6' },
-                { type: 'success', content: 'Event 7' },
-                { type: 'error', content: 'Event 8' },
-                { type: 'error', content: 'Event 9' },
-                { type: 'error', content: 'Event 10' },
-                { type: 'error', content: 'Event 11' },
-            ];
-            break;
-        default:
+    const filteredParticipantData: GetParticipantResponse[] =
+        participantData.filter(
+            (participant) =>
+                participant.eventStartDate.getDate() === value.date() &&
+                participant.eventStartDate.getMonth() === value.month() &&
+                participant.eventStartDate.getFullYear() === value.year()
+        );
+
+    return filteredParticipantData;
+};
+
+const getType = (participant: GetParticipantResponse) => {
+    const currentDate = new Date();
+
+    if (participant.isFilled) {
+        return 'success';
     }
-
-    return listData;
+    if (
+        currentDate >= participant.eventStartDate &&
+        currentDate <= participant.eventEndDate
+    ) {
+        return 'warning';
+    }
+    return 'error';
 };
 
 const getMonthData = (value: Moment) => value.month() === moment().month();
@@ -49,59 +66,100 @@ const getMonthData = (value: Moment) => value.month() === moment().month();
 export const ParticipantAttendance = () => {
     const navigate = useNavigate();
 
-    const [loading, setLoading] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [value, setValue] = useState(moment());
-    const [selectedValue, setSelectedValue] = useState(moment());
+    const [loadingOk, setLoadingOk] = useState(false);
+    const [loadingModal, setLoadingModal] = useState<Map<string, boolean>>(
+        new Map()
+    );
+    const [visibleModal, setVisibleModal] = useState(false);
+    const [selectedParticipant, setSelectedParticipant] = useState<
+        GetParticipantResponse | undefined
+    >(undefined);
+    const [date, setDate] = useState(moment());
+    const [selectedDate, setSelectedDate] = useState(moment());
 
     const showModal = () => {
-        setVisible(true);
+        setVisibleModal(true);
     };
 
     const handleOk = () => {
-        setLoading(true);
+        setLoadingOk(true);
         setTimeout(() => {
-            setVisible(false);
-            setLoading(false);
+            setVisibleModal(false);
+            setLoadingOk(false);
+            setSelectedParticipant(undefined);
         }, 1000);
     };
 
     const handleCancel = () => {
-        setVisible(false);
+        setVisibleModal(false);
+        setSelectedParticipant(undefined);
     };
 
-    const onSelect = (newValue: Moment) => {
-        setValue(newValue);
-        setSelectedValue(newValue);
-        showModal();
-    };
+    const handleClick = (participant: GetParticipantResponse) => {
+        setSelectedParticipant(participant);
+        setLoadingModal((prevLoadingModal) => {
+            const newLoadingModal = new Map(prevLoadingModal);
+            newLoadingModal.set(participant.eventName, true);
 
-    const onPanelChange = (newValue: Moment) => {
-        setValue(newValue);
+            return newLoadingModal;
+        });
+
+        setTimeout(() => {
+            setLoadingModal((prevLoadingModal) => {
+                const newLoadingModal = new Map(prevLoadingModal);
+                newLoadingModal.set(participant.eventName, false);
+
+                return newLoadingModal;
+            });
+            showModal();
+        }, 1000);
     };
 
     const monthCellRender = (newValue: Moment) => {
         const isAvailable = getMonthData(newValue);
 
-        return isAvailable ? <h1>KAT</h1> : null;
+        return isAvailable ? <h1>Dikpus/KAT</h1> : null;
     };
 
     const dateCellRender = (newValue: Moment) => {
-        const listData = getListData(newValue);
+        const participantData = getParticipantData(newValue);
 
         return (
             <ul>
-                {listData.map((item) => (
-                    <li key={item.content}>
-                        <Badge
-                            status={item.type as BadgeProps['status']}
-                            text={item.content}
-                        />
+                {participantData.map((participant) => (
+                    <li key={participant.eventName}>
+                        <Button
+                            type="primary"
+                            loading={loadingModal.get(participant.eventName)}
+                            onClick={() => {
+                                handleClick(participant);
+                            }}
+                            block
+                        >
+                            <Badge
+                                status={
+                                    getType(participant) as BadgeProps['status']
+                                }
+                                text={participant.eventName}
+                            />
+                        </Button>
                     </li>
                 ))}
             </ul>
         );
     };
+
+    const onSelect = (newDate: Moment) => {
+        setDate(newDate);
+        setSelectedDate(newDate);
+    };
+
+    const onPanelChange = (newDate: Moment) => {
+        setDate(newDate);
+    };
+
+    const disableDate = (newDate: Moment) =>
+        !newDate.isSame(selectedDate, 'month');
 
     return (
         <StandardLayout>
@@ -109,20 +167,16 @@ export const ParticipantAttendance = () => {
                 onBack={() => navigate(-1)}
                 title="Participant Attendance"
             />
-            <Alert
-                message={`You selected date: ${selectedValue?.format(
-                    'YYYY-MM-DD'
-                )}`}
-            />
             <Calendar
-                value={value}
+                value={date}
                 onSelect={onSelect}
                 onPanelChange={onPanelChange}
+                disabledDate={disableDate}
                 dateCellRender={dateCellRender}
                 monthCellRender={monthCellRender}
             />
             <Modal
-                visible={visible}
+                visible={visibleModal}
                 title="Absensi"
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -133,16 +187,18 @@ export const ParticipantAttendance = () => {
                     <Button
                         key="submit"
                         type="primary"
-                        loading={loading}
+                        loading={loadingOk}
                         onClick={handleOk}
                     >
                         Tandai Hadir
                     </Button>,
                 ]}
             >
-                <text>
-                    You selected date: {selectedValue?.format('YYYY-MM-DD')}
-                </text>
+                <h1>Nama : {selectedParticipant?.eventName}</h1>
+                <h1>
+                    Start : {selectedParticipant?.eventStartDate.toString()}
+                </h1>
+                <h1>End : {selectedParticipant?.eventEndDate.toString()}</h1>
             </Modal>
         </StandardLayout>
     );
