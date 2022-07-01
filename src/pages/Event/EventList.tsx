@@ -87,7 +87,6 @@ const columns: ColumnsType<EventData> = [
                     type="primary"
                     size="large"
                     icon={<InfoCircleOutlined className="align-baseline" />}
-                    className="bg-blue-500 hover:bg-blue-350"
                 >
                     Details
                 </Button>
@@ -106,7 +105,6 @@ export const EventList = () => {
                         icon={<PlusOutlined className="align-baseline" />}
                         size="large"
                         type="primary"
-                        className="bg-blue-500 hover:bg-blue-350"
                     >
                         Create
                     </Button>

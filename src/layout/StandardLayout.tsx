@@ -68,7 +68,7 @@ export const StandardLayout = ({
                 />
             </Sider>
             <Layout>
-                <Header className="bg-gray-100" style={{ padding: 0 }}>
+                <Header style={{ padding: 0 }}>
                     <Breadcrumb style={{ margin: '16px 0' }} className="pl-5">
                         <Breadcrumb.Item>User</Breadcrumb.Item>
                         <Breadcrumb.Item>Bill</Breadcrumb.Item>
@@ -76,7 +76,7 @@ export const StandardLayout = ({
                 </Header>
                 <Content style={{ margin: '0 16px' }}>
                     <div
-                        className="bg-white text-xl"
+                        className="text-xl"
                         style={{ padding: 24, minHeight: 360 }}
                     >
                         {children}

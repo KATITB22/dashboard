@@ -72,12 +72,7 @@ export const EditEvent = () => {
                     <Button type="primary" style={{ marginRight: 10 }}>
                         Save
                     </Button>
-                    <Button
-                        style={{
-                            color: '#000',
-                            borderColor: '#1890ff',
-                        }}
-                    >
+                    <Button type="ghost">
                         Cancel
                     </Button>
                 </Form.Item>
