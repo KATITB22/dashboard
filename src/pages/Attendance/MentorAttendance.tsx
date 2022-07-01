@@ -18,6 +18,7 @@ interface ParticipantResponse {
     key: React.Key;
     nim: string;
     name: string;
+    group: string;
     isFilled: boolean;
 }
 
@@ -29,6 +30,10 @@ const columns: ColumnsType<ParticipantResponse> = [
     {
         title: 'Nama',
         dataIndex: 'name',
+    },
+    {
+        title: 'Grup',
+        dataIndex: 'group',
     },
 ];
 
@@ -79,21 +84,24 @@ const getParticipantResponse = (event: EventResponse | undefined) => {
     if (event?.name) {
         participantData.push(
             {
-                key: 1,
+                key: '13520065',
                 nim: '13520065',
                 name: 'Kinan',
+                group: 'A',
                 isFilled: true,
             },
             {
-                key: 2,
+                key: '13520101',
                 nim: '13520101',
                 name: 'Aira',
+                group: 'A',
                 isFilled: false,
             },
             {
-                key: 3,
+                key: '13520056',
                 nim: '13520056',
                 name: 'Fikron',
+                group: 'B',
                 isFilled: true,
             }
         );
@@ -121,13 +129,6 @@ export const MentorAttendance = () => {
 
     const showModal = () => {
         setVisibleModal(true);
-
-        const participantData = getParticipantResponse(selectedEvent);
-        const newSelectedRowKeys: React.Key[] = participantData
-            .filter((participant) => participant.isFilled)
-            .map((participant) => participant.key);
-
-        setSelectedRowKeys(newSelectedRowKeys);
     };
 
     const handleOk = () => {
@@ -161,6 +162,16 @@ export const MentorAttendance = () => {
 
                 return newLoadingModal;
             });
+
+            setSelectedRowKeys(() => {
+                const participantData = getParticipantResponse(event);
+                const newSelectedRowKeys: React.Key[] = participantData
+                    .filter((participant) => participant.isFilled)
+                    .map((participant) => participant.key);
+
+                return newSelectedRowKeys;
+            });
+
             showModal();
         }, 1000);
     };
@@ -219,10 +230,7 @@ export const MentorAttendance = () => {
 
     return (
         <StandardLayout>
-            <PageHeader
-                onBack={() => navigate(-1)}
-                title="Participant Attendance"
-            />
+            <PageHeader onBack={() => navigate(-1)} title="Group Attendance" />
             <Alert message={selectedRowKeys.toString()} />
             <Calendar
                 value={date}
