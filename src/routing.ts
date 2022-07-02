@@ -25,24 +25,24 @@ const EditEventPage = React.lazy(() =>
 );
 
 const TopicPage = React.lazy(() =>
-    import('./pages/Topic/Topic').then((module) => ({
+    import('./pages/Assignments/Topic').then((module) => ({
         default: module.Topic,
     }))
 );
 const TopicAdminPage = React.lazy(() =>
-    import('./pages/Topic/Topic').then((module) => ({
+    import('./pages/Assignments/Topic').then((module) => ({
         default: module.TopicAdmin,
     }))
 );
 
 const CreateTopicPage = React.lazy(() =>
-    import('./pages/Topic/CreateTopic').then((module) => ({
+    import('./pages/Assignments/CreateTopic').then((module) => ({
         default: module.CreateTopic,
     }))
 );
 
 const EditTopicPage = React.lazy(() =>
-    import('./pages/Topic/EditTopic').then((module) => ({
+    import('./pages/Assignments/EditTopic').then((module) => ({
         default: module.EditTopic,
     }))
 );
@@ -74,6 +74,12 @@ const EventListPage = React.lazy(() =>
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
+    }))
+);
+
+const WorkspacePage = React.lazy(() =>
+    import('./pages/Assignments/Workspace').then((module) => ({
+        default: module.Workspace,
     }))
 );
 
@@ -111,28 +117,33 @@ export const Routing: PageRouting[] = [
         component: EditEventPage,
     },
     {
-        title: 'Topic List',
-        path: '/topic',
+        title: 'Assignment List',
+        path: '/assignments',
         component: TopicPage,
     },
     {
-        title: 'Topic List',
-        path: '/topic/admin',
+        title: 'Admin Assignment List',
+        path: '/assignments/admin',
         component: TopicAdminPage,
     },
     {
-        title: 'Create Topic',
-        path: '/topic/create',
+        title: 'Create Assignment',
+        path: '/assignments/create',
         component: CreateTopicPage,
     },
     {
-        title: 'Edit Topic',
-        path: '/topic/:id',
+        title: 'Edit Assignment',
+        path: '/assignments/:id',
         component: EditTopicPage,
     },
     {
+        title: 'Workspace',
+        path: '/assignments/workspace/:id',
+        component: WorkspacePage,
+    },
+    {
         title: 'Submission List',
-        path: '/topic/:id/submissions',
+        path: '/assignments/:id/submissions',
         component: SubmissionListPage,
     },
     {

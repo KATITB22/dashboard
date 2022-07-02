@@ -118,8 +118,8 @@ class AssignmentsService extends GenericService {
             return {
                 id: each.id,
                 title: each.title,
-                start: moment(each.start).format('DD MMM YY HH:mm:ss'),
-                end: moment(each.end).format('DD MMM YY HH:mm:ss'),
+                start: moment(each.start).format('DD MMM YY HH:mm'),
+                end: moment(each.end).format('DD MMM YY HH:mm'),
             };
         });
         const mappedResponse: ListTopic = {

@@ -74,7 +74,6 @@ export const TopicForm = ({ id = undefined, setQuestions }: Props) => {
         }
 
         setLoading(true);
-        console.log(request);
         if (isCreating) {
             const rawData = await (
                 await readXlsxFile(file.originFileObj)

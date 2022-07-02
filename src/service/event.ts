@@ -5,7 +5,6 @@ import {
     SuccessCallbackFunction,
 } from '.';
 import APIClient from '../utils/api-client';
-import { APIErrorObject } from '../utils/api-error-object';
 
 export interface IEvent {
     title: string;
