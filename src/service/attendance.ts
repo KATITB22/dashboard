@@ -1,3 +1,5 @@
+import type { Moment } from 'moment';
+import moment from 'moment';
 import {
     FailureCallbackFunction,
     GenericService,
@@ -9,8 +11,8 @@ import { APIErrorObject } from '../utils/api-error-object';
 export interface IParticipantEvent {
     id: string;
     title: string;
-    start_date: Date;
-    end_date: Date;
+    start_date: Moment;
+    end_date: Moment;
     type: string;
     is_filled: boolean;
 }
@@ -18,8 +20,8 @@ export interface IParticipantEvent {
 export interface IMentorEvent {
     id: string;
     title: string;
-    start_date: Date;
-    end_date: Date;
+    start_date: Moment;
+    end_date: Moment;
     type: string;
 }
 
@@ -94,8 +96,8 @@ class AttendanceService extends GenericService {
                 return {
                     id: eachRaw.id,
                     title: eachRaw.title,
-                    start_date: new Date(eachRaw.start),
-                    end_date: new Date(eachRaw.end),
+                    start_date: moment(eachRaw.start),
+                    end_date: moment(eachRaw.end),
                     type: eachRaw.type,
                     is_filled: false,
                 };
@@ -125,8 +127,8 @@ class AttendanceService extends GenericService {
             return {
                 id: each.id,
                 title: each.title,
-                start_date: new Date(each.start),
-                end_date: new Date(each.end),
+                start_date: moment(each.start),
+                end_date: moment(each.end),
                 type: each.title,
             };
         });

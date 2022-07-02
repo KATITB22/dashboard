@@ -1,5 +1,5 @@
 import type { BadgeProps } from 'antd';
-import { Badge, Button, Calendar, Modal, PageHeader, Spin } from 'antd';
+import { Badge, Button, Calendar, PageHeader, Spin } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
@@ -20,8 +20,8 @@ export const ParticipantAttendance = () => {
     const [selectedEvent, setSelectedEvent] = useState<IParticipantEvent>({
         id: '',
         title: '',
-        start_date: new Date(),
-        end_date: new Date(),
+        start_date: moment(),
+        end_date: moment(),
         type: '',
         is_filled: false,
     });
@@ -38,21 +38,14 @@ export const ParticipantAttendance = () => {
 
     const handleEventClick = (event: IParticipantEvent) => {
         setSelectedEvent(event);
-        setLoadingPage(true);
-
-        setTimeout(() => {
-            setLoadingPage(false);
-            setVisibleModal(true);
-        }, 1000);
+        setVisibleModal(true);
     };
 
     const dateCellRender = (newValue: Moment) => {
-        const eventData = eventList.filter(
-            (event) =>
-                event.start_date.getDate() === newValue.date() &&
-                event.start_date.getMonth() === newValue.month() &&
-                event.start_date.getFullYear() === newValue.year()
+        const eventData = eventList.filter((event) =>
+            event.start_date.isSame(newValue, 'date')
         );
+
         return (
             <ul>
                 {eventData.map((event) => (
@@ -97,7 +90,7 @@ export const ParticipantAttendance = () => {
                 defaultFailureCallback(err);
                 setLoadingPage(false);
             }
-        )
+        );
     }, []);
 
     return (
@@ -114,9 +107,17 @@ export const ParticipantAttendance = () => {
                     disabledDate={disableDate}
                     dateCellRender={dateCellRender}
                 />
-                {visibleModal && <AttendanceModal visibleModal={visibleModal} selectedEvent={selectedEvent} handleOk={handleOkModalButton} loadingOk={loadingOkModalButton} handleCancel={() => {
-                    setVisibleModal(false);
-                }} />}
+                {visibleModal && (
+                    <AttendanceModal
+                        visibleModal={visibleModal}
+                        selectedEvent={selectedEvent}
+                        handleOk={handleOkModalButton}
+                        loadingOk={loadingOkModalButton}
+                        handleCancel={() => {
+                            setVisibleModal(false);
+                        }}
+                    />
+                )}
             </Spin>
         </StandardLayout>
     );
