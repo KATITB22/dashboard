@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { MentorAttendanceModal } from '../../components/AttendanceModal';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
-import service, { IEvent } from '../../service/attendance';
+import service, { IEvent, ITable } from '../../service/attendance';
 import { getType } from './helper';
 
 export const MentorAttendance = () => {
@@ -26,17 +26,35 @@ export const MentorAttendance = () => {
     });
     const [date, setDate] = useState(moment());
     const [selectedDate, setSelectedDate] = useState(moment());
+    const [dataSource, setDataSource] = useState<ITable[]>([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
     const handleOkModalButton = () => {
-        console.log(selectedRowKeys);
-
         setLoadingOkModalButton(true);
-        setTimeout(() => {
-            setVisibleModal(false);
-            setLoadingOkModalButton(false);
-            setSelectedRowKeys([]);
-        }, 1000);
+
+        const attend: number[] = selectedRowKeys.map((key) =>
+            parseInt(key.toString())
+        );
+        const notAttend: number[] = dataSource
+            .map((element) => parseInt(element.key.toString()))
+            .filter((key) => !attend.includes(key));
+
+        console.log(attend, notAttend);
+
+        service.groupAttendance(
+            selectedEvent.id,
+            attend,
+            notAttend,
+            () => {
+                setVisibleModal(false);
+                setLoadingOkModalButton(false);
+                setSelectedRowKeys([]);
+            },
+            (err) => {
+                defaultFailureCallback(err);
+                setLoadingOkModalButton(false);
+            }
+        );
     };
 
     const handleEventClick = (event: IEvent) => {
@@ -120,6 +138,8 @@ export const MentorAttendance = () => {
                         handleCancel={() => {
                             setVisibleModal(false);
                         }}
+                        dataSource={dataSource}
+                        setDataSource={setDataSource}
                         selectedRowKeys={selectedRowKeys}
                         setSelectedRowKeys={setSelectedRowKeys}
                     />

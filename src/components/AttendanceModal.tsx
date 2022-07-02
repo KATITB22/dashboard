@@ -21,6 +21,8 @@ interface MentorProps {
     loadingOk: boolean;
     handleOk: (e: React.MouseEvent<HTMLElement>) => void;
     handleCancel: (e: React.MouseEvent<HTMLElement>) => void;
+    dataSource: ITable[];
+    setDataSource: React.Dispatch<React.SetStateAction<ITable[]>>;
     selectedRowKeys: React.Key[];
     setSelectedRowKeys: (value: React.SetStateAction<React.Key[]>) => void;
 }
@@ -68,15 +70,27 @@ export const ParticipantAttendanceModal = ({
     const loadModalContent = () => {
         if (selectedEvent.type === 'Self') {
             if (attend === null) {
-                return (
-                    <p>
-                        {`${moment(selectedEvent.start_date).format(
-                            'DD MMM YY HH:mm:ss'
-                        )} - ${moment(selectedEvent.end_date).format(
-                            'DD MMM YY HH:mm:ss'
-                        )}`}
-                    </p>
-                );
+                if (moment().isBefore(selectedEvent.end_date)) {
+                    return (
+                        <p>
+                            {`${moment(selectedEvent.start_date).format(
+                                'DD MMM YY HH:mm:ss'
+                            )} - ${moment(selectedEvent.end_date).format(
+                                'DD MMM YY HH:mm:ss'
+                            )} [Absen belum terbuka]`}
+                        </p>
+                    );
+                } else {
+                    return (
+                        <p>
+                            {`${moment(selectedEvent.start_date).format(
+                                'DD MMM YY HH:mm:ss'
+                            )} - ${moment(selectedEvent.end_date).format(
+                                'DD MMM YY HH:mm:ss'
+                            )} [Absen sudah ditutup]`}
+                        </p>
+                    );
+                }
             } else {
                 return (
                     <p>
@@ -87,7 +101,17 @@ export const ParticipantAttendanceModal = ({
                 );
             }
         } else {
-            return <p>Akan diabsenkan oleh mentor!</p>;
+            if (attend === null) {
+                return <p>Akan diabsenkan oleh mentor!</p>;
+            } else {
+                return (
+                    <p>
+                        {`Anda sudah diabsenkan mentor pada: ${attend.format(
+                            'DD MMM YY HH:mm:ss'
+                        )}`}
+                    </p>
+                );
+            }
         }
     };
 
@@ -120,11 +144,11 @@ export const MentorAttendanceModal = ({
     loadingOk,
     handleOk,
     handleCancel,
+    dataSource,
+    setDataSource,
     selectedRowKeys,
     setSelectedRowKeys,
 }: MentorProps) => {
-    const [dataSource, setDataSource] = useState<ITable[]>([]);
-
     const columns: ColumnsType<ITable> = [
         {
             title: 'NIM',
@@ -168,16 +192,16 @@ export const MentorAttendanceModal = ({
         );
     }, []);
 
-    return (
-        <Modal
-            visible={visibleModal}
-            title={selectedEvent.title}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            footer={[
-                <Button key="back" onClick={handleCancel}>
-                    Kembali
-                </Button>,
+    const loadModalFooter = () => {
+        const footer = [
+            <Button key="back" onClick={handleCancel}>
+                Kembali
+            </Button>,
+        ];
+        const currentDate = moment();
+
+        if (selectedEvent.type === 'GroupLeader') {
+            footer.push(
                 <Button
                     key="submit"
                     type="primary"
@@ -185,18 +209,46 @@ export const MentorAttendanceModal = ({
                     onClick={handleOk}
                 >
                     Tandai Hadir
-                </Button>,
-            ]}
+                </Button>
+            );
+        }
+
+        return footer;
+    };
+
+    const loadModalContent = () => {
+        if (selectedEvent.type === 'GroupLeader') {
+            return (
+                <>
+                    <p>
+                        Start :{' '}
+                        {selectedEvent.start_date.format('DD MMM YY HH:mm:ss')}
+                    </p>
+                    <p>
+                        End :{' '}
+                        {selectedEvent.end_date.format('DD MMM YY HH:mm:ss')}
+                    </p>
+                    <Table
+                        rowSelection={rowSelection}
+                        columns={columns}
+                        dataSource={dataSource}
+                    />
+                </>
+            );
+        } else {
+            return <p>Akan diabsenkan oleh peserta!</p>;
+        }
+    };
+
+    return (
+        <Modal
+            visible={visibleModal}
+            title={selectedEvent.title}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={loadModalFooter()}
         >
-            <h1>
-                Start : {selectedEvent.start_date.format('DD MMM YY HH:mm:ss')}
-            </h1>
-            <h1>End : {selectedEvent.end_date.format('DD MMM YY HH:mm:ss')}</h1>
-            <Table
-                rowSelection={rowSelection}
-                columns={columns}
-                dataSource={dataSource}
-            />
+            {loadModalContent()}
         </Modal>
     );
 };

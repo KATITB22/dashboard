@@ -47,8 +47,8 @@ class AttendanceService extends GenericService {
 
     public async groupAttendance(
         eventId: string,
-        attend: string[],
-        notAttend: string[],
+        attend: number[],
+        notAttend: number[],
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
     ) {

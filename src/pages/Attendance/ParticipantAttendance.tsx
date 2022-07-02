@@ -38,6 +38,7 @@ export const ParticipantAttendance = () => {
             },
             (err) => {
                 defaultFailureCallback(err);
+                setLoadingOkModalButton(false);
             }
         );
     };

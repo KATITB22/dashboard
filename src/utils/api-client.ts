@@ -7,7 +7,8 @@ class APIClient {
 
     public readonly COOKIE_DOMAIN: string = import.meta.env.VITE_COOKIE_DOMAIN;
 
-    private token: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjU2NzMyMTkzLCJleHAiOjE2NTkzMjQxOTN9.KYsyQbNXjzXOQVVUjl5hyrbdqY5t5Mh-hRUoyJ6S-V4';
+    private token: string =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjU2NzY4NDQ5LCJleHAiOjE2NTkzNjA0NDl9.RaFbazjsomgh_eIp3LwqP43eZB59cxMmVLotzDy-cI8';
 
     public user: Record<string, any> = {};
 
