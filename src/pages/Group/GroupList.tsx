@@ -26,10 +26,19 @@ export const GroupList = () => {
 
     const columns = [
         {
+            title: 'ID',
+            dataIndex: 'key',
+            key: 'key',
+            render: (text: string) => (
+                <Link to={`/groups/${text}`}>
+                    <span>{text}</span>
+                </Link>
+            ),
+        },
+        {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            render: (text: string) => <Link to="/groups/1">{text}</Link>,
         },
         {
             title: 'Description',
