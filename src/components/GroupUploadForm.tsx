@@ -1,9 +1,10 @@
-import { Form, Upload, Button } from 'antd';
+import { Form, Upload, Button, Popconfirm } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import readXlsxFile from 'read-excel-file';
 
 export const GroupUploadForm = () => {
     const handleChange = async (file: any) => {
+        // Parse jadi array of json
         const data = await (
             await readXlsxFile(file.originFileObj)
         ).map((row: any) => ({
@@ -30,7 +31,12 @@ export const GroupUploadForm = () => {
                 <Upload.Dragger
                     name="files"
                     multiple={false}
-                    onChange={(e) => handleChange(e.fileList[0])}
+                    customRequest={() => true}
+                    onChange={(e) => {
+                        handleChange(e.fileList[0]);
+                        e.file.status = 'done';
+                        return;
+                    }}
                     showUploadList={{ showRemoveIcon: true }}
                     accept=".xlsx,.xls,.csv"
                 >
@@ -54,9 +60,16 @@ export const GroupUploadForm = () => {
                     <Button
                         type="primary"
                         danger
-                        onClick={() => console.log('Delete All')}
                     >
-                        Delete All
+                        <Popconfirm
+                            title="Are you sure want to delete all?"
+                            onConfirm={() => console.log('Delete All')}
+                            onCancel={() => console.log('Cancel')}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            Delete All
+                        </Popconfirm>
                     </Button>
                 </Form.Item>
             </div>
