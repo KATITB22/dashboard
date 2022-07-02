@@ -1,88 +1,41 @@
 import { PlusOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { Table, Button, PageHeader } from 'antd';
+import { Table, Button, Spin } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
+import { defaultFailureCallback } from '../../service';
+import eventService, { IEvent } from '../../service/event';
 
-interface EventData {
-    id: number;
-    eventName: string;
-    date: string;
-    startTime: string;
-    endTime: string;
-    method: string;
-}
-
-const dataDummy = [
-    {
-        id: 1,
-        eventName: 'Event 1',
-        date: '2020-01-01',
-        startTime: '',
-        endTime: '',
-        method: '',
-    },
-    {
-        id: 2,
-        eventName: 'Event 2',
-        date: '2020-01-02',
-        startTime: '',
-        endTime: '',
-        method: '',
-    },
-    {
-        id: 3,
-        eventName: 'Event 3',
-        date: '2020-01-03',
-        startTime: '',
-        endTime: '',
-        method: '',
-    },
-    {
-        id: 4,
-        eventName: 'Event 4',
-        date: '2020-01-04',
-        startTime: '',
-        endTime: '',
-        method: '',
-    },
-    {
-        id: 5,
-        eventName: 'Event 5',
-        date: '2020-01-05',
-        startTime: '',
-        endTime: '',
-        method: '',
-    },
-    {
-        id: 6,
-        eventName: 'Event 6',
-        date: '2020-01-06',
-        startTime: '',
-        endTime: '',
-        method: '',
-    },
-];
-
-const columns: ColumnsType<EventData> = [
+const columns: ColumnsType<IEvent> = [
     {
         title: 'Name',
-        dataIndex: 'eventName',
-        width: 550,
+        dataIndex: 'title',
+        key: 'title',
+        width: 400,
         filters: [],
-        onFilter: (value: any, record) => record.eventName.indexOf(value) === 0,
-        sorter: (a, b) => a.eventName.localeCompare(b.eventName),
+        onFilter: (value: any, record) => record.title.indexOf(value) === 0,
+        sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
-        title: 'Date',
-        dataIndex: 'date',
-        width: 550,
-        sorter: (a, b) => a.eventName.localeCompare(b.eventName),
+        title: 'Start',
+        dataIndex: 'attendance_start',
+        key: 'start',
+        width: 400,
+        sorter: (a, b) => a.title.localeCompare(b.title),
+    },
+    {
+        title: 'End',
+        dataIndex: 'attendance_end',
+        key: 'end',
+        width: 400,
+        sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
         title: 'Details',
+        key: 'details',
         render: (_, record) => (
-            <Link to={`/event/${record.eventName}`}>
+            <Link to={`/event/${record.id}`}>
                 <Button
                     type="primary"
                     size="large"
@@ -96,10 +49,33 @@ const columns: ColumnsType<EventData> = [
 ];
 
 export const EventList = () => {
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [events, setEvents] = useState<IEvent[]>([]);
+    const [page, setPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(10);
+    const [total, setTotal] = useState<number>(0);
+    const [queryParams, setQueryParams] = useSearchParams();
+
+    useEffect(() => {
+        const queryPage = queryParams.get('page');
+        if (queryPage && +queryPage) {
+            setPage(+queryPage);
+        }
+        setLoading(true);
+        eventService.getEvents(page, (data) => {
+            setEvents(data.events);
+            setTotal(data.total);
+            setPage(data.page);
+            setPageSize(data.pageSize);
+            setLoading(false);
+        }, (err) => {
+            defaultFailureCallback(err);
+            setLoading(false);
+        });
+    }, [page]);
+
     return (
         <StandardLayout>
-            <PageHeader onBack={() => navigate(-1)} title="List Event" />
             <div className="mb-5">
                 <Link to="create">
                     <Button
@@ -111,7 +87,15 @@ export const EventList = () => {
                     </Button>
                 </Link>
             </div>
-            <Table columns={columns} dataSource={dataDummy} />
+            <Spin tip="Fetching data..." spinning={loading}>
+                <Table columns={columns} dataSource={events} pagination={{
+                    total, current: page, pageSize, showSizeChanger: false, onChange: (e) => {
+                        queryParams.set('page', e.toString());
+                        setQueryParams(queryParams);
+                        setPage(e);
+                    }
+                }} />
+            </Spin>
         </StandardLayout>
     );
 };
