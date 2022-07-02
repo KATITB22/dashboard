@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import eventService from '../../service/event';
+import { defaultFailureCallback } from '../../service';
 import type { DatePickerProps } from 'antd';
 import { Button, Form, Input, DatePicker, Select, PageHeader } from 'antd';
 import { StandardLayout } from '../../layout/StandardLayout';
@@ -7,7 +9,7 @@ import { StandardLayout } from '../../layout/StandardLayout';
 export const CreateEvent = () => {
     const navigate = useNavigate();
     const [data, setData] = useState({
-        event_name: '',
+        title: '',
         attendance_start: '',
         attendance_end: '',
         attendance_type: '',
@@ -16,7 +18,7 @@ export const CreateEvent = () => {
     const handleEventNameChange = (e: any) => {
         setData({
             ...data,
-            event_name: e.target.value,
+            title: e.target.value,
         });
     };
 
@@ -26,7 +28,7 @@ export const CreateEvent = () => {
     ) => {
         setData({
             ...data,
-            attendance_start: dateString,
+            attendance_start: new Date(dateString).toISOString(),
         });
     };
 
@@ -36,7 +38,7 @@ export const CreateEvent = () => {
     ) => {
         setData({
             ...data,
-            attendance_end: dateString,
+            attendance_end: new Date(dateString).toISOString(),
         });
     };
 
@@ -47,8 +49,14 @@ export const CreateEvent = () => {
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // submit data
+        await eventService.createEvent(
+            data,
+            (res) => console.log({ message: 'Success', data: res }),
+            (err) => defaultFailureCallback(err)
+        );
+        navigate('/event');
     };
 
     return (
@@ -117,10 +125,10 @@ export const CreateEvent = () => {
                         placeholder="Pick a method"
                         onChange={handleAttendanceTypeChange}
                     >
-                        <Select.Option value="group">
-                            Group Presence
+                        <Select.Option value="GroupLeader">
+                            Group Leader Presence
                         </Select.Option>
-                        <Select.Option value="self">
+                        <Select.Option value="Self">
                             Self Presence
                         </Select.Option>
                     </Select>
