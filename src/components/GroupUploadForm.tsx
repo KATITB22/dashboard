@@ -1,78 +1,154 @@
-import { Form, Upload, Button, Popconfirm } from 'antd';
+import { useState } from 'react';
+import { Form, Upload, Button, Popconfirm, Table } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import readXlsxFile from 'read-excel-file';
+import { toast } from 'react-toastify';
+import Service from '../service/group';
+
 
 export const GroupUploadForm = () => {
-    const handleChange = async (file: any) => {
-        // Parse jadi array of json
-        const data = await (
-            await readXlsxFile(file.originFileObj)
-        ).map((row: any) => ({
-            nim: row[0],
-            kelompok: row[1],
-            role: row[2],
-        }));
+    const [file, setFile] = useState<any>();
+    const [errData, setErrData] = useState<any>([]);
+    const columns = [
+        {
+            'title': 'Kelompok',
+            'dataIndex': 'name',
+        },
+        {
+            'title': 'Error',
+            'dataIndex': 'error',
+        },
+        {
+            'title': 'Data',
+            'dataIndex': 'data',
+        }
+    ]
+    const handleSubmit = async (file: any) => {
+        if (file === undefined) {
+            toast.error('Please select a file');
+        }
+        let data: any = []
+
+        await (await readXlsxFile(file.originFileObj)).map((row: any, idx) => {
+            if (idx > 0) {
+                data[row[1]] === undefined ? (
+                    data[row[1]] = {},
+                    data[row[1]].name = "Kelompok " + row[1],
+                    data[row[1]].leaders = [],
+                    data[row[1]].members = [],
+                    row[2].toLowerCase() === "member" ? (
+                        data[row[1]].members.push(row[0])
+                    ) : (
+                        data[row[1]].leaders.push(row[0])
+                    )
+                ) : (
+                    row[2].toLowerCase() === "member" ? (
+                        data[row[1]].members.push(row[0])
+                    ) : (
+                        data[row[1]].leaders.push(row[0])
+                    )
+                )
+            } 
+        })
+
         const res = data.slice(1, data.length);
-        console.log(res);
+        const arr: number[] = [];
+        const succ: number[] = [];
+        res.map((d: any, idx: number) => {
+            Service.uploadGroup(d, 
+                (resp) => {
+                    succ.push(idx+1);
+                    {idx === res.length - 1 && succ.length === res.length ? toast.success("Successfully uploaded " + file.name) : null }
+                }, 
+                (err) => {
+                    setErrData((old: any) => [...old, {
+                        key: errData.length,
+                        name: d.name,
+                        error: err.toString(),
+                        data: err.toString().includes('members') ? d.members.map((t: any) => t + ' ') : d.leaders.map((t: any) => t + ' ')
+                    }])
+                    arr.push(idx)
+                    {idx === res.length-1 && arr.length > 0 ? toast.error("Failed to upload " + file.name) : null }
+                });
+        })
     };
 
-    return (
-        <Form layout="vertical">
-            <Form.Item
-                label="Upload File Kelompok"
-                name="file-kelompok-upload"
-                rules={[
-                    {
-                        required: true,
-                        message: 'File kelompok belum di-upload',
-                    },
-                ]}
-            >
-                <Upload.Dragger
-                    name="files"
-                    multiple={false}
-                    customRequest={() => true}
-                    onChange={(e) => {
-                        handleChange(e.fileList[0]);
-                        e.file.status = 'done';
-                        return;
-                    }}
-                    showUploadList={{ showRemoveIcon: true }}
-                    accept=".xlsx,.xls,.csv"
-                >
-                    <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                    </p>
-                    <p className="ant-upload-text">Upload File Kelompok</p>
-                </Upload.Dragger>
-            </Form.Item>
+    const handleDelete = () => {
+        Service.deleteAll(
+            (res) => toast.success("Successfully deleted all data"),
+            (err) => toast.success("Failed deleting data")
+        );
+    }
 
-            <div className="flex gap-2 flex-wrap">
-                <Form.Item>
-                    <Button
-                        type="primary"
-                        onClick={() => console.log('Submit')}
+    return (
+        <>
+            <Form layout="vertical">
+                <Form.Item
+                    label="Upload File Kelompok"
+                    name="file-kelompok-upload"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'File kelompok belum di-upload',
+                        },
+                    ]}
+                >
+                    <Upload.Dragger
+                        name="files"
+                        multiple={false}
+                        maxCount={1}
+                        customRequest={() => true}
+                        onChange={(e) => {
+                            e.file.status = 'done';
+                            setFile(e.fileList[0])
+                            return;
+                        }}
+                        showUploadList={{ showRemoveIcon: true }}
+                        accept=".xlsx"
                     >
-                        Submit
-                    </Button>
+                        <p className="ant-upload-drag-icon">
+                            <InboxOutlined />
+                        </p>
+                        <p className="ant-upload-text">Upload File Kelompok</p>
+                    </Upload.Dragger>
                 </Form.Item>
-                <Form.Item>
-                    <Button
-                        type="primary"
-                        danger
-                    >
-                        <Popconfirm
-                            title="Are you sure want to delete all?"
-                            onConfirm={() => console.log('Delete All')}
-                            onCancel={() => console.log('Cancel')}
-                            okText="Yes"
-                            cancelText="No"
+
+                <div className="flex flex-col gap-2 flex-wrap">
+                    <Form.Item>
+                        <Button
+                            type="primary"
+                            htmlType="reset"
+                            onClick={() => {
+                                setErrData([])
+                                handleSubmit(file)
+                            }}
                         >
-                            Delete All
-                        </Popconfirm>
-                    </Button>
-                </Form.Item>
-            </div>
-        </Form>
+                            Submit
+                        </Button>
+                    </Form.Item>
+                    <Form.Item
+                        label="Hapus Data Kelompok"
+                    >
+                        <Button
+                            type="primary"
+                            danger
+                        >
+                            <Popconfirm
+                                title="Are you sure want to delete all?"
+                                onConfirm={() => {
+                                    setErrData([])
+                                    handleDelete()
+                                }}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                Delete All
+                            </Popconfirm>
+                        </Button>
+                    </Form.Item>
+                </div>
+            </Form>
+            { errData.length > 0 ? <Table dataSource={errData} columns={columns} /> : null }
+        </>
     );
 };
