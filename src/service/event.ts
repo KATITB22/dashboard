@@ -87,8 +87,12 @@ class EventService extends GenericService {
         }
         const events: IEvent[] = response.data;
         events.forEach((eachRaw, _) => {
-            eachRaw.start = moment(eachRaw.start).format('DD MMM YY HH:mm:ss');
-            eachRaw.end = moment(eachRaw.end).format('DD MMM YY HH:mm:ss');
+            const each: any = eachRaw.attributes;
+            eachRaw.id = each.id;
+            eachRaw.start = moment(each.attendance_start).format('DD MMM YY HH:mm:ss');
+            eachRaw.end = moment(each.attendance_end).format('DD MMM YY HH:mm:ss');
+            eachRaw.title = each.title;
+
         });
         const total = events.length;
         const mappedResponse: ListEvent = {
