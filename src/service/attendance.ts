@@ -76,7 +76,7 @@ class AttendanceService extends GenericService {
         this.handleResponse(response, onSuccess, onFail);
     }
 
-    public async getSelfEvents(
+    public async getEvents(
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
     ) {
@@ -96,14 +96,14 @@ class AttendanceService extends GenericService {
                     title: eachRaw.title,
                     start_date: new Date(eachRaw.start),
                     end_date: new Date(eachRaw.end),
-                    type: eachRaw.title,
+                    type: eachRaw.type,
                     is_filled: false,
                 };
             }
         );
 
         if (onSuccess) {
-            onSuccess(participantEvents);
+            onSuccess({ result: participantEvents });
         }
     }
 
