@@ -120,9 +120,11 @@ export const MentorAttendance = () => {
         new Map()
     );
     const [visibleModal, setVisibleModal] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState<
-        EventResponse | undefined
-    >(undefined);
+    const [selectedEvent, setSelectedEvent] = useState<EventResponse>({
+        name: '',
+        startDate: new Date(),
+        endDate: new Date(),
+    });
     const [date, setDate] = useState(moment());
     const [selectedDate, setSelectedDate] = useState(moment());
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -136,14 +138,12 @@ export const MentorAttendance = () => {
         setTimeout(() => {
             setVisibleModal(false);
             setLoadingOk(false);
-            setSelectedEvent(undefined);
             setSelectedRowKeys([]);
         }, 1000);
     };
 
     const handleCancel = () => {
         setVisibleModal(false);
-        setSelectedEvent(undefined);
     };
 
     const handleClick = (event: EventResponse) => {
@@ -194,7 +194,6 @@ export const MentorAttendance = () => {
                             onClick={() => {
                                 handleClick(event);
                             }}
-                            block
                         >
                             <Badge
                                 status={getType(event) as BadgeProps['status']}
@@ -242,7 +241,7 @@ export const MentorAttendance = () => {
             />
             <Modal
                 visible={visibleModal}
-                title={selectedEvent?.name}
+                title={selectedEvent.name}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={[
@@ -260,9 +259,9 @@ export const MentorAttendance = () => {
                 ]}
             >
                 <h1>
-                    Start : {selectedEvent?.startDate.toLocaleString('id-ID')}
+                    Start : {selectedEvent.startDate.toLocaleString('id-ID')}
                 </h1>
-                <h1>End : {selectedEvent?.endDate.toLocaleString('id-ID')}</h1>
+                <h1>End : {selectedEvent.endDate.toLocaleString('id-ID')}</h1>
                 <Table
                     rowSelection={rowSelection}
                     columns={columns}

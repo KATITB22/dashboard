@@ -1,77 +1,58 @@
 import type { BadgeProps } from 'antd';
-import { Badge, Button, Calendar, Modal, PageHeader } from 'antd';
+import { Badge, Button, Calendar, Modal, PageHeader, Spin } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
-
-interface EventResponse {
-    name: string;
-    startDate: Date;
-    endDate: Date;
-    isFilled: boolean;
-}
-
-const getEventData = (value: Moment) => {
-    const eventData: EventResponse[] = [
-        {
-            name: 'KAT',
-            startDate: new Date(),
-            endDate: new Date(Date.now() + 1000 * 60),
-            isFilled: true,
-        },
-        {
-            name: 'DikPus',
-            startDate: new Date(Date.now() - 1000 * 60 * 60 * 25),
-            endDate: new Date(Date.now() - 1000 * 60 * 60 * 24),
-            isFilled: true,
-        },
-        {
-            name: 'OSKM',
-            startDate: new Date(Date.now() + 1000 * 60 * 60 * 23),
-            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
-            isFilled: false,
-        },
-    ];
-
-    const filteredEventData: EventResponse[] = eventData.filter(
-        (event) =>
-            event.startDate.getDate() === value.date() &&
-            event.startDate.getMonth() === value.month() &&
-            event.startDate.getFullYear() === value.year()
-    );
-
-    return filteredEventData;
-};
-
-const getType = (event: EventResponse) => {
-    const currentDate = new Date();
-
-    if (event.isFilled) {
-        return 'success';
-    }
-    if (currentDate >= event.startDate && currentDate <= event.endDate) {
-        return 'warning';
-    }
-    return 'error';
-};
-
-const getMonthData = (value: Moment) => value.month() === moment().month();
+import { defaultFailureCallback } from '../../service';
+import service, { IParticipantEvent } from '../../service/attendance';
 
 export const ParticipantAttendance = () => {
     const navigate = useNavigate();
 
+    const [loadingPage, setLoadingPage] = useState(true);
     const [loadingOk, setLoadingOk] = useState(false);
     const [loadingModal, setLoadingModal] = useState<Map<string, boolean>>(
         new Map()
     );
     const [visibleModal, setVisibleModal] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState<
-        EventResponse | undefined
-    >(undefined);
+    const [eventList, setEventList] = useState<IParticipantEvent[]>([]);
+    const [selectedEvent, setSelectedEvent] = useState<IParticipantEvent>({
+        id: '',
+        title: '',
+        start_date: new Date(),
+        end_date: new Date(),
+        type: '',
+        is_filled: false,
+    });
     const [date, setDate] = useState(moment());
     const [selectedDate, setSelectedDate] = useState(moment());
+
+    const getEventData = (value: Moment) => {
+        const filteredEventData: IParticipantEvent[] = eventList.filter(
+            (event) =>
+                event.start_date.getDate() === value.date() &&
+                event.start_date.getMonth() === value.month() &&
+                event.start_date.getFullYear() === value.year()
+        );
+
+        return filteredEventData;
+    };
+
+    const getType = (event: IParticipantEvent) => {
+        const currentDate = new Date();
+
+        if (event.is_filled) {
+            return 'success';
+        }
+        if (currentDate >= event.start_date && currentDate <= event.end_date) {
+            return 'warning';
+        }
+        return 'error';
+    };
+
+    const getMonthData = (value: Moment) => value.month() === moment().month();
 
     const showModal = () => {
         setVisibleModal(true);
@@ -82,20 +63,18 @@ export const ParticipantAttendance = () => {
         setTimeout(() => {
             setVisibleModal(false);
             setLoadingOk(false);
-            setSelectedEvent(undefined);
         }, 1000);
     };
 
     const handleCancel = () => {
         setVisibleModal(false);
-        setSelectedEvent(undefined);
     };
 
-    const handleClick = (event: EventResponse) => {
+    const handleClick = (event: IParticipantEvent) => {
         setSelectedEvent(event);
         setLoadingModal((prevLoadingModal) => {
             const newLoadingModal = new Map(prevLoadingModal);
-            newLoadingModal.set(event.name, true);
+            newLoadingModal.set(event.id, true);
 
             return newLoadingModal;
         });
@@ -103,7 +82,7 @@ export const ParticipantAttendance = () => {
         setTimeout(() => {
             setLoadingModal((prevLoadingModal) => {
                 const newLoadingModal = new Map(prevLoadingModal);
-                newLoadingModal.set(event.name, false);
+                newLoadingModal.set(event.id, false);
 
                 return newLoadingModal;
             });
@@ -117,13 +96,13 @@ export const ParticipantAttendance = () => {
         return isAvailable ? <h1>Dikpus/KAT</h1> : null;
     };
 
-    const disableButton = (participant: EventResponse) => {
+    const disableButton = (event: IParticipantEvent) => {
         const currentDate = new Date();
 
         return (
-            currentDate < participant.startDate ||
-            currentDate > participant.endDate ||
-            participant.isFilled
+            currentDate < event.start_date ||
+            currentDate > event.end_date ||
+            event.is_filled
         );
     };
 
@@ -133,19 +112,18 @@ export const ParticipantAttendance = () => {
         return (
             <ul>
                 {eventData.map((event) => (
-                    <li key={event.name}>
+                    <li key={event.id}>
                         <Button
                             type="primary"
-                            loading={loadingModal.get(event.name)}
+                            loading={loadingModal.get(event.id)}
                             onClick={() => {
                                 handleClick(event);
                             }}
                             disabled={disableButton(event)}
-                            block
                         >
                             <Badge
                                 status={getType(event) as BadgeProps['status']}
-                                text={event.name}
+                                text={event.title}
                             />
                         </Button>
                     </li>
@@ -166,44 +144,90 @@ export const ParticipantAttendance = () => {
     const disableDate = (newDate: Moment) =>
         !newDate.isSame(selectedDate, 'month');
 
+    useEffect(() => {
+        service
+            .getSelfEvents(
+                (res) => {
+                    setEventList(() => {
+                        const newEventList: IParticipantEvent[] = [];
+                        res.forEach((element: any) => {
+                            service.getSelfPresence(
+                                element.id,
+                                (res) => {
+                                    newEventList.push({
+                                        id: element.id,
+                                        title: element.title,
+                                        start_date: element.start_date,
+                                        end_date: element.end_date,
+                                        type: element.type,
+                                        is_filled: res.status,
+                                    });
+                                },
+
+                                (err) => {
+                                    defaultFailureCallback(err);
+                                }
+                            );
+                        });
+
+                        return newEventList;
+                    });
+                },
+                (err) => {
+                    defaultFailureCallback(err);
+                }
+            )
+            .then(() => setLoadingPage(false));
+    }, []);
+
     return (
         <StandardLayout>
-            <PageHeader
-                onBack={() => navigate(-1)}
-                title="Participant Attendance"
-            />
-            <Calendar
-                value={date}
-                onSelect={onSelectCell}
-                onPanelChange={onPanelChange}
-                disabledDate={disableDate}
-                dateCellRender={dateCellRender}
-                monthCellRender={monthCellRender}
-            />
-            <Modal
-                visible={visibleModal}
-                title={selectedEvent?.name}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                footer={[
-                    <Button key="back" onClick={handleCancel}>
-                        Kembali
-                    </Button>,
-                    <Button
-                        key="submit"
-                        type="primary"
-                        loading={loadingOk}
-                        onClick={handleOk}
+            {loadingPage ? (
+                <Spin tip="Loading..." />
+            ) : (
+                <>
+                    <PageHeader
+                        onBack={() => navigate(-1)}
+                        title="Participant Attendance"
+                    />
+                    <Calendar
+                        value={date}
+                        onSelect={onSelectCell}
+                        onPanelChange={onPanelChange}
+                        disabledDate={disableDate}
+                        dateCellRender={dateCellRender}
+                        monthCellRender={monthCellRender}
+                    />
+                    <Modal
+                        visible={visibleModal}
+                        title={selectedEvent.title}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                        footer={[
+                            <Button key="back" onClick={handleCancel}>
+                                Kembali
+                            </Button>,
+                            <Button
+                                key="submit"
+                                type="primary"
+                                loading={loadingOk}
+                                onClick={handleOk}
+                            >
+                                Tandai Hadir
+                            </Button>,
+                        ]}
                     >
-                        Tandai Hadir
-                    </Button>,
-                ]}
-            >
-                <h1>
-                    Start : {selectedEvent?.startDate.toLocaleString('id-ID')}
-                </h1>
-                <h1>End : {selectedEvent?.endDate.toLocaleString('id-ID')}</h1>
-            </Modal>
+                        <h1>
+                            Start :{' '}
+                            {selectedEvent.start_date.toLocaleString('id-ID')}
+                        </h1>
+                        <h1>
+                            End :{' '}
+                            {selectedEvent.end_date.toLocaleString('id-ID')}
+                        </h1>
+                    </Modal>
+                </>
+            )}
         </StandardLayout>
     );
 };
