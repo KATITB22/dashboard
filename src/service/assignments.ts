@@ -1,3 +1,4 @@
+import { result } from 'lodash';
 import moment from 'moment';
 import {
     FailureCallbackFunction,
@@ -6,10 +7,10 @@ import {
 } from '.';
 import APIClient from '../utils/api-client';
 import { APIErrorObject } from '../utils/api-error-object';
+import { Question } from './questions';
 
 export interface ITopic {
     id: string;
-    idx: number;
     title: string;
     start: string;
     end: string;
@@ -20,6 +21,7 @@ export interface RTopic {
     start: string;
     end: string;
     score_released?: boolean;
+    questions?: Question[];
 }
 
 export interface ListTopic {
@@ -33,10 +35,33 @@ export interface ListTopic {
 class AssignmentsService extends GenericService {
     public async getTopic(
         id: string,
+        isComplete: boolean,
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
     ) {
-        const response = await APIClient.GET(`/topics/${id}`);
+        const response = await APIClient.GET(`/topics/${id}${(isComplete) ? '/complete' : ''}`);
+        if (response.questions && Array.isArray(response.questions)) {
+            const questions: any[] = response.questions;
+            const final: Question[] = questions.map((each: any): Question => {
+                const result = ({
+                    question_no: each.question_no,
+                    score: each.score,
+                    metadata: {
+                        ...each.metadata,
+                    },
+                    question: each.content,
+                    hidden_metadata: {},
+                    id: each.id
+                });
+                if (each.private_metadata) {
+                    result.hidden_metadata = {
+                        ...each.private_metadata
+                    }
+                }
+                return result;
+            })
+            response.questions = final;
+        }
         this.handleResponse(response, onSuccess, onFail);
     }
     public async createTopic(
@@ -75,6 +100,9 @@ class AssignmentsService extends GenericService {
         const response = await APIClient.GET(`/topics`, {
             'pagination[pageSize]': 10,
             'pagination[page]': pageNumber,
+            'sort[0]': 'start:desc',
+            'sort[1]': 'end:desc'
+
         });
         if (response instanceof APIErrorObject) {
             if (!onFail) return;
@@ -92,7 +120,6 @@ class AssignmentsService extends GenericService {
                 title: each.title,
                 start: moment(each.start).format('DD MMM YY HH:mm:ss'),
                 end: moment(each.end).format('DD MMM YY HH:mm:ss'),
-                idx: eachIdx + 1 + (page - 1) * pageSize,
             };
         });
         const mappedResponse: ListTopic = {

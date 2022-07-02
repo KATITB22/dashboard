@@ -29,6 +29,11 @@ const TopicPage = React.lazy(() =>
         default: module.Topic,
     }))
 );
+const TopicAdminPage = React.lazy(() =>
+    import('./pages/Topic/Topic').then((module) => ({
+        default: module.TopicAdmin,
+    }))
+);
 
 const CreateTopicPage = React.lazy(() =>
     import('./pages/Topic/CreateTopic').then((module) => ({
@@ -121,6 +126,11 @@ export const Routing: PageRouting[] = [
         title: 'Topic List',
         path: '/topic',
         component: TopicPage,
+    },
+    {
+        title: 'Topic List',
+        path: '/topic/admin',
+        component: TopicAdminPage,
     },
     {
         title: 'Create Topic',
