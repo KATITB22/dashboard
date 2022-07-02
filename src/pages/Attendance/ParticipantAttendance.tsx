@@ -4,7 +4,7 @@ import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AttendanceModal } from '../../components/AttendanceModal';
+import { ParticipantAttendanceModal } from '../../components/AttendanceModal';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
 import service, { IEvent } from '../../service/attendance';
@@ -14,7 +14,7 @@ export const ParticipantAttendance = () => {
     const navigate = useNavigate();
 
     const [loadingPage, setLoadingPage] = useState(true);
-    const [loadingOkModalButton, setLoadingOk] = useState(false);
+    const [loadingOkModalButton, setLoadingOkModalButton] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
     const [eventList, setEventList] = useState<IEvent[]>([]);
     const [selectedEvent, setSelectedEvent] = useState<IEvent>({
@@ -28,13 +28,13 @@ export const ParticipantAttendance = () => {
     const [selectedDate, setSelectedDate] = useState(moment());
 
     const handleOkModalButton = () => {
-        setLoadingOk(true);
+        setLoadingOkModalButton(true);
 
         service.selfAttendance(
             selectedEvent.id,
             () => {
                 setVisibleModal(false);
-                setLoadingOk(false);
+                setLoadingOkModalButton(false);
             },
             (err) => {
                 defaultFailureCallback(err);
@@ -114,7 +114,7 @@ export const ParticipantAttendance = () => {
                     dateCellRender={dateCellRender}
                 />
                 {visibleModal && (
-                    <AttendanceModal
+                    <ParticipantAttendanceModal
                         visibleModal={visibleModal}
                         selectedEvent={selectedEvent}
                         handleOk={handleOkModalButton}

@@ -16,6 +16,14 @@ export interface IEvent {
     type: string;
 }
 
+export interface ITable {
+    key: React.Key;
+    nim: string;
+    name: string;
+    group: string;
+    status: boolean;
+}
+
 export interface REvent {
     id: string;
     title: string;
@@ -66,7 +74,30 @@ class AttendanceService extends GenericService {
         onFail?: FailureCallbackFunction
     ) {
         const response = await APIClient.GET(`/attendances/group/${eventId}`);
-        this.handleResponse(response, onSuccess, onFail);
+
+        if (response instanceof APIErrorObject) {
+            if (!onFail) return;
+
+            return onFail(response);
+        }
+
+        const rawPresence: any[] = response;
+        const groupPresence = Object.entries(rawPresence).map(
+            ([group, values]: [any, any[]]) => {
+                return values.map((value: any) => {
+                    return {
+                        key: value.nim,
+                        nim: value.nim,
+                        name: value.name,
+                        group: group,
+                        status: value.status,
+                    };
+                });
+            }
+        );
+        if (onSuccess) {
+            onSuccess({ result: groupPresence[0] });
+        }
     }
 
     public async getEvents(
@@ -82,7 +113,7 @@ class AttendanceService extends GenericService {
         }
 
         const rawEvents: any[] = response.data;
-        const participantEvents: IEvent[] = rawEvents.map((eachRaw) => {
+        const participantEvents = rawEvents.map((eachRaw) => {
             return {
                 id: eachRaw.id,
                 title: eachRaw.title,
