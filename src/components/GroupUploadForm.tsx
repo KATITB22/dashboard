@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Upload, Button, Popconfirm, Table } from 'antd';
+import { Form, Upload, Button, Popconfirm, Table, Spin } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import readXlsxFile from 'read-excel-file';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import Service from '../service/group';
 
 export const GroupUploadForm = () => {
     const [file, setFile] = useState<any>();
+    const [loading, setLoading] = useState<boolean>(false);
     const [errData, setErrData] = useState<any>([]);
     const columns = [
         {
@@ -59,7 +60,7 @@ export const GroupUploadForm = () => {
             Service.uploadGroup(d, 
                 (resp) => {
                     succ.push(idx+1);
-                    {idx === res.length - 1 && succ.length === res.length ? toast.success("Successfully uploaded " + file.name) : null }
+                    {idx === res.length - 1 && succ.length === res.length ? toast.success("Successfully uploaded " + file.name) && setLoading(false) : null }
                 }, 
                 (err) => {
                     setErrData((old: any) => [...old, {
@@ -69,22 +70,23 @@ export const GroupUploadForm = () => {
                         data: err.toString().includes('members') ? d.members.map((t: any) => t + ' ') : d.leaders.map((t: any) => t + ' ')
                     }])
                     arr.push(idx)
-                    {idx === res.length-1 && arr.length > 0 ? toast.error("Failed to upload " + file.name) : null }
+                    {idx === res.length-1 && arr.length > 0 ? (
+                        toast.error("Failed to upload " + file.name) && setLoading(false)
+                    ) : null }
                 });
         })
-        
         setFile(undefined);
     };
 
     const handleDelete = () => {
         Service.deleteAll(
-            (res) => toast.success("Successfully deleted all data"),
-            (err) => toast.success("Failed deleting data")
+            (res) => toast.success("Successfully deleted all data") && setLoading(false),
+            (err) => toast.error("Failed deleting data") && setLoading(false)
         );
     }
 
     return (
-        <>
+        <Spin tip="Loading..." spinning={loading}>
             <Form layout="vertical">
                 <Form.Item
                     label="Upload File Kelompok"
@@ -112,7 +114,8 @@ export const GroupUploadForm = () => {
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />
                         </p>
-                        <p className="ant-upload-text">Upload File Kelompok</p>
+                        <p className="ant-upload-text">Upload or Drag File to this<br />(.xlsx)</p>
+                        <p className="ant-upload-text"></p>
                     </Upload.Dragger>
                 </Form.Item>
 
@@ -122,6 +125,7 @@ export const GroupUploadForm = () => {
                             type="primary"
                             htmlType="reset"
                             onClick={() => {
+                                setLoading(true)
                                 setErrData([])
                                 handleSubmit(file)
                             }}
@@ -139,6 +143,7 @@ export const GroupUploadForm = () => {
                             <Popconfirm
                                 title="Are you sure want to delete all?"
                                 onConfirm={() => {
+                                    setLoading(true)
                                     setErrData([])
                                     handleDelete()
                                 }}
@@ -152,6 +157,6 @@ export const GroupUploadForm = () => {
                 </div>
             </Form>
             { errData.length > 0 ? <Table dataSource={errData} columns={columns} /> : null }
-        </>
+        </Spin>
     );
 };
