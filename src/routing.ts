@@ -164,6 +164,7 @@ export const Routing: PageRouting[] = [
         path: '/groups/:id',
         component: GroupDetailPage,
     },
+    {
         title: 'Event List',
         path: '/event',
         component: EventListPage,
