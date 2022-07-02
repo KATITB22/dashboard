@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { AttendanceModal } from '../../components/AttendanceModal';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
-import Service, { IParticipantEvent } from '../../service/attendance';
+import service, { IEvent } from '../../service/attendance';
 import { getType } from './helper';
 
 export const ParticipantAttendance = () => {
@@ -16,27 +16,33 @@ export const ParticipantAttendance = () => {
     const [loadingPage, setLoadingPage] = useState(true);
     const [loadingOkModalButton, setLoadingOk] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
-    const [eventList, setEventList] = useState<IParticipantEvent[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<IParticipantEvent>({
+    const [eventList, setEventList] = useState<IEvent[]>([]);
+    const [selectedEvent, setSelectedEvent] = useState<IEvent>({
         id: '',
         title: '',
         start_date: moment(),
         end_date: moment(),
         type: '',
-        is_filled: false,
     });
     const [date, setDate] = useState(moment());
     const [selectedDate, setSelectedDate] = useState(moment());
 
     const handleOkModalButton = () => {
         setLoadingOk(true);
-        setTimeout(() => {
-            setVisibleModal(false);
-            setLoadingOk(false);
-        }, 1000);
+
+        service.selfAttendance(
+            selectedEvent.id,
+            () => {
+                setVisibleModal(false);
+                setLoadingOk(false);
+            },
+            (err) => {
+                defaultFailureCallback(err);
+            }
+        );
     };
 
-    const handleEventClick = (event: IParticipantEvent) => {
+    const handleEventClick = (event: IEvent) => {
         setSelectedEvent(event);
         setVisibleModal(true);
     };
@@ -81,7 +87,7 @@ export const ParticipantAttendance = () => {
 
     useEffect(() => {
         setLoadingPage(true);
-        Service.getEvents(
+        service.getEvents(
             (res) => {
                 setEventList(res.result);
                 setLoadingPage(false);

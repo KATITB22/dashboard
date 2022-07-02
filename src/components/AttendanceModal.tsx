@@ -3,11 +3,11 @@ import type { Moment } from 'moment';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { defaultFailureCallback } from '../service';
-import Service, { IParticipantEvent } from '../service/attendance';
+import service, { IEvent } from '../service/attendance';
 
 interface Props {
     visibleModal: boolean;
-    selectedEvent: IParticipantEvent;
+    selectedEvent: IEvent;
     loadingOk: boolean;
     handleOk: (e: React.MouseEvent<HTMLElement>) => void;
     handleCancel: (e: React.MouseEvent<HTMLElement>) => void;
@@ -23,7 +23,7 @@ export const AttendanceModal = ({
     const [attend, setAttend] = useState<Moment | null>(null);
 
     useEffect(() => {
-        Service.getSelfPresence(
+        service.getSelfPresence(
             selectedEvent.id,
             (res) => {
                 setAttend(res.attendance ? moment(res.attendance) : null);

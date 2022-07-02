@@ -1,7 +1,7 @@
 import moment from 'moment';
-import { IParticipantEvent } from '../../../service/attendance';
+import { IEvent } from '../../../service/attendance';
 
-export const getType = (event: IParticipantEvent) => {
+export const getType = (event: IEvent) => {
     const currentDate = moment();
 
     if (currentDate.isBetween(event.start_date, event.end_date)) {
