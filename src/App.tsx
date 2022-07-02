@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import { Routing } from './routing';
 import 'react-toastify/dist/ReactToastify.css';
 import 'antd/dist/antd.less';
+import 'antd/lib/style/themes/default.less';
 
 function App() {
     return (
