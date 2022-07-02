@@ -10,9 +10,8 @@ import { APIErrorObject } from '../utils/api-error-object';
 export interface IEvent {
     id: string;
     title: string;
-    attendance_start: string;
-    attendance_end: string;
-    attendance_type: string;
+    start: string;
+    end: string;
 }
 
 export interface REvent {
@@ -86,16 +85,10 @@ class EventService extends GenericService {
             if (!onFail) return;
             return onFail(response);
         }
-        const rawEvents: any[] = response.data;
-        const events: IEvent[] = rawEvents.map((eachRaw, _) => {
-            const each: any = eachRaw.attributes;
-            return {
-                id: each.ext_id,
-                title: each.title,
-                attendance_start: moment(each.attendance_start).format('DD MMM YY HH:mm:ss'),
-                attendance_end: moment(each.attendance_end).format('DD MMM YY HH:mm:ss'),
-                attendance_type: each.attendance_type,
-            };
+        const events: IEvent[] = response.data;
+        events.forEach((eachRaw, _) => {
+            eachRaw.start = moment(eachRaw.start).format('DD MMM YY HH:mm:ss');
+            eachRaw.end = moment(eachRaw.end).format('DD MMM YY HH:mm:ss');
         });
         const total = events.length;
         const mappedResponse: ListEvent = {

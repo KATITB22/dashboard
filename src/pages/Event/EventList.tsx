@@ -19,14 +19,14 @@ const columns: ColumnsType<IEvent> = [
     },
     {
         title: 'Start',
-        dataIndex: 'attendance_start',
+        dataIndex: 'start',
         key: 'start',
         width: 400,
         sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
         title: 'End',
-        dataIndex: 'attendance_end',
+        dataIndex: 'end',
         key: 'end',
         width: 400,
         sorter: (a, b) => a.title.localeCompare(b.title),
@@ -62,7 +62,7 @@ export const EventList = () => {
             defaultFailureCallback(err);
             setLoading(false);
         });
-    });
+    }, []);
 
     return (
         <StandardLayout>
