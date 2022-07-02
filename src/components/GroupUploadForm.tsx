@@ -26,6 +26,7 @@ export const GroupUploadForm = () => {
     const handleSubmit = async (file: any) => {
         if (file === undefined) {
             toast.error('Please select a file');
+            return;
         }
         let data: any = []
 
@@ -71,6 +72,8 @@ export const GroupUploadForm = () => {
                     {idx === res.length-1 && arr.length > 0 ? toast.error("Failed to upload " + file.name) : null }
                 });
         })
+        
+        setFile(undefined);
     };
 
     const handleDelete = () => {
