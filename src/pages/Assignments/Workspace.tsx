@@ -1,4 +1,4 @@
-import { Button, Col, Row, Form, Input, InputNumber, PageHeader } from 'antd';
+import { Button, Col, Row, Form, Input, InputNumber, PageHeader, Radio, Space } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
@@ -27,39 +27,132 @@ const qdata = [
     },
 ];
 
-const WorkspaceForms = (item: any) => {
+interface QuestionFormProps {
+    dataHandler: Function;
+    data: any;
+    id: string;
+    question: string;
+    metadata?: any;
+    hideScore?: boolean;
+    editScore?: boolean;
+    editAnswer?: boolean;
+}
+
+const Essay = (item: QuestionFormProps) => {
+    const [answer, setAnswer] = useState<string | undefined>(undefined);
     const handleDebounce = (val: any) => {
         item.dataHandler({
             ...item.data,
             [item.id]: val,
         });
+        setAnswer(val);
     }
+
+    useEffect(() => {
+        setAnswer(item.data[item.id]);
+    }, []);
     const debounceFn = useCallback(_.debounce(handleDebounce, 1000), []);
     const handleChange = (e: any) => debounceFn(e.target.value);
 
     return (
-        <Form.Item label={item.question} >
+        <Form.Item label={item.question} key={item.id}>
             <Input.Group>
                 <Row gutter={[16, 16]} align="middle">
                     <Col xs={24} xl={20}>
-                        <Input.TextArea onBlur={handleChange} onChange={handleChange} />
+                        <Input.TextArea onBlur={handleChange} onChange={handleChange} disabled={!item.editAnswer}
+                            maxLength={4000} rows={3} autoSize={{ minRows: 2, maxRows: 6 }}
+                            showCount value={answer} />
                     </Col>
-                    <Col span={3}>
-                        <InputNumber addonAfter="100" min={0} value={undefined} />
+                    <Col span={3} hidden={item.hideScore}>
+                        <InputNumber addonAfter="100" min={0} value={undefined} disabled={!item.editScore} />
                     </Col>
                 </Row>
             </Input.Group>
-        </Form.Item>)
+        </Form.Item>);
+}
+
+const Isian = (item: QuestionFormProps) => {
+    const [answer, setAnswer] = useState<string | undefined>(undefined);
+    const handleDebounce = (val: any) => {
+        item.dataHandler({
+            ...item.data,
+            [item.id]: val,
+        });
+        setAnswer(val);
+    }
+
+    useEffect(() => {
+        setAnswer(item.data[item.id]);
+    }, []);
+
+    const debounceFn = useCallback(_.debounce(handleDebounce, 1000), []);
+    const handleChange = (e: any) => debounceFn(e.target.value);
+
+    return (
+        <Form.Item label={item.question} key={item.id}>
+            <Input.Group>
+                <Row gutter={[16, 16]} align="middle">
+                    <Col xs={24} xl={20}>
+                        <Input onBlur={handleChange} onChange={handleChange} disabled={!item.editAnswer} maxLength={150}
+                            showCount value={answer} />
+                    </Col>
+                    <Col span={3} hidden={item.hideScore}>
+                        <InputNumber addonAfter="100" min={0} value={undefined} disabled={!item.editScore} />
+                    </Col>
+                </Row>
+            </Input.Group>
+        </Form.Item>);
+}
+
+const PilihanGanda = (item: QuestionFormProps) => {
+    if (!item.metadata) return <></>;
+    const [answer, setAnswer] = useState<string | undefined>(undefined);
+
+    const handleDebounce = (val: any) => {
+        item.dataHandler({
+            ...item.data,
+            [item.id]: val,
+        });
+        setAnswer(val);
+    }
+    const debounceFn = useCallback(_.debounce(handleDebounce, 1000), []);
+    const handleChange = (e: any) => debounceFn(e.target.value);
+
+    useEffect(() => {
+        setAnswer(item.data[item.id]);
+    }, []);
+
+    const options = ['A', 'B', 'C', 'D', 'E'];
+    return (
+        <Form.Item label={item.question} key={item.id}>
+            <Input.Group>
+                <Row gutter={[16, 16]} align="middle">
+                    <Col xs={24} xl={20}>
+                        <Radio.Group onChange={handleChange} disabled={!item.editAnswer}
+                            value={answer}>
+                            <Space direction='vertical'>
+                                {options.map((each) => {
+                                    if (!item.metadata['pilihan_' + each]) return <></>
+
+                                    return <Radio value={each}>{each}. {item.metadata['pilihan_' + each].toString()}</Radio>
+                                })}
+                            </Space>
+                        </Radio.Group>
+                    </Col>
+                    <Col span={3} hidden={item.hideScore}>
+                        <InputNumber addonAfter="100" min={0} value={undefined} disabled={!item.editScore} />
+                    </Col>
+                </Row>
+            </Input.Group>
+        </Form.Item>);
 }
 
 export const Workspace = () => {
     const navigate = useNavigate();
-    const [data, setData] = useState<object>({});
+    const [data, setData] = useState<object>({ "1": 'A' });
     const onFinish = (req: any) => {
         console.log(req);
     }
-
-    useEffect(() => console.log("ha"), [])
 
     console.log(data);
 
@@ -69,7 +162,7 @@ export const Workspace = () => {
             <Row justify="center">
                 <Col span={24}>
                     <Form layout="vertical">
-                        {qdata.map((each) => <WorkspaceForms key={each.id} data={data} dataHandler={setData} {...each} />)}
+                        {qdata.map((each) => <Isian key={each.id} data={data} dataHandler={setData} {...each} metadata={{ "pilihan_A": 123, 'pilihan_E': true, 'pilihan_B': "asds" }} />)}
                         <Form.Item>
                             <Button
                                 size="large"

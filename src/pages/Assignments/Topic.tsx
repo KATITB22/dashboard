@@ -106,10 +106,13 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
     }
 
     const refresh = () => {
+        if (!document.hasFocus()) return;
+
         setLastUpdate(moment().format("DD MMM YYYY HH:mm"));
         const queryPage = queryParams.get("page");
-        if (queryPage && +queryPage) {
-            setPage(+queryPage);
+        if (queryPage) {
+            const numberedPage = +queryPage;
+            setPage(Number.isNaN(numberedPage) ? 1 : numberedPage);
         }
         setLoading(true);
         Service.getTopics(page, (data) => {

@@ -78,7 +78,7 @@ export const StandardLayout = ({
                 </Content>
                 <hr />
                 <Footer style={{ textAlign: 'center' }}>
-                    Dashboard KAT ©2022<br /> Created by Tim IT KAT '22
+                    Dashboard KAT ©2022<br /> Created by Tim IT KAT '22.
                 </Footer>
             </Layout>
         </Layout>
