@@ -10,15 +10,15 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 import Service, { ITopic } from '../../service/assignments';
 import { defaultFailureCallback } from '../../service';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
+import { UserContext } from '../../context';
 
 interface TopicProps {
     isAdmin?: boolean;
 }
 
 export const Topic = ({ isAdmin = false }: TopicProps) => {
-    const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [topics, setTopics] = useState<ITopic[]>([]);
     const [page, setPage] = useState<number>(1);
@@ -103,6 +103,29 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
                     )
                 },
             })
+    } else {
+        columns.push(
+            {
+                title: 'Action',
+                key: 'action',
+                render: (_, record) => {
+                    if (moment().isBefore(moment(record.start))) {
+                        return (<Button type="primary" icon={<FormOutlined />} size="middle" disabled>
+                            Open
+                        </Button>)
+                    }
+
+                    return (
+                        <Space size="middle" key={`action-` + record.id}>
+                            <Link to={`../assignment/workspace/${record.id}`}>
+                                <Button type="primary" icon={<FormOutlined />} size="middle">
+                                    Open
+                                </Button>
+                            </Link>
+                        </Space>
+                    )
+                },
+            })
     }
 
     const refresh = () => {
@@ -164,15 +187,13 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
                         setQueryParams(queryParams);
                         setPage(e);
                     }
-                }} onRow={(record) => {
-                    if (isAdmin) return {};
-                    return {
-                        onClick: () => { navigate(`../assignment/workspace/${record.id}`) }
-                    };
                 }} />
             </Spin>
         </StandardLayout>
     );
 };
 
-export const TopicAdmin = () => <Topic isAdmin={true} />
+export const TopicAdmin = () => {
+    const user: any = useContext(UserContext);
+    return <Topic isAdmin={user.role === 'Committee'} />
+};

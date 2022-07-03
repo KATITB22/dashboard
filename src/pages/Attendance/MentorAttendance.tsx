@@ -36,8 +36,6 @@ export const MentorAttendance = () => {
             .map((element) => parseInt(element.key.toString()))
             .filter((key) => !attend.includes(key));
 
-        console.log(attend, notAttend);
-
         service.groupAttendance(
             selectedEvent.id,
             attend,

@@ -56,7 +56,6 @@ class GroupService extends GenericService {
         const { page, pageCount, pageSize, total }: { [key: string]: number } =
             response.meta.pagination;
         const raw: any[] = response.data;
-        console.log(raw);
         const groups: Group[] = raw.map((eachRaw: any) => {
             const each: any = eachRaw.attributes;
             return {

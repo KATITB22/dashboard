@@ -5,6 +5,7 @@ import { Button, Form, Input, PageHeader, Spin } from 'antd';
 import eventService from '../../service/event';
 import { defaultFailureCallback } from '../../service';
 import { StandardLayout } from '../../layout/StandardLayout';
+import { toast } from 'react-toastify';
 
 export const EventDetail = () => {
     const { id } = useParams();
@@ -38,7 +39,7 @@ export const EventDetail = () => {
     const handleDeleteEvent = async () => {
         await eventService.deleteEvent(
             id,
-            (res) => console.log({ message: 'Success', data: res }),
+            (res) => toast.success("Successfully delete event!"),
             (err) => defaultFailureCallback(err)
         );
         navigate('/event');

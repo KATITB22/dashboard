@@ -1,174 +1,91 @@
-import { Button, Col, Row, Form, Input, InputNumber, PageHeader, Radio, Space } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Button, Col, Row, Form, PageHeader, } from 'antd';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 import * as _ from "lodash";
+import { Isian } from '../../components/Assignments/Isian';
+import { PilihanGanda } from '../../components/Assignments/PilihanGanda';
+import { Essay } from '../../components/Assignments/Essay';
+import Service from '../../service/assignments';
+import { defaultFailureCallback } from '../../service';
+import moment from 'moment';
+import { AssignmentComponentProps } from '../../components/Assignments';
 
-const qdata = [
-    {
-        id: '1',
-        type: 'PILIHAN GANDA',
-        question: 'Apa definisi dari apa?',
-        metadata: {
-            pilihan_A: 'gatau',
-            pilihan_B: 'gatau',
-            pilihan_C: 'gatau',
-            pilihan_D: 'gatau',
-            pilihan_E: 'gatau',
-        }
-    },
-    {
-        id: '2',
-        question: 'Apa definisi dari apa?',
-        type: 'ISIAN',
-    },
-    {
-        id: '3',
-        question: 'Apa definisi dari apa?',
-        type: 'ESSAY',
-    },
-];
-
-interface QuestionFormProps {
-    dataHandler: Function;
-    data: any;
-    id: string;
-    question: string;
-    metadata?: any;
-    hideScore?: boolean;
-    editScore?: boolean;
-    editAnswer?: boolean;
-}
-
-const Essay = (item: QuestionFormProps) => {
-    const [answer, setAnswer] = useState<string | undefined>(undefined);
-    const handleDebounce = (val: any) => {
-        item.dataHandler({
-            ...item.data,
-            [item.id]: val,
-        });
-        setAnswer(val);
-    }
-
-    useEffect(() => {
-        setAnswer(item.data[item.id]);
-    }, []);
-    const debounceFn = useCallback(_.debounce(handleDebounce, 1000), []);
-    const handleChange = (e: any) => debounceFn(e.target.value);
-
-    return (
-        <Form.Item label={item.question} key={item.id}>
-            <Input.Group>
-                <Row gutter={[16, 16]} align="middle">
-                    <Col xs={24} xl={20}>
-                        <Input.TextArea onBlur={handleChange} onChange={handleChange} disabled={!item.editAnswer}
-                            maxLength={4000} rows={3} autoSize={{ minRows: 2, maxRows: 6 }}
-                            showCount value={answer} />
-                    </Col>
-                    <Col span={3} hidden={item.hideScore}>
-                        <InputNumber addonAfter="100" min={0} value={undefined} disabled={!item.editScore} />
-                    </Col>
-                </Row>
-            </Input.Group>
-        </Form.Item>);
-}
-
-const Isian = (item: QuestionFormProps) => {
-    const [answer, setAnswer] = useState<string | undefined>(undefined);
-    const handleDebounce = (val: any) => {
-        item.dataHandler({
-            ...item.data,
-            [item.id]: val,
-        });
-        setAnswer(val);
-    }
-
-    useEffect(() => {
-        setAnswer(item.data[item.id]);
-    }, []);
-
-    const debounceFn = useCallback(_.debounce(handleDebounce, 1000), []);
-    const handleChange = (e: any) => debounceFn(e.target.value);
-
-    return (
-        <Form.Item label={item.question} key={item.id}>
-            <Input.Group>
-                <Row gutter={[16, 16]} align="middle">
-                    <Col xs={24} xl={20}>
-                        <Input onBlur={handleChange} onChange={handleChange} disabled={!item.editAnswer} maxLength={150}
-                            showCount value={answer} />
-                    </Col>
-                    <Col span={3} hidden={item.hideScore}>
-                        <InputNumber addonAfter="100" min={0} value={undefined} disabled={!item.editScore} />
-                    </Col>
-                </Row>
-            </Input.Group>
-        </Form.Item>);
-}
-
-const PilihanGanda = (item: QuestionFormProps) => {
-    if (!item.metadata) return <></>;
-    const [answer, setAnswer] = useState<string | undefined>(undefined);
-
-    const handleDebounce = (val: any) => {
-        item.dataHandler({
-            ...item.data,
-            [item.id]: val,
-        });
-    }
-    const debounceFn = useCallback(_.debounce(handleDebounce, 1500), []);
-    const instantChange = (val: any) => {
-        setAnswer(val.target.value);
-        debounceFn(val.target.value)
-    }
-
-    useEffect(() => {
-        setAnswer(item.data[item.id]);
-    }, []);
-
-    const options = ['A', 'B', 'C', 'D', 'E'];
-    return (
-        <Form.Item label={item.question} key={item.id}>
-            <Input.Group>
-                <Row gutter={[16, 16]} align="middle">
-                    <Col xs={24} xl={20}>
-                        <Radio.Group onChange={instantChange} disabled={!item.editAnswer}
-                            value={answer}>
-                            <Space direction='vertical'>
-                                {options.map((each) => {
-                                    if (!item.metadata['pilihan_' + each]) return <></>
-
-                                    return <Radio value={each}>{each}. {item.metadata['pilihan_' + each].toString()}</Radio>
-                                })}
-                            </Space>
-                        </Radio.Group>
-                    </Col>
-                    <Col span={3} hidden={item.hideScore}>
-                        <InputNumber addonAfter="100" min={0} value={undefined} disabled={!item.editScore} />
-                    </Col>
-                </Row>
-            </Input.Group>
-        </Form.Item>);
+interface Time {
+    start: moment.Moment;
+    end: moment.Moment;
+    range: string;
 }
 
 export const Workspace = () => {
     const navigate = useNavigate();
-    const [data, setData] = useState<object>({ "1": 'A' });
-    const onFinish = (req: any) => {
-        console.log(req);
-    }
+    const { id } = useParams();
+    if (!id) return null;
+    const [questions, setQuestions] = useState<AssignmentComponentProps[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [title, setTitle] = useState<string>("Workspace");
+    const [data, setData] = useState<object>({});
+    const [time, setTime] = useState<Time>({
+        start: moment(),
+        end: moment(),
+        range: ""
+    });
 
-    console.log(data);
+    useEffect(() => {
+        setLoading(true);
+        Service.findOrGetEntry(id, (response) => {
+            console.log(response);
+            setTitle(response.topic.title);
+
+            const start = moment(response.topic.start);
+            const end = moment(response.topic.end);
+            const timeFormat = "DD MMM YY HH:MM";
+            setTime({
+                start, end, range: `${start.format(timeFormat)} - ${end.format(timeFormat)}`
+            });
+
+            const questions: AssignmentComponentProps[] = response.topic.questions.map((each: any) => {
+
+                return ({
+                    id: each.id,
+                    metadata: each.metadata,
+                    data, dataHandler: setData,
+                    question: each.question,
+                    question_no: each.question_no,
+                    max_score: each.score,
+                    editScore: false,
+                    editAnswer: (response.submit_time === null),
+                    type: each.metadata.type,
+                    score: {}
+                })
+            });
+
+            if (response.score) {
+                questions.forEach((each) => {
+                    each.score = response.score;
+                });
+            }
+
+            if (response.answers) {
+                setData(response.answers);
+            }
+
+            setQuestions(questions);
+            setLoading(false);
+        }, (err) => {
+            defaultFailureCallback(err);
+            setLoading(false);
+        });
+    }, []);
 
     return (
         <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
-            <PageHeader onBack={() => navigate(-1)} title="Submission" />
-            <Row justify="center">
+            <PageHeader onBack={() => navigate(-1)} title={"Workspace: " + title} />
+            {!loading ? <Row justify="center">
                 <Col span={24}>
+                    <p>Time: {time.range}</p>
                     <Form layout="vertical">
-                        {qdata.map((each: any) => {
-                            each.hideScore = true;
-                            each.editAnswer = true;
+                        {questions.map((each: any) => {
                             if (each.type === 'ISIAN') {
                                 return <Isian key={each.id} data={data} dataHandler={setData} {...each} />
                             } else if (each.type === 'PILIHAN GANDA') {
@@ -188,7 +105,7 @@ export const Workspace = () => {
                         </Form.Item>
                     </Form>
                 </Col>
-            </Row>
+            </Row> : <div>Loading...</div>}
         </StandardLayout>
     );
 };

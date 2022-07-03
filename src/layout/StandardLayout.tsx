@@ -41,7 +41,7 @@ const itemsCommittee: MenuItem[] = [
 ];
 
 const itemsMentor: MenuItem[] = [
-    getItem(<NavTab url="../attendance">Attendance</NavTab>, '1', <CalendarOutlined />),
+    getItem(<NavTab url="../attendance/mentor">Attendance</NavTab>, '1', <CalendarOutlined />),
     getItem(<NavTab url="../assignment/admin">Assignment</NavTab>, '3', <FileTextOutlined />)
 ];
 const itemsParticipant: MenuItem[] = [

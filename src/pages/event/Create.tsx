@@ -5,6 +5,7 @@ import { defaultFailureCallback } from '../../service';
 import type { DatePickerProps } from 'antd';
 import { Button, Form, Input, DatePicker, Select, PageHeader } from 'antd';
 import { StandardLayout } from '../../layout/StandardLayout';
+import { toast } from 'react-toastify';
 
 export const CreateEvent = () => {
     const navigate = useNavigate();
@@ -53,7 +54,7 @@ export const CreateEvent = () => {
         // submit data
         await eventService.createEvent(
             data,
-            (res) => console.log({ message: 'Success', data: res }),
+            (res) => toast.success("Successfully create event!"),
             (err) => defaultFailureCallback(err)
         );
         navigate('/event');

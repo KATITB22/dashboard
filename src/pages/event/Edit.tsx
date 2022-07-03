@@ -6,6 +6,7 @@ import { Button, Form, Input, DatePicker, Select, Spin } from 'antd';
 import eventService from '../../service/event';
 import { defaultFailureCallback } from '../../service';
 import { StandardLayout } from '../../layout/StandardLayout';
+import { toast } from 'react-toastify';
 
 export const EditEvent = () => {
     const { id } = useParams();
@@ -72,7 +73,7 @@ export const EditEvent = () => {
         await eventService.updateEvent(
             id,
             data,
-            (res) => console.log({ message: 'Success', data: res }),
+            (res) => toast.success("Successfully update event!"),
             (err) => defaultFailureCallback(err)
         );
         navigate(`/event/${id}`);

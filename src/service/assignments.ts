@@ -33,6 +33,37 @@ export interface ListTopic {
 }
 
 class AssignmentsService extends GenericService {
+    public async findOrGetEntry(topicId: string,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction) {
+        const response = await APIClient.POST(`/entries/${topicId}`);
+        if (response.topic && response.topic.questions && Array.isArray(response.topic.questions)) {
+            const questions: any[] = response.topic.questions;
+            const final: Question[] = questions.map((each: any): Question => {
+                const result = ({
+                    question_no: each.question_no,
+                    score: each.score,
+                    metadata: {
+                        ...each.metadata,
+                    },
+                    question: each.content,
+                    hidden_metadata: {},
+                    id: each.id
+                });
+                if (each.private_metadata) {
+                    result.hidden_metadata = {
+                        ...each.private_metadata
+                    }
+                }
+                return result;
+            })
+            response.topic.questions = final;
+        } else {
+            response.topic.questions = [];
+        }
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
     public async getTopic(
         id: string,
         isComplete: boolean,

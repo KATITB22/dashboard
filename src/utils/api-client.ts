@@ -8,7 +8,7 @@ class APIClient {
     public readonly COOKIE_DOMAIN: string = import.meta.env.VITE_COOKIE_DOMAIN;
 
     private token: string =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjU2NjkzOTU3LCJleHAiOjE2NTkyODU5NTd9.NzPSMq_zGPp69PYwj9TCf-VwrfGDOYcgGmde3IDWRO4';
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjU2ODcxODIyLCJleHAiOjE2NTk0NjM4MjJ9.VfsqvfhOMIO_F4MDGPJ7GnOWa3e28wQsmyyLgOpiJHo';
 
     constructor() {
         const cookie = new Cookies();

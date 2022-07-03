@@ -58,10 +58,10 @@ class QuestionService {
             obj.metadata = {};
             obj.hidden_metadata = {};
             for (var i = 0; i < headers.length; i++) {
-                if (headers[i] == 'type') {
+                if (headers[i] == 'type' || headers[i].includes("pilihan")) {
                     obj.metadata[headers[i]] = each[i];
                 }
-                else if (headers[i] == 'correct_answer' || headers[i].includes("pilihan")) {
+                else if (headers[i] == 'correct_answer') {
                     obj.hidden_metadata[headers[i]] = each[i];
                 } else {
                     obj[headers[i]] = each[i];
