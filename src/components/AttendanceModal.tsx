@@ -152,7 +152,7 @@ export const MentorAttendanceModal = ({
             dataIndex: 'name',
         },
         {
-            title: 'Grup',
+            title: 'Kelompok',
             dataIndex: 'group',
         },
     ];
@@ -191,8 +191,6 @@ export const MentorAttendanceModal = ({
                 Kembali
             </Button>,
         ];
-        const currentDate = moment();
-
         if (selectedEvent.type === 'GroupLeader') {
             footer.push(
                 <Button
@@ -201,7 +199,7 @@ export const MentorAttendanceModal = ({
                     loading={loadingOk}
                     onClick={handleOk}
                 >
-                    Tandai Hadir
+                    Simpan
                 </Button>
             );
         }
@@ -210,16 +208,15 @@ export const MentorAttendanceModal = ({
     };
 
     const loadModalContent = () => {
+        const timeFormat = 'DD MMM YY HH:mm';
+        const startTime = `${moment(selectedEvent.start_date).format(timeFormat)}`
+        const endTime = `${moment(selectedEvent.end_date).format(timeFormat)}`;
+        const timeRange = `${startTime} - ${endTime}`;
         if (selectedEvent.type === 'GroupLeader') {
             return (
                 <>
                     <p>
-                        Start :{' '}
-                        {selectedEvent.start_date.format('DD MMM YY HH:mm:ss')}
-                    </p>
-                    <p>
-                        End :{' '}
-                        {selectedEvent.end_date.format('DD MMM YY HH:mm:ss')}
+                        {`Waktu Presensi: ${timeRange}`}
                     </p>
                     <Table
                         rowSelection={rowSelection}
@@ -229,7 +226,7 @@ export const MentorAttendanceModal = ({
                 </>
             );
         } else {
-            return <p>Akan diabsenkan oleh peserta!</p>;
+            return <p>Peserta akan melakukan presensi secara mandiri.</p>;
         }
     };
 

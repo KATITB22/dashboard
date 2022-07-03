@@ -5,10 +5,10 @@ import {
     ContactsOutlined,
     FileTextOutlined,
 } from '@ant-design/icons';
-import SkeletonAvatar from 'antd/lib/skeleton/Avatar';
 import { NavTab } from '../components/NavTab';
 import { UserContext } from '../context';
 import { useNavigate } from 'react-router-dom';
+import Logo from '../resource/logo.png';
 
 const { Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -95,17 +95,19 @@ export const StandardLayout = ({
         />
     }
 
-    return (
+    return (<>
         <Layout style={{ minHeight: '100vh' }}>
             <Sider
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
-                style={{ minHeight: '100vh' }}
+                style={{ minHeight: '100vh', zIndex: 2 }}
 
             >
-                <div className="flex justify-center my-2 md:my-3">
-                    <SkeletonAvatar size="large" />
+                <div className="flex justify-center my-2 md:my-3 flex-wrap">
+                    <div className='w-3/4'>
+                        <img src={Logo} className="shadow rounded-full max-w-full h-auto align-middle border-none" />
+                    </div>
                 </div>
                 <Menu
                     theme="dark"
@@ -124,13 +126,21 @@ export const StandardLayout = ({
                     </div>
                 </Content>
                 <hr />
-                <Footer style={{ textAlign: 'center' }}>
-                    Dashboard KAT ©2022<br /> Created by Tim IT KAT '22.
+                <Footer style={{ textAlign: 'center', zIndex: 1 }}>
+                    Dashboard KAT © 2022.<br /> Created by IT KAT '22.
                 </Footer>
             </Layout>
             <BackTop>
                 <div style={style}>UP</div>
             </BackTop>
         </Layout>
+        {/* <div className='flex justify-center'>
+            <div className='fixed z-1 bottom-0 w-[95vw] border border-red-500 flex flex-row text-center translate-x-10'>
+                <div className='w-2/12 translate-y-[-5]'>
+                    <img src={House} />
+                </div>
+            </div>
+        </div> */}
+    </>
     );
 };

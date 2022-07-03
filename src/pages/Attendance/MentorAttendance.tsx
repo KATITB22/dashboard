@@ -1,9 +1,8 @@
 import type { BadgeProps } from 'antd';
-import { Alert, Badge, Button, Calendar, PageHeader, Spin } from 'antd';
+import { Badge, Button, Calendar, PageHeader, Spin } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MentorAttendanceModal } from '../../components/AttendanceModal';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
@@ -11,8 +10,6 @@ import service, { IEvent, ITable } from '../../service/attendance';
 import { getType } from './helper';
 
 export const MentorAttendance = () => {
-    const navigate = useNavigate();
-
     const [loadingPage, setLoadingPage] = useState(true);
     const [loadingOkModalButton, setLoadingOkModalButton] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
@@ -120,7 +117,6 @@ export const MentorAttendance = () => {
                 <PageHeader
                     title="Group Attendance"
                 />
-                <Alert message={selectedRowKeys.toString()} />
                 <Calendar
                     value={date}
                     onSelect={onSelectCell}
