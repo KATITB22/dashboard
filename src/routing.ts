@@ -85,6 +85,18 @@ const EventListPage = React.lazy(() =>
     }))
 );
 
+const SelfAttendancePage = React.lazy(() =>
+    import('./pages/Attendance/ParticipantAttendance').then((module) => ({
+        default: module.ParticipantAttendance,
+    }))
+);
+
+const GroupAttendancePage = React.lazy(() =>
+    import('./pages/Attendance/MentorAttendance').then((module) => ({
+        default: module.MentorAttendance,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
@@ -167,6 +179,16 @@ export const Routing: PageRouting[] = [
     {
         path: '/group/upload',
         component: GroupUploadPage,
+    },
+    {
+        title: 'Self Attendance',
+        path: '/attendance/self',
+        component: SelfAttendancePage,
+    },
+    {
+        title: 'Group Attendance',
+        path: '/attendance/group',
+        component: GroupAttendancePage,
     },
     PageNotFoundRouting,
 ];
