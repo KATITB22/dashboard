@@ -45,7 +45,7 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
             title: 'No.',
             dataIndex: 'idx',
             key: 'id',
-            render: (_, record, idx) => (<>{+idx + 1}</>),
+            render: (_, record, idx) => (<>{+idx + 1 + ((page - 1) * pageSize)}</>),
         },
         {
             title: 'Title',

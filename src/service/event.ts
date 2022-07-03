@@ -5,6 +5,7 @@ import {
     SuccessCallbackFunction,
 } from '.';
 import APIClient from '../utils/api-client';
+import { APIErrorObject } from '../utils/api-error-object';
 
 export interface IEvent {
     id: string;
@@ -22,6 +23,9 @@ export interface REvent {
 
 export interface ListEvent {
     events: IEvent[];
+    page: number;
+    pageCount: number;
+    pageSize: number;
     total: number;
 }
 
@@ -74,29 +78,38 @@ class EventService extends GenericService {
     }
 
     public async getEvents(
+        pageNumber: number,
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
-        
+
     ) {
         const response = await APIClient.GET(`/events`, {
+            'pagination[pageSize]': 10,
+            'pagination[page]': pageNumber,
+            'sort[0]': 'attendance_start:desc',
+            'sort[1]': 'attendance_end:desc',
         });
         if (response instanceof APIErrorObject) {
             if (!onFail) return;
             return onFail(response);
         }
         const events: IEvent[] = response.data;
-        events.forEach((eachRaw, _) => {
+        const { page, pageCount, pageSize, total }: { [key: string]: number } = response.meta.pagination;
+        events.forEach((eachRaw: any, _) => {
             const each: any = eachRaw.attributes;
             eachRaw.id = each.id;
             eachRaw.start = moment(each.attendance_start).format('DD MMM YY HH:mm:ss');
             eachRaw.end = moment(each.attendance_end).format('DD MMM YY HH:mm:ss');
             eachRaw.title = each.title;
+            delete eachRaw.attributes;
 
         });
-        const total = events.length;
         const mappedResponse: ListEvent = {
             events,
-            total
+            total,
+            page,
+            pageCount,
+            pageSize
         };
         if (onSuccess) onSuccess(mappedResponse);
     }
