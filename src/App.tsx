@@ -7,6 +7,7 @@ import 'antd/dist/antd.less';
 import 'antd/lib/style/themes/default.less';
 
 function App() {
+    document.title = 'Dashboard - KAT ITB 2022'
     return (
         <>
             <Suspense fallback={<div>Loading...</div>}>

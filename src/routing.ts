@@ -98,90 +98,73 @@ const WorkspacePage = React.lazy(() =>
 );
 
 interface PageRouting {
-    title: string;
     path: string;
     component: LazyExoticComponent<any>;
 }
 
 const PageNotFoundRouting: PageRouting = {
-    title: 'Page Not Found',
     path: '*',
     component: PageNotFound,
 };
 
 export const Routing: PageRouting[] = [
     {
-        title: 'Default Page',
         path: '/',
         component: DefPage,
     },
     {
-        title: 'New Event',
         path: '/event/create',
         component: CreateEventPage,
     },
     {
-        title: 'Event Detail',
         path: '/event/:id',
         component: EventDetailPage,
     },
     {
-        title: 'Edit Event',
         path: '/event/:id/edit',
         component: EditEventPage,
     },
     {
-        title: 'Assignment List',
         path: '/assignments',
         component: TopicPage,
     },
     {
-        title: 'Admin Assignment List',
         path: '/assignments/admin',
         component: TopicAdminPage,
     },
     {
-        title: 'Create Assignment',
         path: '/assignments/create',
         component: CreateTopicPage,
     },
     {
-        title: 'Edit Assignment',
         path: '/assignments/:id',
         component: EditTopicPage,
     },
     {
-        title: 'Workspace',
         path: '/assignments/workspace/:id',
         component: WorkspacePage,
     },
     {
-        title: 'Submission List',
         path: '/assignments/:id/submissions',
         component: SubmissionListPage,
     },
     {
-        title: 'Submission Details',
         path: '/submissions/:id',
         component: SubmissionDetailsPage,
     },
     {
-        title: 'Group List',
         path: '/groups',
         component: GroupListPage,
     },
     {
-        title: 'Group List',
         path: '/groups/:id',
         component: GroupDetailPage,
     },
     {
-        title: 'Event List',
         path: '/event',
         component: EventListPage,
     },
     {
-        title: 'Group Upload',
         path: '/group/upload',
         component: GroupUploadPage,
     },
