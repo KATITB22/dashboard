@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { MenuProps, Layout, Menu } from 'antd';
+import { MenuProps, Layout, Menu, BackTop } from 'antd';
 import {
     CalendarOutlined,
-    DesktopOutlined,
-    FileOutlined,
-    TeamOutlined,
-    UserOutlined,
+    ContactsOutlined,
+    FileTextOutlined,
 } from '@ant-design/icons';
 import SkeletonAvatar from 'antd/lib/skeleton/Avatar';
 import { NavTab } from '../components/NavTab';
@@ -26,24 +24,44 @@ function getItem(
         label,
     } as MenuItem;
 }
-
-const items: MenuItem[] = [
-    getItem(<NavTab url="../event">Event</NavTab>, '1', <CalendarOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-        getItem('Tom', '3'),
-        getItem('Bill', '4'),
-        getItem('Alex', '5'),
-    ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [
-        getItem('Team 1', '6'),
-        getItem('Team 2', '8'),
-    ]),
-    getItem('Files', '9', <FileOutlined />),
-];
 export interface StandardLayoutProps {
     children?: JSX.Element | JSX.Element[] | string | string[];
 }
+
+const itemsComittee: MenuItem[] = [
+    getItem(<NavTab url="../event">Event</NavTab>, '1', <CalendarOutlined />),
+    getItem('Group', '2', <ContactsOutlined />, [
+        getItem(<NavTab url="../group">List</NavTab>, '2a'),
+        getItem(<NavTab url="../group/upload">Upload</NavTab>, '2b')
+    ]),
+    getItem(<NavTab url="../assignment/admin">Assignment</NavTab>, '3', <FileTextOutlined />)
+];
+
+const itemsMentor: MenuItem[] = [
+    getItem(<NavTab url="../attendance">Attendance</NavTab>, '1', <CalendarOutlined />),
+    getItem(<NavTab url="../assignment/admin">Assignment</NavTab>, '3', <FileTextOutlined />)
+];
+const itemsParticipant: MenuItem[] = [
+    getItem(<NavTab url="../attendance">Attendance</NavTab>, '1', <CalendarOutlined />),
+    getItem(<NavTab url="../assignment">Assignment</NavTab>, '2', <FileTextOutlined />)
+];
+
+const sidebarMaping: { [key: string]: MenuItem[] } = {
+    'Mentor': itemsMentor,
+    'Participant': itemsParticipant,
+    'Comittee': itemsComittee
+}
+
+const style: React.CSSProperties = {
+    height: 40,
+    width: 40,
+    lineHeight: '40px',
+    borderRadius: 4,
+    backgroundColor: '#1088e9',
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 14,
+};
 
 export const StandardLayout = ({
     children = undefined,
@@ -57,16 +75,16 @@ export const StandardLayout = ({
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
                 style={{ minHeight: '100vh' }}
-                onChange={(x) => console.log(x)}
+
             >
                 <div className="flex justify-center my-2 md:my-3">
                     <SkeletonAvatar size="large" />
                 </div>
                 <Menu
                     theme="dark"
-                    defaultSelectedKeys={['1']}
+                    selectedKeys={[]}
                     mode="inline"
-                    items={items}
+                    items={itemsParticipant}
                 />
             </Sider>
             <Layout>
@@ -83,6 +101,9 @@ export const StandardLayout = ({
                     Dashboard KAT ©2022<br /> Created by Tim IT KAT '22.
                 </Footer>
             </Layout>
+            <BackTop>
+                <div style={style}>UP</div>
+            </BackTop>
         </Layout>
     );
 };

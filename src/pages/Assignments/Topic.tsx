@@ -85,12 +85,12 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
                 render: (_, record) => {
                     return (
                         <Space size="middle" key={`action-` + record.id}>
-                            <Link to={`../assignments/${record.id}`}>
+                            <Link to={`../assignment/${record.id}`}>
                                 <Button type="primary" icon={<FormOutlined />} size="middle">
                                     Edit
                                 </Button>
                             </Link>
-                            <Link to={`../assignments/${record.id}/submissions`}>
+                            <Link to={`../assignment/${record.id}/submissions`}>
                                 <Button
                                     type="primary"
                                     icon={<ContainerOutlined />}
@@ -151,7 +151,7 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
             <PageHeader title={(isAdmin) ? 'Admin Assignments Page' : 'Assignments'} />
             <div className='mb-3'>Last Update: {lastUpdate} WIB</div>
             {(isAdmin) ? <div className="mb-5">
-                <Link to="../assignments/create">
+                <Link to="../assignment/create">
                     <Button icon={<PlusOutlined />} size="large" type="primary">
                         Create
                     </Button>
@@ -167,7 +167,7 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
                 }} onRow={(record) => {
                     if (isAdmin) return {};
                     return {
-                        onClick: () => { navigate(`../assignments/workspace/${record.id}`) }
+                        onClick: () => { navigate(`../assignment/workspace/${record.id}`) }
                     };
                 }} />
             </Spin>

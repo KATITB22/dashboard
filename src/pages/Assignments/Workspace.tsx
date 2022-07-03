@@ -7,23 +7,25 @@ import * as _ from "lodash";
 const qdata = [
     {
         id: '1',
-        question: 'Apa kepanjangan dari HMIF?',
+        type: 'PILIHAN GANDA',
+        question: 'Apa definisi dari apa?',
+        metadata: {
+            pilihan_A: 'gatau',
+            pilihan_B: 'gatau',
+            pilihan_C: 'gatau',
+            pilihan_D: 'gatau',
+            pilihan_E: 'gatau',
+        }
     },
     {
         id: '2',
-        question: 'Apa kepanjangan dari HMIF?',
+        question: 'Apa definisi dari apa?',
+        type: 'ISIAN',
     },
     {
         id: '3',
-        question: 'Apa kepanjangan dari HMIF?',
-    },
-    {
-        id: '4',
-        question: 'Apa kepanjangan dari HMIF?',
-    },
-    {
-        id: '5',
-        question: 'Apa kepanjangan dari HMIF?',
+        question: 'Apa definisi dari apa?',
+        type: 'ESSAY',
     },
 ];
 
@@ -113,10 +115,12 @@ const PilihanGanda = (item: QuestionFormProps) => {
             ...item.data,
             [item.id]: val,
         });
-        setAnswer(val);
     }
-    const debounceFn = useCallback(_.debounce(handleDebounce, 1000), []);
-    const handleChange = (e: any) => debounceFn(e.target.value);
+    const debounceFn = useCallback(_.debounce(handleDebounce, 1500), []);
+    const instantChange = (val: any) => {
+        setAnswer(val.target.value);
+        debounceFn(val.target.value)
+    }
 
     useEffect(() => {
         setAnswer(item.data[item.id]);
@@ -128,7 +132,7 @@ const PilihanGanda = (item: QuestionFormProps) => {
             <Input.Group>
                 <Row gutter={[16, 16]} align="middle">
                     <Col xs={24} xl={20}>
-                        <Radio.Group onChange={handleChange} disabled={!item.editAnswer}
+                        <Radio.Group onChange={instantChange} disabled={!item.editAnswer}
                             value={answer}>
                             <Space direction='vertical'>
                                 {options.map((each) => {
@@ -162,7 +166,17 @@ export const Workspace = () => {
             <Row justify="center">
                 <Col span={24}>
                     <Form layout="vertical">
-                        {qdata.map((each) => <Isian key={each.id} data={data} dataHandler={setData} {...each} metadata={{ "pilihan_A": 123, 'pilihan_E': true, 'pilihan_B': "asds" }} />)}
+                        {qdata.map((each: any) => {
+                            each.hideScore = true;
+                            each.editAnswer = true;
+                            if (each.type === 'ISIAN') {
+                                return <Isian key={each.id} data={data} dataHandler={setData} {...each} />
+                            } else if (each.type === 'PILIHAN GANDA') {
+                                return <PilihanGanda key={each.id} data={data} dataHandler={setData} {...each} />
+                            } else {
+                                return <Essay key={each.id} data={data} dataHandler={setData} {...each} />
+                            }
+                        })}
                         <Form.Item>
                             <Button
                                 size="large"

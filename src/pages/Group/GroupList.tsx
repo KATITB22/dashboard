@@ -60,7 +60,7 @@ export const GroupList = () => {
                         },
                     }} onRow={(record) => {
                         return {
-                            onClick: () => { navigate(`../groups/${record.id}`) }
+                            onClick: () => { navigate(`../group/${record.id}`) }
                         };
                     }}
                 />

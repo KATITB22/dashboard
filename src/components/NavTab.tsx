@@ -7,7 +7,9 @@ interface NavTabProps {
 
 export const NavTab = ({ url, children }: NavTabProps) => {
     const navigate = useNavigate();
-    return (<div onClick={() => navigate(url)}>
+    return (<div onClick={() => {
+        navigate(url);
+    }}>
         {children}
     </div>)
 };
