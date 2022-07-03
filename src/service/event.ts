@@ -7,10 +7,10 @@ import {
 import APIClient from '../utils/api-client';
 
 export interface IEvent {
+    id: string;
     title: string;
-    attendance_start: string;
-    attendance_end: string;
-    attendance_type: string;
+    start: string;
+    end: string;
 }
 
 export interface REvent {
@@ -18,6 +18,11 @@ export interface REvent {
     attendance_start?: string;
     attendance_end?: string;
     attendance_type?: string;
+}
+
+export interface ListEvent {
+    events: IEvent[];
+    total: number;
 }
 
 class EventService extends GenericService {
@@ -66,6 +71,34 @@ class EventService extends GenericService {
             attendance_type: response.attendance_type,
         };
         this.handleResponse(result, onSuccess, onFail);
+    }
+
+    public async getEvents(
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+        
+    ) {
+        const response = await APIClient.GET(`/events`, {
+        });
+        if (response instanceof APIErrorObject) {
+            if (!onFail) return;
+            return onFail(response);
+        }
+        const events: IEvent[] = response.data;
+        events.forEach((eachRaw, _) => {
+            const each: any = eachRaw.attributes;
+            eachRaw.id = each.id;
+            eachRaw.start = moment(each.attendance_start).format('DD MMM YY HH:mm:ss');
+            eachRaw.end = moment(each.attendance_end).format('DD MMM YY HH:mm:ss');
+            eachRaw.title = each.title;
+
+        });
+        const total = events.length;
+        const mappedResponse: ListEvent = {
+            events,
+            total
+        };
+        if (onSuccess) onSuccess(mappedResponse);
     }
 }
 
