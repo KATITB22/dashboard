@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { MenuProps, Breadcrumb, Layout, Menu } from 'antd';
+import { MenuProps, Layout, Menu } from 'antd';
 import {
+    CalendarOutlined,
     DesktopOutlined,
     FileOutlined,
-    PieChartOutlined,
     TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import SkeletonAvatar from 'antd/lib/skeleton/Avatar';
+import { NavTab } from '../components/NavTab';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
 
 function getItem(
@@ -27,7 +28,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem('Option 1', '1', <PieChartOutlined />),
+    getItem(<NavTab url="../event">Event</NavTab>, '1', <CalendarOutlined />),
     getItem('Option 2', '2', <DesktopOutlined />),
     getItem('User', 'sub1', <UserOutlined />, [
         getItem('Tom', '3'),
@@ -56,6 +57,7 @@ export const StandardLayout = ({
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
                 style={{ minHeight: '100vh' }}
+                onChange={(x) => console.log(x)}
             >
                 <div className="flex justify-center my-2 md:my-3">
                     <SkeletonAvatar size="large" />

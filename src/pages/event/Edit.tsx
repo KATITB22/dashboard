@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import moment from 'moment';
-import type { DatePickerProps } from 'antd';
+import { DatePickerProps, PageHeader } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, DatePicker, Select, Spin } from 'antd';
 import eventService from '../../service/event';
@@ -9,6 +9,8 @@ import { StandardLayout } from '../../layout/StandardLayout';
 
 export const EditEvent = () => {
     const { id } = useParams();
+    if (!id) return <></>;
+
     const navigate = useNavigate();
 
     const [title, setTitle] = useState('');
@@ -78,7 +80,7 @@ export const EditEvent = () => {
 
     return (
         <StandardLayout>
-            <h1 className="font-bold mb-3">Edit Event</h1>
+            <PageHeader onBack={() => navigate(-1)} title="Edit Event" />
             {empty ? (
                 <Spin tip="Loading..." />
             ) : (

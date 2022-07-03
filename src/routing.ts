@@ -125,39 +125,39 @@ export const Routing: PageRouting[] = [
         component: EditEventPage,
     },
     {
-        path: '/assignments',
+        path: '/assignment',
         component: TopicPage,
     },
     {
-        path: '/assignments/admin',
+        path: '/assignment/admin',
         component: TopicAdminPage,
     },
     {
-        path: '/assignments/create',
+        path: '/assignment/create',
         component: CreateTopicPage,
     },
     {
-        path: '/assignments/:id',
+        path: '/assignment/:id',
         component: EditTopicPage,
     },
     {
-        path: '/assignments/workspace/:id',
+        path: '/assignment/workspace/:id',
         component: WorkspacePage,
     },
     {
-        path: '/assignments/:id/submissions',
+        path: '/assignment/:id/submissions',
         component: SubmissionListPage,
     },
     {
-        path: '/submissions/:id',
+        path: '/submission/:id',
         component: SubmissionDetailsPage,
     },
     {
-        path: '/groups',
+        path: '/group',
         component: GroupListPage,
     },
     {
-        path: '/groups/:id',
+        path: '/group/:id',
         component: GroupDetailPage,
     },
     {

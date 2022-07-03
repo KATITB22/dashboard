@@ -1,14 +1,13 @@
-import { PlusOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined, InfoCircleOutlined, FormOutlined } from '@ant-design/icons';
 import { Table, Button, Spin, PageHeader } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
 import eventService, { IEvent } from '../../service/event';
 
 export const EventList = () => {
-    const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [events, setEvents] = useState<IEvent[]>([]);
     const [page, setPage] = useState<number>(1);
@@ -48,18 +47,29 @@ export const EventList = () => {
             sorter: (a, b) => a.title.localeCompare(b.title),
         },
         {
-            title: 'Details',
-            key: 'details',
+            title: 'Action',
+            key: 'action',
             render: (_, record) => (
-                <Link to={`../event/${record.id}`}>
-                    <Button
-                        type="primary"
-                        size="middle"
-                        icon={<InfoCircleOutlined className="align-baseline" />}
-                    >
-                        Details
-                    </Button>
-                </Link>
+                <>
+                    <Link to={`../event/${record.id}`}>
+                        <Button
+                            type="primary"
+                            size="middle"
+                            icon={<InfoCircleOutlined className="align-baseline" />}
+                        >
+                            View
+                        </Button>
+                    </Link>
+                    <Link to={`../event/${record.id}/edit`} className="ml-2">
+                        <Button
+                            type="primary"
+                            size="middle"
+                            icon={<FormOutlined className='align-baseline' />}
+                        >
+                            Edit
+                        </Button>
+                    </Link>
+                </>
             ),
         },
     ];
@@ -84,20 +94,19 @@ export const EventList = () => {
 
     return (
         <StandardLayout>
-            <div className="mb-5">
-                <Link to="create">
-                    <Button
-                        icon={<PlusOutlined className="align-baseline" />}
-                        size="large"
-                        type="primary"
-                    >
-                        Create
-                    </Button>
-                </Link>
-            </div>
-
             <Spin tip="Fetching data..." spinning={loading}>
-                <PageHeader onBack={() => navigate(-1)} title="List Event" />
+                <PageHeader title="List Event" />
+                <div className='ml-3 mb-3'>
+                    <Link to="create">
+                        <Button
+                            icon={<PlusOutlined className="align-baseline" />}
+                            size="middle"
+                            type="primary"
+                        >
+                            Create
+                        </Button>
+                    </Link>
+                </div>
                 <Table columns={columns} dataSource={events}
                     pagination={{
                         total, current: page, pageSize, showSizeChanger: false, onChange: (e) => {
