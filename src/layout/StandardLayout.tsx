@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MenuProps, Layout, Menu, BackTop } from 'antd';
+import React, { useContext, useState } from 'react';
+import { MenuProps, Layout, Menu, BackTop, Result, Button } from 'antd';
 import {
     CalendarOutlined,
     ContactsOutlined,
@@ -7,6 +7,8 @@ import {
 } from '@ant-design/icons';
 import SkeletonAvatar from 'antd/lib/skeleton/Avatar';
 import { NavTab } from '../components/NavTab';
+import { UserContext } from '../context';
+import { useNavigate } from 'react-router-dom';
 
 const { Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -26,9 +28,10 @@ function getItem(
 }
 export interface StandardLayoutProps {
     children?: JSX.Element | JSX.Element[] | string | string[];
+    allowedRole: string | string[];
 }
 
-const itemsComittee: MenuItem[] = [
+const itemsCommittee: MenuItem[] = [
     getItem(<NavTab url="../event">Event</NavTab>, '1', <CalendarOutlined />),
     getItem('Group', '2', <ContactsOutlined />, [
         getItem(<NavTab url="../group">List</NavTab>, '2a'),
@@ -49,7 +52,7 @@ const itemsParticipant: MenuItem[] = [
 const sidebarMaping: { [key: string]: MenuItem[] } = {
     'Mentor': itemsMentor,
     'Participant': itemsParticipant,
-    'Comittee': itemsComittee
+    'Committee': itemsCommittee,
 }
 
 const style: React.CSSProperties = {
@@ -65,8 +68,32 @@ const style: React.CSSProperties = {
 
 export const StandardLayout = ({
     children = undefined,
+    allowedRole
 }: StandardLayoutProps) => {
+    const navigate = useNavigate();
+    const user: any = useContext(UserContext);
     const [collapsed, setCollapsed] = useState(false);
+    const renderChild: boolean = sidebarMaping[user.role] !== undefined;
+    let rolePermitted: boolean = false;
+    if (Array.isArray(allowedRole)) {
+        if (allowedRole.find((each) => each === user.role)) {
+            rolePermitted = true;
+        }
+    } else {
+        rolePermitted = (allowedRole === user.role);
+    }
+
+    if (!(rolePermitted && renderChild)) {
+        children = <Result
+            status="warning"
+            title="You have no permission to open this page."
+            extra={
+                <Button type="primary" onClick={() => navigate("../")}>
+                    Back
+                </Button>
+            }
+        />
+    }
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
@@ -84,7 +111,7 @@ export const StandardLayout = ({
                     theme="dark"
                     selectedKeys={[]}
                     mode="inline"
-                    items={itemsParticipant}
+                    items={sidebarMaping[user.role]}
                 />
             </Sider>
             <Layout>

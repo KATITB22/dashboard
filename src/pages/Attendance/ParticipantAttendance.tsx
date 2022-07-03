@@ -101,10 +101,9 @@ export const ParticipantAttendance = () => {
     }, []);
 
     return (
-        <StandardLayout>
+        <StandardLayout allowedRole={"Participant"}>
             <Spin tip="Loading..." spinning={loadingPage}>
                 <PageHeader
-                    onBack={() => navigate(-1)}
                     title="Participant Attendance"
                 />
                 <Calendar

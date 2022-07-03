@@ -96,7 +96,7 @@ export const SubmissionList = () => {
     const navigate = useNavigate();
 
     return (
-        <StandardLayout>
+        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
             <PageHeader onBack={() => navigate(-1)} title="List Submission" />
             <Table columns={columns} dataSource={data} />
         </StandardLayout>

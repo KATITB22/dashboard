@@ -8,9 +8,7 @@ class APIClient {
     public readonly COOKIE_DOMAIN: string = import.meta.env.VITE_COOKIE_DOMAIN;
 
     private token: string =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjU2NzY4NDQ5LCJleHAiOjE2NTkzNjA0NDl9.RaFbazjsomgh_eIp3LwqP43eZB59cxMmVLotzDy-cI8';
-
-    public user: Record<string, any> = {};
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjU2NjkzOTU3LCJleHAiOjE2NTkyODU5NTd9.NzPSMq_zGPp69PYwj9TCf-VwrfGDOYcgGmde3IDWRO4';
 
     constructor() {
         const cookie = new Cookies();
@@ -22,19 +20,18 @@ class APIClient {
         }
     }
 
-    private async isTokenValid(): Promise<boolean> {
-        const response = await this.GET('/users/me');
+    private async isTokenValid(): Promise<any> {
+        const response = await this.GET('/users/my-account');
         if (response instanceof APIErrorObject) {
-            return false;
+            return {};
         }
-        this.user = response;
-        return true;
+        return response;
     }
 
-    public async checkToken(redirect: boolean = true): Promise<boolean> {
+    public async checkToken(redirect: boolean = true): Promise<any> {
         if (!this.token || !this.token.trim()) {
             if (redirect) window.location.href = import.meta.env.VITE_AUTH_URL;
-            return false;
+            return {};
         }
 
         const verifyToken = await this.isTokenValid();

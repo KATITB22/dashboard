@@ -161,7 +161,7 @@ export const Workspace = () => {
     console.log(data);
 
     return (
-        <StandardLayout>
+        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
             <PageHeader onBack={() => navigate(-1)} title="Submission" />
             <Row justify="center">
                 <Col span={24}>

@@ -181,13 +181,11 @@ export const Routing: PageRouting[] = [
         component: GroupUploadPage,
     },
     {
-        title: 'Self Attendance',
-        path: '/attendance/self',
+        path: '/attendance',
         component: SelfAttendancePage,
     },
     {
-        title: 'Group Attendance',
-        path: '/attendance/group',
+        path: '/attendance/mentor',
         component: GroupAttendancePage,
     },
     PageNotFoundRouting,

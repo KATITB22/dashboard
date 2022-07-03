@@ -29,7 +29,7 @@ export const SubmissionDetails = () => {
     const navigate = useNavigate();
 
     return (
-        <StandardLayout>
+        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
             <PageHeader onBack={() => navigate(-1)} title="Submission" />
             <Row justify="center">
                 <Col span={24}>

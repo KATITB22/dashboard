@@ -93,7 +93,7 @@ export const EventList = () => {
     }, [page]);
 
     return (
-        <StandardLayout>
+        <StandardLayout allowedRole={"Committee"}>
             <Spin tip="Fetching data..." spinning={loading}>
                 <PageHeader title="List Event" />
                 <div className='ml-3 mb-3'>

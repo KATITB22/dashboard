@@ -67,48 +67,41 @@ export const ParticipantAttendanceModal = ({
         return footer;
     };
 
+    const timeFormat = 'DD MMM YY HH:mm';
+    const startTime = `${moment(selectedEvent.start_date).format(timeFormat)}`
+    const endTime = `${moment(selectedEvent.end_date).format(timeFormat)}`;
+    const timeRange = `${startTime} - ${endTime}`
+
     const loadModalContent = () => {
         if (selectedEvent.type === 'Self') {
             if (attend === null) {
                 if (moment().isBefore(selectedEvent.end_date)) {
                     return (
                         <p>
-                            {`${moment(selectedEvent.start_date).format(
-                                'DD MMM YY HH:mm:ss'
-                            )} - ${moment(selectedEvent.end_date).format(
-                                'DD MMM YY HH:mm:ss'
-                            )} [Absen belum terbuka]`}
+                            {`Presensi akan dibuka pada ${timeRange}`}
                         </p>
                     );
                 } else {
                     return (
                         <p>
-                            {`${moment(selectedEvent.start_date).format(
-                                'DD MMM YY HH:mm:ss'
-                            )} - ${moment(selectedEvent.end_date).format(
-                                'DD MMM YY HH:mm:ss'
-                            )} [Absen sudah ditutup]`}
+                            {`Yah! Kamu belum presensi dan presensi sudah ditutup sejak ${endTime}. `}
                         </p>
                     );
                 }
             } else {
                 return (
                     <p>
-                        {`Anda sudah absen pada: ${attend.format(
-                            'DD MMM YY HH:mm:ss'
-                        )}`}
+                        {`Anda sudah presensi pada ${attend.format(timeFormat)}.`}
                     </p>
                 );
             }
         } else {
             if (attend === null) {
-                return <p>Akan diabsenkan oleh mentor!</p>;
+                return <p>Presensi untuk acara ini akan dilakukan oleh mentor.</p>;
             } else {
                 return (
                     <p>
-                        {`Anda sudah diabsenkan mentor pada: ${attend.format(
-                            'DD MMM YY HH:mm:ss'
-                        )}`}
+                        {`Mentor sudah melakukan presensi untuk anda pada ${attend.format(timeFormat)}.`}
                     </p>
                 );
             }

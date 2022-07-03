@@ -8,6 +8,8 @@ import { StandardLayout } from '../../layout/StandardLayout';
 
 export const EventDetail = () => {
     const { id } = useParams();
+    if (!id) return <></>;
+
     const navigate = useNavigate();
 
     const [title, setTitle] = useState('');
@@ -55,7 +57,7 @@ export const EventDetail = () => {
     }, []);
 
     return (
-        <StandardLayout>
+        <StandardLayout allowedRole={"Committee"}>
             <PageHeader onBack={() => navigate(-1)} title="Event Detail" />
             {loading ? (
                 <Spin tip="Loading..." />

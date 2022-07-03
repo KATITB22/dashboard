@@ -40,7 +40,7 @@ export const GroupDetail = () => {
     }, []);
 
     return (
-        <StandardLayout>
+        <StandardLayout allowedRole={["Committee", "Mentor"]}>
             <>
                 <PageHeader onBack={() => navigate(-1)} title="Group Detail" />
                 <Header>Kelompok {groupName}</Header>

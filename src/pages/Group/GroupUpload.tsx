@@ -2,7 +2,7 @@ import { StandardLayout } from '../../layout/StandardLayout';
 import { GroupUploadForm } from '../../components/GroupUploadForm';
 
 export const GroupUpload = () => (
-    <StandardLayout>
+    <StandardLayout allowedRole={"Committee"}>
         <GroupUploadForm />
     </StandardLayout>
 );

@@ -115,10 +115,9 @@ export const MentorAttendance = () => {
     }, []);
 
     return (
-        <StandardLayout>
+        <StandardLayout allowedRole={"Mentor"}>
             <Spin tip="Loading..." spinning={loadingPage}>
                 <PageHeader
-                    onBack={() => navigate(-1)}
                     title="Group Attendance"
                 />
                 <Alert message={selectedRowKeys.toString()} />
