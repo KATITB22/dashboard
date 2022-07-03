@@ -25,19 +25,24 @@ const EditEventPage = React.lazy(() =>
 );
 
 const TopicPage = React.lazy(() =>
-    import('./pages/Topic/Topic').then((module) => ({
+    import('./pages/Assignments/Topic').then((module) => ({
         default: module.Topic,
+    }))
+);
+const TopicAdminPage = React.lazy(() =>
+    import('./pages/Assignments/Topic').then((module) => ({
+        default: module.TopicAdmin,
     }))
 );
 
 const CreateTopicPage = React.lazy(() =>
-    import('./pages/Topic/CreateTopic').then((module) => ({
+    import('./pages/Assignments/CreateTopic').then((module) => ({
         default: module.CreateTopic,
     }))
 );
 
 const EditTopicPage = React.lazy(() =>
-    import('./pages/Topic/EditTopic').then((module) => ({
+    import('./pages/Assignments/EditTopic').then((module) => ({
         default: module.EditTopic,
     }))
 );
@@ -54,6 +59,19 @@ const SubmissionDetailsPage = React.lazy(() =>
     }))
 );
 
+
+const GroupListPage = React.lazy(() =>
+    import('./pages/Group/GroupList').then((module) => ({
+        default: module.GroupList,
+    }))
+);
+
+const GroupDetailPage = React.lazy(() =>
+    import('./pages/Group/GroupDetail').then((module) => ({
+        default: module.GroupDetail,
+    }))
+);
+
 const GroupUploadPage = React.lazy(() =>
     import('./pages/Group/GroupUpload').then((module) => ({
         default: module.GroupUpload,
@@ -63,12 +81,19 @@ const GroupUploadPage = React.lazy(() =>
 const EventListPage = React.lazy(() =>
     import('./pages/Event/EventList').then((module) => ({
         default: module.EventList,
+
     }))
 );
 
 const PageNotFound = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
         default: module.Dashboard,
+    }))
+);
+
+const WorkspacePage = React.lazy(() =>
+    import('./pages/Assignments/Workspace').then((module) => ({
+        default: module.Workspace,
     }))
 );
 
@@ -106,29 +131,49 @@ export const Routing: PageRouting[] = [
         component: EditEventPage,
     },
     {
-        title: 'Topic List',
-        path: '/topic',
+        title: 'Assignment List',
+        path: '/assignments',
         component: TopicPage,
     },
     {
-        title: 'Create Topic',
-        path: '/topic/create',
+        title: 'Admin Assignment List',
+        path: '/assignments/admin',
+        component: TopicAdminPage,
+    },
+    {
+        title: 'Create Assignment',
+        path: '/assignments/create',
         component: CreateTopicPage,
     },
     {
-        title: 'Edit Topic',
-        path: '/topic/:id',
+        title: 'Edit Assignment',
+        path: '/assignments/:id',
         component: EditTopicPage,
     },
     {
+        title: 'Workspace',
+        path: '/assignments/workspace/:id',
+        component: WorkspacePage,
+    },
+    {
         title: 'Submission List',
-        path: '/topic/:id/submissions',
+        path: '/assignments/:id/submissions',
         component: SubmissionListPage,
     },
     {
         title: 'Submission Details',
         path: '/submissions/:id',
         component: SubmissionDetailsPage,
+    },
+    {
+        title: 'Group List',
+        path: '/groups',
+        component: GroupListPage,
+    },
+    {
+        title: 'Group List',
+        path: '/groups/:id',
+        component: GroupDetailPage,
     },
     {
         title: 'Event List',

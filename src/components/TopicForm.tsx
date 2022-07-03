@@ -3,35 +3,47 @@ import { InboxOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import Service, { RTopic } from '../service/assignments';
+import QuestionService from '../service/questions';
 import { defaultFailureCallback } from '../service';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import readXlsxFile from 'read-excel-file';
+import { UploadFile } from 'antd/lib/upload/interface';
 
 interface Props {
     id?: string;
+    setQuestions?: Function;
 }
 
-export const TopicForm = ({ id = undefined }: Props) => {
+export const TopicForm = ({ id = undefined, setQuestions }: Props) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
+    const [file, setFile] = useState<UploadFile | null>(null);
     const now = moment().set('second', 0);
     const next = moment().add(4, 'hour').set('second', 0);
     const [initVal, setInitVal] = useState<object>({
         deadline: [now, next]
     })
     const [scoreReleased, setScoreReleased] = useState<boolean>(false);
+    const handleChange = (f: UploadFile) => {
+        setFile(f);
+    };
 
     const isCreating = !id;
     useEffect(() => {
+        ;
         if (!isCreating) {
             setLoading(true);
-            Service.getTopic(id, (response) => {
+            Service.getTopic(id, true, (response) => {
                 if (response.score_released)
                     setScoreReleased(response.score_released);
                 setInitVal({
                     ...initVal,
                     title: response.title
                 });
+                if (setQuestions) {
+                    setQuestions(response.questions);
+                }
                 setLoading(false);
             }, (err) => {
                 defaultFailureCallback(err);
@@ -41,13 +53,15 @@ export const TopicForm = ({ id = undefined }: Props) => {
     }, []);
 
     const onFinish = async (item: { title: string, deadline: moment.Moment[], score_released?: boolean }) => {
+        if (!file || !file.originFileObj) return;
         const [start, end] = item.deadline;
 
         const request: RTopic = {
             title: item.title,
             start: start.toDate().toISOString(),
             end: end.toDate().toISOString(),
-            score_released: false
+            score_released: false,
+            questions: []
         }
 
         if (start.isAfter(end)) {
@@ -61,6 +75,10 @@ export const TopicForm = ({ id = undefined }: Props) => {
 
         setLoading(true);
         if (isCreating) {
+            const rawData = await (
+                await readXlsxFile(file.originFileObj)
+            )
+            request.questions = QuestionService.mapRawData(rawData);
             await Service.createTopic(request, () => {
                 toast.success("Topic created successfully.");
                 navigate(-1);
@@ -70,7 +88,6 @@ export const TopicForm = ({ id = undefined }: Props) => {
                 setLoading(false);
             });
         } else {
-            console.log(request);
             await Service.updateTopic(id, request, () => {
                 toast.success("Topic updated successfully.");
                 navigate(-1);
@@ -109,15 +126,17 @@ export const TopicForm = ({ id = undefined }: Props) => {
                     label="Upload File Soal"
                     name="file-upload"
                     rules={[
-                        { required: false, message: 'File soal belum di-upload!' },
+                        { required: true, message: 'File soal belum di-upload!' },
                     ]}
                 >
                     <Upload.Dragger name="file" multiple={false}
                         showUploadList={{ showRemoveIcon: true }}
                         accept=".xlsx,.xls,.csv"
                         customRequest={() => true}
+                        maxCount={1}
                         onChange={(e) => {
                             e.file.status = 'done';
+                            handleChange(e.fileList[0]);
                             return;
                         }} >
                         <p className="ant-upload-drag-icon">
