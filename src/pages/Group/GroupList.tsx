@@ -1,6 +1,6 @@
 import { PageHeader, Spin, Table } from 'antd';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 import service, { Group } from '../../service/group';
 
@@ -13,27 +13,12 @@ export const GroupList = () => {
     const [total, setTotal] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    // const dataSource = [
-    //     {
-    //         key: '1',
-    //         name: 'Group 1',
-    //     },
-    //     {
-    //         key: '2',
-    //         name: 'Group 2',
-    //     },
-    // ];
-
     const columns = [
         {
-            title: 'ID',
-            dataIndex: 'id',
+            title: 'No.',
+            dataIndex: 'idx',
             key: 'id',
-            render: (text: string) => (
-                <Link to={`/groups/${text}`}>
-                    <span>{text}</span>
-                </Link>
-            ),
+            render: (_: any, record: any, idx: number) => (<>{+idx + 1 + ((page - 1) * pageSize)}</>),
         },
         {
             title: 'Name',
@@ -54,30 +39,32 @@ export const GroupList = () => {
             setPageSize(res.pageSize);
             setIsLoading(false);
         });
-    }, []);
+    }, [page]);
 
     return (
         <StandardLayout>
-            <>
-                <PageHeader onBack={() => navigate(-1)} title="Group List" />
-                <Spin tip="Fetching data..." spinning={isLoading}>
-                    <Table
-                        columns={columns}
-                        dataSource={groups}
-                        pagination={{
-                            total,
-                            current: page,
-                            pageSize,
-                            showSizeChanger: false,
-                            onChange: (e) => {
-                                queryParams.set('page', e.toString());
-                                setQueryParams(queryParams);
-                                setPage(e);
-                            },
-                        }}
-                    />
-                </Spin>
-            </>
+            <PageHeader onBack={() => navigate(-1)} title="Group List" />
+            <Spin tip="Fetching data..." spinning={isLoading}>
+                <Table
+                    columns={columns}
+                    dataSource={groups}
+                    pagination={{
+                        total,
+                        current: page,
+                        pageSize,
+                        showSizeChanger: false,
+                        onChange: (e) => {
+                            queryParams.set('page', e.toString());
+                            setQueryParams(queryParams);
+                            setPage(e);
+                        },
+                    }} onRow={(record) => {
+                        return {
+                            onClick: () => { navigate(`../groups/${record.id}`) }
+                        };
+                    }}
+                />
+            </Spin>
         </StandardLayout>
     );
 };

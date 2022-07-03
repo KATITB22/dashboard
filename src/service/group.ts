@@ -19,13 +19,15 @@ export interface GroupResponse {
 }
 
 export interface GroupMember {
-    id: string;
+    nim: number;
     name: string;
-    // faculty: string;
+    role: 'Mentor' | 'Member';
 }
 
 export interface GroupMemberResponse {
     members: GroupMember[];
+    leaders: GroupMember[];
+    name: string;
 }
 
 class GroupService extends GenericService {
@@ -34,18 +36,11 @@ class GroupService extends GenericService {
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
     ) {
-        const response = await APIClient.GET(`/groups/${id}`);
-        const members: GroupMember[] = response.members.map(
-            (each: any, eachIdx: number) => ({
-                id: eachIdx,
-                name: each,
-            })
-        );
-
-        const mappedResponse: GroupMemberResponse = {
-            members,
-        };
-        this.handleResponse(mappedResponse, onSuccess, onFail);
+        const response = await APIClient.GET(`/groups/${id}/with-name`);
+        const { name, leaders, members } = response;
+        const leadersMapped: GroupMember[] = leaders.map((each: any) => ({ nim: each.username, name: each.name, role: 'Mentor' }));
+        const membersMapped: GroupMember[] = members.map((each: any) => ({ nim: each.username, name: each.name, role: 'Member' }));
+        this.handleResponse({ name, leaders: leadersMapped, members: membersMapped }, onSuccess, onFail);
     }
 
     public async getGroups(
@@ -61,6 +56,7 @@ class GroupService extends GenericService {
         const { page, pageCount, pageSize, total }: { [key: string]: number } =
             response.meta.pagination;
         const raw: any[] = response.data;
+        console.log(raw);
         const groups: Group[] = raw.map((eachRaw: any) => {
             const each: any = eachRaw.attributes;
             return {
