@@ -59,6 +59,19 @@ const SubmissionDetailsPage = React.lazy(() =>
     }))
 );
 
+
+const GroupListPage = React.lazy(() =>
+    import('./pages/Group/GroupList').then((module) => ({
+        default: module.GroupList,
+    }))
+);
+
+const GroupDetailPage = React.lazy(() =>
+    import('./pages/Group/GroupDetail').then((module) => ({
+        default: module.GroupDetail,
+    }))
+);
+
 const GroupUploadPage = React.lazy(() =>
     import('./pages/Group/GroupUpload').then((module) => ({
         default: module.GroupUpload,
@@ -68,6 +81,7 @@ const GroupUploadPage = React.lazy(() =>
 const EventListPage = React.lazy(() =>
     import('./pages/Event/EventList').then((module) => ({
         default: module.EventList,
+
     }))
 );
 
@@ -150,6 +164,16 @@ export const Routing: PageRouting[] = [
         title: 'Submission Details',
         path: '/submissions/:id',
         component: SubmissionDetailsPage,
+    },
+    {
+        title: 'Group List',
+        path: '/groups',
+        component: GroupListPage,
+    },
+    {
+        title: 'Group List',
+        path: '/groups/:id',
+        component: GroupDetailPage,
     },
     {
         title: 'Event List',
