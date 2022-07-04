@@ -3,10 +3,9 @@ import {
     PlusOutlined,
     FormOutlined,
     ContainerOutlined,
-    FolderOpenOutlined,
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/lib/table';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
 import Service, { ITopic } from '../../service/assignments';
 import { defaultFailureCallback } from '../../service';
@@ -195,6 +194,6 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
 };
 
 export const TopicAdmin = () => {
-    const user: any = useContext(UserContext);
+    const { user }: any = useContext(UserContext);
     return <Topic isAdmin={user.role === 'Committee'} />
 };

@@ -28,19 +28,12 @@ class APIClient {
         return response;
     }
 
-    public async checkToken(redirect: boolean = true): Promise<any> {
-        const redirectquery = new URLSearchParams({
-            redirect: window.location.href
-        });
+    public async checkToken(): Promise<any> {
         if (!this.token || !this.token.trim()) {
-            if (redirect) window.location.href = import.meta.env.VITE_AUTH_URL + "?" + redirectquery.toString();
             return {};
         }
 
         const verifyToken = await this.isTokenValid();
-        if (!verifyToken) {
-            if (redirect) window.location.href = import.meta.env.VITE_AUTH_URL + "?" + redirectquery.toString();
-        }
         return verifyToken;
     }
 
@@ -65,7 +58,10 @@ class APIClient {
 
     public deleteCookie(key: string) {
         const cookie = new Cookies();
-        cookie.remove(key);
+        cookie.remove(key, {
+            path: '/',
+            domain: this.COOKIE_DOMAIN,
+        });
     }
 
     private header(

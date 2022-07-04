@@ -38,6 +38,7 @@ class AssignmentsService extends GenericService {
         const response = await APIClient.POST(`/entries/${topicId}`);
         if (response.topic && response.topic.questions && Array.isArray(response.topic.questions)) {
             const questions: any[] = response.topic.questions;
+            questions.sort((a, b) => a.question_no - b.question_no);
             const final: Question[] = questions.map((each: any): Question => {
                 const result = ({
                     question_no: each.question_no,
