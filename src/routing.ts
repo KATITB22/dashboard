@@ -1,4 +1,5 @@
 import React, { LazyExoticComponent } from 'react';
+import { Profile } from './pages/Profile/Profile';
 
 const DefPage = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
@@ -109,6 +110,18 @@ const WorkspacePage = React.lazy(() =>
     }))
 );
 
+const ProfilePage = React.lazy(() =>
+    import('./pages/Profile/Profile').then((module) => ({
+        default: module.Profile,
+    })) 
+)
+
+const EditProfilePage = React.lazy(() =>
+    import('./pages/Profile/EditProfile').then((module) => ({
+        default: module.EditProfile,
+    }))
+)
+
 interface PageRouting {
     path: string;
     component: LazyExoticComponent<any>;
@@ -187,6 +200,14 @@ export const Routing: PageRouting[] = [
     {
         path: '/attendance/mentor',
         component: GroupAttendancePage,
+    },
+    {
+        path: '/profile',
+        component: ProfilePage,
+    },
+    {
+        path: '/profile/edit',
+        component: EditProfilePage,
     },
     PageNotFoundRouting,
 ];
