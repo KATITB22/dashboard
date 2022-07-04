@@ -37,7 +37,15 @@ export interface GroupMemberResponse {
 }
 
 class GroupService extends GenericService {
-    public async uploadGroup (
+    public async getMyGroup(
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction) {
+        const response = await APIClient.GET('/groups/me');
+
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
+    public async uploadGroup(
         data: IGroup,
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
@@ -47,7 +55,7 @@ class GroupService extends GenericService {
         this.handleResponse(response, onSuccess, onFail);
     }
 
-    public async deleteAll (
+    public async deleteAll(
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
     ) {
@@ -55,7 +63,7 @@ class GroupService extends GenericService {
 
         this.handleResponse(response, onSuccess, onFail);
     }
-    
+
     public async getGroupByID(
         id?: string,
         onSuccess?: SuccessCallbackFunction,

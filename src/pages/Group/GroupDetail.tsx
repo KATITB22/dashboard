@@ -8,12 +8,20 @@ import service, { GroupMember } from '../../service/group';
 
 export const GroupDetail = () => {
     const { id } = useParams();
+    if (!id) return <></>;
+
     const navigate = useNavigate();
     const [members, setMembers] = useState<GroupMember[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [groupName, setGroupName] = useState<string>("");
+    const [page, setPage] = useState<number>(1);
 
     const columns = [
+        {
+            title: 'No',
+            key: 'idx',
+            render: (_: any, record: any, idx: number) => <>{idx + 1 + (page - 1) * 10}</>
+        },
         {
             title: 'NIM',
             dataIndex: 'nim',
@@ -45,7 +53,7 @@ export const GroupDetail = () => {
                 <PageHeader onBack={() => navigate(-1)} title="Group Detail" />
                 <Header>Kelompok {groupName}</Header>
                 <Spin tip="Fetching data..." spinning={isLoading}>
-                    <Table dataSource={members} columns={columns} />
+                    <Table dataSource={members} columns={columns} pagination={{ onChange: (e) => setPage(e), showSizeChanger: false }} />
                 </Spin>
             </>
         </StandardLayout>
