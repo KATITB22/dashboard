@@ -10,6 +10,12 @@ export interface Group {
     name: string;
 }
 
+export interface IGroup {
+    name: string,
+    leaders: number[],
+    members: number[],
+}
+
 export interface GroupResponse {
     groups: Group[];
     page: number;
@@ -31,6 +37,25 @@ export interface GroupMemberResponse {
 }
 
 class GroupService extends GenericService {
+    public async uploadGroup (
+        data: IGroup,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.POST('/groups', data);
+
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
+    public async deleteAll (
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.DELETE('/groups');
+
+        this.handleResponse(response, onSuccess, onFail);
+    }
+    
     public async getGroupByID(
         id?: string,
         onSuccess?: SuccessCallbackFunction,
