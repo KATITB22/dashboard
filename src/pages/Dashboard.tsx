@@ -13,20 +13,23 @@ export const Dashboard = () => {
     const [page, setPage] = useState<number>(1);
     const [members, setMembers] = useState<any[]>([]);
 
+    const isCommittee: boolean = (user.role === 'Committee');
+
     useEffect(() => {
-        GroupService.getMyGroup((res) => {
-            const data: any[] = [];
-            res.leaders.forEach((each: any) => {
-                each.role = "Mentor";
-                data.push(each);
-            });
-            res.members.forEach((each: any) => {
-                each.role = "Member";
-                data.push(each);
-            });
-            setMembers(data);
-            setGroupLoading(false);
-        }, (err) => defaultFailureCallback(err));
+        if (!isCommittee)
+            GroupService.getMyGroup((res) => {
+                const data: any[] = [];
+                res.leaders.forEach((each: any) => {
+                    each.role = "Mentor";
+                    data.push(each);
+                });
+                res.members.forEach((each: any) => {
+                    each.role = "Member";
+                    data.push(each);
+                });
+                setMembers(data);
+                setGroupLoading(false);
+            }, (err) => defaultFailureCallback(err));
     }, [])
 
     const columns = [
@@ -91,12 +94,14 @@ export const Dashboard = () => {
                 <Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
                 <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
             </Timeline>
-            <PageHeader title="My Group" />
-            <div className='mt-3'>
-                <Spin tip="Fetching data..." spinning={groupLoading}>
-                    <Table dataSource={members} columns={columns} pagination={{ onChange: (e) => setPage(e), showSizeChanger: false }} />
-                </Spin>
-            </div>
+            {!isCommittee ? <>
+                <PageHeader title="My Group" />
+                <div className='mt-3'>
+                    <Spin tip="Fetching data..." spinning={groupLoading}>
+                        <Table dataSource={members} columns={columns} pagination={{ onChange: (e) => setPage(e), showSizeChanger: false }} />
+                    </Spin>
+                </div>
+            </> : <></>}
         </StandardLayout>
     )
 };

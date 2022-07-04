@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Form, PageHeader, Input, Button } from 'antd';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { UserContext } from '../../context'
-import { toast } from 'react-toastify';
 
 export const Profile = () => {
     const navigate = useNavigate();
     const { user }: any = useContext(UserContext);
 
     return (
-        <StandardLayout allowedRole={"Committee"}>
+        <StandardLayout allowedRole={["Committee", "Participant", "Mentor"]}>
             <PageHeader title="Profile" />
             <Form
                 layout="vertical"
