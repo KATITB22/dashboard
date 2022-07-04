@@ -8,7 +8,7 @@ class APIClient {
     public readonly COOKIE_DOMAIN: string = import.meta.env.VITE_COOKIE_DOMAIN;
 
     private token: string =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjU2ODcxODIyLCJleHAiOjE2NTk0NjM4MjJ9.VfsqvfhOMIO_F4MDGPJ7GnOWa3e28wQsmyyLgOpiJHo';
+        '';
 
     constructor() {
         const cookie = new Cookies();
@@ -29,14 +29,17 @@ class APIClient {
     }
 
     public async checkToken(redirect: boolean = true): Promise<any> {
+        const redirectquery = new URLSearchParams({
+            redirect: window.location.href
+        });
         if (!this.token || !this.token.trim()) {
-            if (redirect) window.location.href = import.meta.env.VITE_AUTH_URL;
+            if (redirect) window.location.href = import.meta.env.VITE_AUTH_URL + "?" + redirectquery.toString();
             return {};
         }
 
         const verifyToken = await this.isTokenValid();
         if (!verifyToken) {
-            if (redirect) window.location.href = import.meta.env.VITE_AUTH_URL;
+            if (redirect) window.location.href = import.meta.env.VITE_AUTH_URL + "?" + redirectquery.toString();
         }
         return verifyToken;
     }

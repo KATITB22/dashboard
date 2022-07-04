@@ -4,11 +4,14 @@ import {
     CalendarOutlined,
     ContactsOutlined,
     FileTextOutlined,
+    HomeOutlined,
+    LogoutOutlined,
 } from '@ant-design/icons';
 import { NavTab } from '../components/NavTab';
 import { UserContext } from '../context';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../resource/logo.png';
+import APIClient from "../utils/api-client";
 
 const { Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -32,21 +35,27 @@ export interface StandardLayoutProps {
 }
 
 const itemsCommittee: MenuItem[] = [
+    getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
     getItem(<NavTab url="../event">Event</NavTab>, '1', <CalendarOutlined />),
     getItem('Group', '2', <ContactsOutlined />, [
         getItem(<NavTab url="../group">List</NavTab>, '2a'),
         getItem(<NavTab url="../group/upload">Upload</NavTab>, '2b')
     ]),
-    getItem(<NavTab url="../assignment/admin">Assignment</NavTab>, '3', <FileTextOutlined />)
+    getItem(<NavTab url="../assignment/admin">Assignment</NavTab>, '3', <FileTextOutlined />),
+    getItem(<div onClick={() => { APIClient.deleteCookie("token"); window.location.href = import.meta.env.VITE_AUTH_URL; }}>Logout</div>, "99", <LogoutOutlined />)
 ];
 
 const itemsMentor: MenuItem[] = [
+    getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
     getItem(<NavTab url="../attendance/mentor">Attendance</NavTab>, '1', <CalendarOutlined />),
+    getItem(<div onClick={() => { APIClient.deleteCookie("token"); window.location.href = import.meta.env.VITE_AUTH_URL; }}>Logout</div>, "99", <LogoutOutlined />)
     //getItem(<NavTab url="../assignment/admin">Assignment</NavTab>, '3', <FileTextOutlined />)
 ];
 const itemsParticipant: MenuItem[] = [
+    getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
     getItem(<NavTab url="../attendance">Attendance</NavTab>, '1', <CalendarOutlined />),
-    getItem(<NavTab url="../assignment">Assignment</NavTab>, '2', <FileTextOutlined />)
+    getItem(<NavTab url="../assignment">Assignment</NavTab>, '2', <FileTextOutlined />),
+    getItem(<div onClick={() => { APIClient.deleteCookie("token"); window.location.href = import.meta.env.VITE_AUTH_URL; }}>Logout</div>, "99", <LogoutOutlined />)
 ];
 
 const sidebarMaping: { [key: string]: MenuItem[] } = {

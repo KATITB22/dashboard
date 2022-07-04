@@ -12,7 +12,7 @@ function App() {
     const [user, setUser] = useState({});
     document.title = 'Dashboard - KAT ITB 2022'
     useEffect(() => {
-        APIClient.checkToken(false).then((result) => setUser(result));
+        APIClient.checkToken(true).then((result) => setUser(result));
     }, [])
     return (
         <UserContext.Provider value={user}>

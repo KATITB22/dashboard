@@ -5,7 +5,7 @@
     "scripts": {
         "preinstall": "npx only-allow yarn",
         "dev": "vite",
-        "build": "yarn lint && tsc && vite build",
+        "build": "tsc && vite build",
         "preview": "vite preview"
     },
     "dependencies": {
