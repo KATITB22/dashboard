@@ -52,12 +52,14 @@ const itemsCommittee: MenuItem[] = [
         getItem(<NavTab url="../group/upload">Upload</NavTab>, '2b')
     ]),
     getItem(<NavTab url="../assignment/admin">Assignment</NavTab>, '3', <FileTextOutlined />),
+    getItem(<NavTab url="../profile">Profile</NavTab>, '4', <ContactsOutlined />),
     getItem(<Logout />, "99", <LogoutOutlined />)
 ];
 
 const itemsMentor: MenuItem[] = [
     getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
     getItem(<NavTab url="../attendance/mentor">Attendance</NavTab>, '1', <CalendarOutlined />),
+    getItem(<NavTab url="../profile">Profile</NavTab>, '2', <ContactsOutlined />),
     getItem(<Logout />, "99", <LogoutOutlined />)
     //getItem(<NavTab url="../assignment/admin">Assignment</NavTab>, '3', <FileTextOutlined />)
 ];
@@ -65,6 +67,7 @@ const itemsParticipant: MenuItem[] = [
     getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
     getItem(<NavTab url="../attendance">Attendance</NavTab>, '1', <CalendarOutlined />),
     getItem(<NavTab url="../assignment">Assignment</NavTab>, '2', <FileTextOutlined />),
+    getItem(<NavTab url="../profile">Profile</NavTab>, '3', <ContactsOutlined />),
     getItem(<Logout />, "99", <LogoutOutlined />)
 ];
 
