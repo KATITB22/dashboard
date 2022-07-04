@@ -1,7 +1,4 @@
 export interface AssignmentComponentProps {
-    dataHandler: Function;
-    data: Record<string, any>;
-
     id: string;
     question: string;
     question_no: number;

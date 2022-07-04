@@ -29,7 +29,7 @@ export const Dashboard = () => {
                 <Descriptions.Item label="Sex">{user.sex}</Descriptions.Item>
                 <Descriptions.Item label="Role">{user.role}</Descriptions.Item>
             </Descriptions>
-            <Timeline mode="alternate" className='mt-16'>
+            <Timeline mode="alternate" className='mt-16 hidden'>
                 <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
                 <Timeline.Item dot={<ClockCircleOutlined />}>Solve initial network problems 2015-09-01</Timeline.Item>
                 <Timeline.Item>Technical testing 2015-09-01</Timeline.Item>

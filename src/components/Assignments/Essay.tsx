@@ -1,23 +1,19 @@
-import { Col, Form, Input, InputNumber, Radio, Row, Space } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { Col, Form, Input, InputNumber, Row } from "antd";
+import React, { useEffect, useState } from "react";
 import { AssignmentComponentProps } from ".";
-import * as _ from "lodash";
+import { WorkspaceContext } from "../../context";
 
 export const Essay = (item: AssignmentComponentProps) => {
     const [answer, setAnswer] = useState<string | undefined>(undefined);
-    const handleDebounce = (val: any) => {
-        item.dataHandler({
-            ...item.data,
-            [item.id]: val,
-        });
-        setAnswer(val);
+    const { data, setData }: any = React.useContext(WorkspaceContext);
+    const handleChange = (e: any) => {
+        setAnswer(e.target.value);
+        setData({ ...data, [item.id]: e.target.value });
     }
 
     useEffect(() => {
-        setAnswer(item.data[item.id]);
+        setAnswer(data[item.id]);
     }, []);
-    const debounceFn = useCallback(_.debounce(handleDebounce, 1000), []);
-    const handleChange = (e: any) => debounceFn(e.target.value);
 
     return (
         <Form.Item label={`${item.question_no}. ${item.question}`} key={item.id}>

@@ -1,4 +1,4 @@
-import { Button, PageHeader, Space, Spin, Table, Tag } from 'antd';
+import { Alert, Button, PageHeader, Space, Spin, Table, Tag } from 'antd';
 import {
     PlusOutlined,
     FormOutlined,
@@ -172,7 +172,8 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
     return (
         <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
             <PageHeader title={(isAdmin) ? 'Admin Assignments Page' : 'Assignments'} />
-            <div className='mb-3'>Last Update: {lastUpdate} WIB</div>
+            <Alert className='mb-5' showIcon type="info" message="Disclaimer: Fitur ini masih dalam pengembangan dan belum sempurna! Masih dalam tahap uji coba. Mohon maaf apabila terjadi kesalahan. Ditargetkan mendekati sempurna untuk acara OSKM." />
+            <div className='mb-3'>Last Data Update: {lastUpdate} WIB</div>
             {(isAdmin) ? <div className="mb-5">
                 <Link to="../assignment/create">
                     <Button icon={<PlusOutlined />} size="large" type="primary">

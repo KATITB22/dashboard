@@ -1,26 +1,19 @@
 import { Col, Form, Input, InputNumber, Radio, Row, Space } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AssignmentComponentProps } from ".";
-import * as _ from "lodash";
+import { WorkspaceContext } from "../../context";
 
 export const PilihanGanda = (item: AssignmentComponentProps) => {
     if (!item.metadata) return null;
     const [answer, setAnswer] = useState<string | undefined>(undefined);
-
-    const handleDebounce = (val: any) => {
-        item.dataHandler({
-            ...item.data,
-            [item.id]: val,
-        });
-    }
-    const debounceFn = useCallback(_.debounce(handleDebounce, 1500), []);
-    const instantChange = (val: any) => {
-        setAnswer(val.target.value);
-        debounceFn(val.target.value)
+    const { data, setData }: any = React.useContext(WorkspaceContext);
+    const handleChange = (e: any) => {
+        setAnswer(e.target.value);
+        setData({ ...data, [item.id]: e.target.value });
     }
 
     useEffect(() => {
-        setAnswer(item.data[item.id]);
+        setAnswer(data[item.id]);
     }, []);
 
     const options = ['A', 'B', 'C', 'D', 'E'];
@@ -30,7 +23,7 @@ export const PilihanGanda = (item: AssignmentComponentProps) => {
                 <Row gutter={[16, 16]} align="middle">
                     <Col
                         xs={24} xl={20}>
-                        <Radio.Group onChange={instantChange} disabled={!item.editAnswer}
+                        <Radio.Group onChange={handleChange} disabled={!item.editAnswer}
                             value={answer}>
                             <Space direction="vertical">
                                 {options.map((each) => {

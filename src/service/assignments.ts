@@ -1,4 +1,3 @@
-import { result } from 'lodash';
 import moment from 'moment';
 import {
     FailureCallbackFunction,
@@ -58,7 +57,7 @@ class AssignmentsService extends GenericService {
                 return result;
             })
             response.topic.questions = final;
-        } else {
+        } else if (response.topic) {
             response.topic.questions = [];
         }
         this.handleResponse(response, onSuccess, onFail);
@@ -95,12 +94,46 @@ class AssignmentsService extends GenericService {
         }
         this.handleResponse(response, onSuccess, onFail);
     }
+
     public async createTopic(
         item: RTopic,
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
     ) {
         const response = await APIClient.POST('/topics', item);
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
+    public async postAnswers(
+        entryId: string,
+        item: Record<string, any>,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.PUT(`/entries/${entryId}/answer`, {
+            answers: item
+        });
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
+    public async submit(
+        entryId: string,
+        item: Record<string, any>,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.POST(`/entries/${entryId}/submit`, {
+            answers: item
+        });
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
+    public async unsubmit(
+        entryId: string,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.POST(`/entries/${entryId}/edit`, {});
         this.handleResponse(response, onSuccess, onFail);
     }
 

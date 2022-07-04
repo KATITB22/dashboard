@@ -98,8 +98,8 @@ const GroupAttendancePage = React.lazy(() =>
 );
 
 const PageNotFound = React.lazy(() =>
-    import('./pages/Dashboard').then((module) => ({
-        default: module.Dashboard,
+    import('./pages/NotFound').then((module) => ({
+        default: module.Page,
     }))
 );
 
@@ -156,14 +156,14 @@ export const Routing: PageRouting[] = [
         path: '/assignment/workspace/:id',
         component: WorkspacePage,
     },
-    {
-        path: '/assignment/:id/submissions',
-        component: SubmissionListPage,
-    },
-    {
-        path: '/submission/:id',
-        component: SubmissionDetailsPage,
-    },
+    // {
+    //     path: '/assignment/:id/submissions',
+    //     component: SubmissionListPage,
+    // },
+    // {
+    //     path: '/submission/:id',
+    //     component: SubmissionDetailsPage,
+    // },
     {
         path: '/group',
         component: GroupListPage,
