@@ -30,38 +30,41 @@ export const GroupUploadForm = () => {
             return;
         }
         let data: any = []
-
-        await (await readXlsxFile(file.originFileObj)).map((row: any, idx) => {
-            if (idx > 0) {
-                data[row[1]] === undefined ? (
-                    data[row[1]] = {},
-                    data[row[1]].name = "Kelompok " + row[1],
-                    data[row[1]].leaders = [],
-                    data[row[1]].members = [],
-                    row[2].toLowerCase() === "member" ? (
-                        data[row[1]].members.push(row[0])
+        try {
+            await (await readXlsxFile(file.originFileObj)).map((row: any, idx) => {
+                if (idx > 0) {
+                    data[row[1]] === undefined ? (
+                        data[row[1]] = {},
+                        data[row[1]].name = "Kelompok " + row[1],
+                        data[row[1]].leaders = [],
+                        data[row[1]].members = [],
+                        row[2] === "Member" ? (
+                            data[row[1]].members.push(row[0])
+                        ) : (
+                            data[row[1]].leaders.push(row[0])
+                        )
                     ) : (
-                        data[row[1]].leaders.push(row[0])
+                        row[2] === "Member" ? (
+                            data[row[1]].members.push(row[0])
+                        ) : (
+                            data[row[1]].leaders.push(row[0])
+                        )
                     )
-                ) : (
-                    row[2].toLowerCase() === "member" ? (
-                        data[row[1]].members.push(row[0])
-                    ) : (
-                        data[row[1]].leaders.push(row[0])
-                    )
-                )
-            } 
-        })
+                }
+            });
+        } catch (err: any) {
+            toast.error(err);
+        }
 
         const res = data.slice(1, data.length);
         const arr: number[] = [];
         const succ: number[] = [];
         res.map((d: any, idx: number) => {
-            Service.uploadGroup(d, 
+            Service.uploadGroup(d,
                 (resp) => {
-                    succ.push(idx+1);
-                    {idx === res.length - 1 && succ.length === res.length ? toast.success("Successfully uploaded " + file.name) && setLoading(false) : null }
-                }, 
+                    succ.push(idx + 1);
+                    { idx === res.length - 1 && succ.length === res.length ? toast.success("Successfully uploaded " + file.name) && setLoading(false) : null }
+                },
                 (err) => {
                     setErrData((old: any) => [...old, {
                         key: errData.length,
@@ -70,9 +73,11 @@ export const GroupUploadForm = () => {
                         data: err.toString().includes('members') ? d.members.map((t: any) => t + ' ') : d.leaders.map((t: any) => t + ' ')
                     }])
                     arr.push(idx)
-                    {idx === res.length-1 && arr.length > 0 ? (
-                        toast.error("Failed to upload " + file.name) && setLoading(false)
-                    ) : null }
+                    {
+                        idx === res.length - 1 && arr.length > 0 ? (
+                            toast.error("Failed to upload " + file.name) && setLoading(false)
+                        ) : null
+                    }
                 });
         })
         setFile(undefined);
@@ -156,7 +161,7 @@ export const GroupUploadForm = () => {
                     </Form.Item>
                 </div>
             </Form>
-            { errData.length > 0 ? <Table dataSource={errData} columns={columns} /> : null }
+            {errData.length > 0 ? <Table dataSource={errData} columns={columns} /> : null}
         </Spin>
     );
 };

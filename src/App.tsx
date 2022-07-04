@@ -18,7 +18,6 @@ function App() {
     useEffect(() => {
         APIClient.checkToken().then((result) => {
             setUser(result);
-            console.log("asd");
             setLoggedIn((Object.keys(result).length > 0));
             setLoading(false);
         }).catch(() => {
