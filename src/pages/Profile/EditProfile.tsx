@@ -20,17 +20,20 @@ const faculty = [
     "SF",
     "SITH",
     "STEI",
+    "-",
 ]
 
 const campus = [
     "Ganesha",
     "Jatinangor",
     "Cirebon",
+    "-",
 ]
 
 const gender = [
     "Male",
     "Female",
+    "Unknown",
 ]
 
 export const EditProfile = () => {
