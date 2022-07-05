@@ -70,7 +70,6 @@ export const ParticipantAttendanceModal = ({
     const timeFormat = 'DD MMM YY HH:mm';
     const startTime = `${moment(selectedEvent.start_date).format(timeFormat)}`
     const endTime = `${moment(selectedEvent.end_date).format(timeFormat)}`;
-    const timeRange = `${startTime} - ${endTime}`
 
     const loadModalContent = () => {
         if (selectedEvent.type === 'Self') {
@@ -78,7 +77,7 @@ export const ParticipantAttendanceModal = ({
                 if (moment().isBefore(selectedEvent.end_date)) {
                     return (
                         <p>
-                            {`Presensi akan dibuka pada ${timeRange}`}
+                            {`Presensi belum dibuka.`}
                         </p>
                     );
                 } else {

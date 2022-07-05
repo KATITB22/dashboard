@@ -29,7 +29,7 @@ function App() {
     return (
         <Spin tip="Loading..." spinning={loading}>
             <UserContext.Provider value={{ user, setUser, setLoggedIn }}>
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div>Loading... Your web browser is loading the script, please wait...</div>}>
                     {isLoggedIn ? (<BrowserRouter>
                         <Routes>
                             {Routing.map((route) => {

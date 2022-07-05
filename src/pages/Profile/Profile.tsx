@@ -1,13 +1,69 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, PageHeader, Input, Button } from 'antd';
+import { Form, PageHeader, Input, Button, Spin, Table } from 'antd';
 import { StandardLayout } from '../../layout/StandardLayout';
-import { UserContext } from '../../context'
+import { UserContext } from '../../context';
+import { defaultFailureCallback } from '../../service';
+import GroupService from '../../service/group';
 
 export const Profile = () => {
     const navigate = useNavigate();
     const { user }: any = useContext(UserContext);
+    const [groupLoading, setGroupLoading] = useState<boolean>(true);
+    const [page, setPage] = useState<number>(1);
+    const [members, setMembers] = useState<any[]>([]);
+    const [isCommittee, setIsCommittee] = useState<boolean>(false);
 
+    useEffect(() => {
+        setIsCommittee((user.role === 'Committee'));
+        if (!isCommittee)
+            GroupService.getMyGroup((res) => {
+                const data: any[] = [];
+                res.leaders.forEach((each: any) => {
+                    each.role = "Mentor";
+                    data.push(each);
+                });
+                res.members.forEach((each: any) => {
+                    each.role = "Member";
+                    data.push(each);
+                });
+                setMembers(data);
+                setGroupLoading(false);
+            }, (err) => defaultFailureCallback(err));
+    }, []);
+
+    const columns = [
+        {
+            title: 'No',
+            key: 'idx',
+            render: (_: any, record: any, idx: number) => <>{idx + 1 + (page - 1) * 10}</>
+        },
+        {
+            title: 'NIM',
+            dataIndex: 'username',
+            key: 'nim',
+        },
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Faculty',
+            dataIndex: 'faculty',
+            key: 'faculty',
+        },
+        {
+            title: 'Campus',
+            dataIndex: 'campus',
+            key: 'campus',
+        },
+        {
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
+        },
+    ];
     return (
         <StandardLayout allowedRole={["Committee", "Participant", "Mentor"]}>
             <PageHeader title="Profile" />
@@ -57,6 +113,14 @@ export const Profile = () => {
             >
                 Edit Profile
             </Button>
+            {!isCommittee ? <>
+                <PageHeader title="My Group" />
+                <div className='mt-3'>
+                    <Spin tip="Fetching data..." spinning={groupLoading}>
+                        <Table dataSource={members} columns={columns} pagination={{ onChange: (e) => setPage(e), showSizeChanger: false }} />
+                    </Spin>
+                </div>
+            </> : <></>}
         </StandardLayout>
     );
 };
