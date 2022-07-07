@@ -1,4 +1,4 @@
-import { Button, Col, Row, Form, PageHeader, Spin, Modal, } from 'antd';
+import { Button, Col, Row, Form, PageHeader, Spin, Alert, Popconfirm, } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
@@ -12,6 +12,7 @@ import moment from 'moment';
 import { AssignmentComponentProps } from '../../components/Assignments';
 import { WorkspaceContext } from '../../context';
 import { toast } from 'react-toastify';
+import { SaveStatus } from '../../components/Assignments/SaveStatus';
 
 interface Time {
     start: moment.Moment;
@@ -64,7 +65,7 @@ export const Workspace = () => {
         });
     }
 
-    const debounceFn = useCallback(_.debounce(handleDebounceFn, 10000), []);
+    const debounceFn = useCallback(_.debounce(handleDebounceFn, 5000), []);
 
     useEffect(() => {
         debounceFn.cancel();
@@ -83,7 +84,6 @@ export const Workspace = () => {
         });
 
         const questions: AssignmentComponentProps[] = response.topic.questions.map((each: any) => {
-
             return ({
                 id: each.id,
                 metadata: each.metadata,
@@ -158,17 +158,15 @@ export const Workspace = () => {
 
     return (
         <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
-            <WorkspaceContext.Provider value={{ data, setData }}>
+            <WorkspaceContext.Provider value={{ data, setData, lastUpdate, canSave }}>
                 <PageHeader onBack={() => navigate(-1)} title={"Workspace: " + title} />
-                <p>Assignment Time: {time.range}</p>
-                <Spin tip="Saving Answer" spinning={saving}>
-                    <div className='flex flex-row'>
-                        <p>Terakhir kali disimpan pada {lastUpdate}</p>
-                        <Button type="primary" className='ml-3' onClick={() => {
+                <Alert className='max-w-lg' message="Waktu Pengerjaan" type="info" description={`${time.range} WIB`} />
+                <div className='max-w-lg my-4'>
+                    <SaveStatus loading={saving}
+                        saveButtonHandler={() => {
                             handleDebounceFn(submissionId, data);
-                        }} disabled={!canSave()}>Simpan</Button>
-                    </div>
-                </Spin>
+                        }} />
+                </div>
                 <br />
                 {!loading ? <Spin tip="Submitting..." spinning={spinning}>
                     <Row justify="center">
@@ -176,21 +174,27 @@ export const Workspace = () => {
                             <Form layout="vertical">
                                 {questions.map((each: any) => {
                                     if (each.type === 'ISIAN') {
-                                        return <Isian key={each.id} data={data} dataHandler={setData} {...each} editAnswer={(submitTime === null)} />
+                                        return <Isian key={each.id} {...each} editAnswer={(submitTime === null)} />
                                     } else if (each.type === 'PILIHAN GANDA') {
-                                        return <PilihanGanda key={each.id} data={data} dataHandler={setData} {...each} editAnswer={(submitTime === null)} />
+                                        return <PilihanGanda key={each.id} {...each} editAnswer={(submitTime === null)} />
                                     } else {
-                                        return <Essay key={each.id} data={data} dataHandler={setData} {...each} editAnswer={(submitTime === null)} />
+                                        return <Essay key={each.id} {...each} editAnswer={(submitTime === null)} />
                                     }
                                 })}
                                 <Form.Item>
                                     <Button
                                         size="large"
                                         type="primary"
-                                        onClick={(submitTime) ? onUnsubmit : onSubmit}
+                                        onClick={(submitTime) ? () => { } : onSubmit}
                                         danger={!!submitTime}
                                     >
-                                        {(submitTime) ? 'Unsubmit' : 'Submit'}
+                                        {(submitTime) ? <Popconfirm title={<>
+                                            <p>Jika kamu melakukan unsubmit setelah deadline, akan dianggap telat.</p>
+                                            <p>Jangan lupa melakukan submit setelah selesai mengubah jawaban.</p>
+                                            <p>Apakah kamu yakin?</p>
+                                        </>} onConfirm={onUnsubmit} okText="Ya" cancelText="Batal" okType='danger'>
+                                            Unsubmit
+                                        </Popconfirm> : 'Submit'}
                                     </Button>
                                 </Form.Item>
                             </Form>

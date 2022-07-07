@@ -24,6 +24,7 @@ export const QuestionItemList = (item: Question) => {
             {Object.keys(metadata).map((each: any) => {
                 if (!each.includes("pilihan_")) return;
                 const opsi = each.replace("pilihan_", "");
+                if (!metadata[each]) return;
                 return <span className='text-gray-400'>{`${opsi}. ${metadata[each]}`}</span>
             })}
             <span className='text-gray-400'>Correct Answer: {item.hidden_metadata['correct_answer'].toLocaleUpperCase()}</span>

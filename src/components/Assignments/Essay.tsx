@@ -5,14 +5,26 @@ import { WorkspaceContext } from "../../context";
 
 export const Essay = (item: AssignmentComponentProps) => {
     const [answer, setAnswer] = useState<string | undefined>(undefined);
-    const { data, setData }: any = React.useContext(WorkspaceContext);
+    const [score, setScore] = useState<number | undefined>(undefined);
+    const { data, setData, scoreData, setScoreData }: any = React.useContext(WorkspaceContext);
+
     const handleChange = (e: any) => {
         setAnswer(e.target.value);
         setData({ ...data, [item.id]: e.target.value });
+        setScore(scoreData[item.id]);
+    }
+
+    const handleScoreChange = (e: any) => {
+        if (e == null) {
+            e = 0;
+        }
+        setScore(e);
+        setScoreData({ ...scoreData, [item.id]: e });
     }
 
     useEffect(() => {
         setAnswer(data[item.id]);
+        setScore(scoreData[item.id] || 0);
     }, []);
 
     return (
@@ -25,9 +37,14 @@ export const Essay = (item: AssignmentComponentProps) => {
                             showCount value={answer} />
                     </Col>
                     <Col span={3}>
-                        <InputNumber addonAfter={item.max_score} min={0} value={item.score[item.id]} disabled={!item.editScore} />
+                        <InputNumber addonAfter={item.max_score}
+                            onChange={handleScoreChange} min={0} max={item.max_score}
+                            value={score} disabled={!item.editScore} />
                     </Col>
                 </Row>
+                {item.correct_answer ? <Row gutter={[16, 16]} align="middle">
+                    <p className="text-gray-400">Correct Answer: {item.correct_answer}</p>
+                </Row> : <></>}
             </Input.Group>
         </Form.Item>);
 }

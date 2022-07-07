@@ -1,5 +1,4 @@
 import React, { LazyExoticComponent } from 'react';
-import { Profile } from './pages/Profile/Profile';
 
 const DefPage = React.lazy(() =>
     import('./pages/Dashboard').then((module) => ({
@@ -110,10 +109,16 @@ const WorkspacePage = React.lazy(() =>
     }))
 );
 
+const WorkspaceScoringPage = React.lazy(() =>
+    import('./pages/Assignments/WorkspaceScoring').then((module) => ({
+        default: module.WorkspaceScoring,
+    }))
+);
+
 const ProfilePage = React.lazy(() =>
     import('./pages/Profile/Profile').then((module) => ({
         default: module.Profile,
-    })) 
+    }))
 )
 
 const EditProfilePage = React.lazy(() =>
@@ -169,10 +174,14 @@ export const Routing: PageRouting[] = [
         path: '/assignment/workspace/:id',
         component: WorkspacePage,
     },
-    // {
-    //     path: '/assignment/:id/submissions',
-    //     component: SubmissionListPage,
-    // },
+    {
+        path: '/assignment/workspace/:id/scoring',
+        component: WorkspaceScoringPage,
+    },
+    {
+        path: '/assignment/:id/submissions',
+        component: SubmissionListPage,
+    },
     // {
     //     path: '/submission/:id',
     //     component: SubmissionDetailsPage,

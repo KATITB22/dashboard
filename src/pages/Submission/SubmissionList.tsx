@@ -1,8 +1,10 @@
 import { Table, PageHeader, Space, Button } from 'antd';
 import { FolderOpenOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/lib/table';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
+import { useEffect } from 'react';
+import Service from '../../service/assignments';
 
 interface DataType {
     id: number;
@@ -14,36 +16,10 @@ const columns: ColumnsType<DataType> = [
     {
         title: 'Submission',
         dataIndex: 'submission',
-        filters: [
-            {
-                text: 'Joe',
-                value: 'Joe',
-            },
-            {
-                text: 'Jim',
-                value: 'Jim',
-            },
-        ],
-        onFilter: (value: any, record) =>
-            record.submission.indexOf(value) === 0,
-        sorter: (a, b) => a.submission.localeCompare(b.submission),
-        sortDirections: ['descend'],
     },
     {
         title: 'NIM',
         dataIndex: 'nim',
-        filters: [
-            {
-                text: 'London',
-                value: 'London',
-            },
-            {
-                text: 'New York',
-                value: 'New York',
-            },
-        ],
-        onFilter: (value: any, record) => record.nim.indexOf(value) === 0,
-        sorter: (a, b) => a.nim.localeCompare(b.nim),
     },
     {
         title: 'Action',
@@ -93,7 +69,13 @@ const data = [
 ];
 
 export const SubmissionList = () => {
+    const { id } = useParams();
+    if (!id) return null;
     const navigate = useNavigate();
+
+    useEffect(() => {
+        Service.getTopicSubmissions(id, 1, (response) => console.log(response), (err) => { });
+    }, []);
 
     return (
         <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>

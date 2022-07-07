@@ -105,6 +105,15 @@ class AssignmentsService extends GenericService {
         this.handleResponse(response, onSuccess, onFail);
     }
 
+    public async getEntry(
+        entryId: string,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.GET(`/entries/${entryId}/entry`);
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
     public async postAnswers(
         entryId: string,
         item: Record<string, any>,
@@ -113,6 +122,18 @@ class AssignmentsService extends GenericService {
     ) {
         const response = await APIClient.PUT(`/entries/${entryId}/answer`, {
             answers: item
+        });
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
+    public async postScores(
+        entryId: string,
+        item: Record<string, any>,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.PUT(`/entries/${entryId}/score`, {
+            scores: item
         });
         this.handleResponse(response, onSuccess, onFail);
     }
@@ -155,6 +176,35 @@ class AssignmentsService extends GenericService {
     ) {
         const response = await APIClient.DELETE(`/topics/${id}`);
         this.handleResponse(response, onSuccess, onFail);
+    }
+
+    public async getTopicSubmissions(
+        topicId: string,
+        pageNumber: number = 1,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.GET(`/entries/${topicId}`, {
+            'pageSize': 10,
+            'page': pageNumber
+
+        });
+        if (response instanceof APIErrorObject) {
+            if (!onFail) return;
+
+            return onFail(response);
+        }
+
+        const rawEntries: any[] = response.data;
+        const { page, pageCount, pageSize, total }: { [key: string]: number } = response.metadata;
+        const mappedResponse = {
+            entries: rawEntries,
+            page,
+            pageCount,
+            total,
+            pageSize: +pageSize,
+        };
+        if (onSuccess) onSuccess(mappedResponse);
     }
 
     public async getTopics(

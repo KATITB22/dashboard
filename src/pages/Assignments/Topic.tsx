@@ -169,7 +169,7 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
     })
 
     return (
-        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
+        <StandardLayout allowedRole={["Committee", "Participant"]}>
             <PageHeader title={(isAdmin) ? 'Admin Assignments Page' : 'Assignments'} />
             <Alert className='mb-5' showIcon type="info" message="Disclaimer: Fitur ini masih dalam pengembangan dan belum sempurna! Masih dalam tahap uji coba. Mohon maaf apabila terjadi kesalahan." />
             <div className='mb-3'>Last Data Update: {lastUpdate} WIB</div>
