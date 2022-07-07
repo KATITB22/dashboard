@@ -28,13 +28,18 @@ export const TopicForm = ({ id = undefined, setQuestions }: Props) => {
     const handleChange = (f: UploadFile) => {
         setFile(f);
     };
+    const [isCreating, setIsCreating] = useState<boolean>(false);
 
-    const isCreating = !id;
     useEffect(() => {
-        ;
+        if (!id) {
+            setIsCreating(true);
+        }
+    }, []);
+
+    useEffect(() => {
         if (!isCreating) {
             setLoading(true);
-            Service.getTopic(id, true, (response) => {
+            Service.getTopic(id!, true, (response) => {
                 if (response.score_released)
                     setScoreReleased(response.score_released);
                 setInitVal({
@@ -50,10 +55,22 @@ export const TopicForm = ({ id = undefined, setQuestions }: Props) => {
                 setLoading(false);
             })
         }
-    }, []);
+    }, [isCreating]);
+
+    const handleDelete = async () => {
+        setLoading(true);
+        await Service.deleteTopic(id!, (response) => {
+            toast.success("Topic deleted successfully.");
+            navigate(-1);
+            setLoading(false);
+        }, (err) => {
+            defaultFailureCallback(err);
+            setLoading(false);
+        })
+    };
 
     const onFinish = async (item: { title: string, deadline: moment.Moment[], score_released?: boolean }) => {
-        if (!file || !file.originFileObj) return;
+        if (isCreating && !(file && file.originFileObj)) return;
         const [start, end] = item.deadline;
 
         const request: RTopic = {
@@ -76,7 +93,7 @@ export const TopicForm = ({ id = undefined, setQuestions }: Props) => {
         setLoading(true);
         if (isCreating) {
             const rawData = await (
-                await readXlsxFile(file.originFileObj)
+                await readXlsxFile(file!.originFileObj!)
             )
             request.questions = QuestionService.mapRawData(rawData);
             await Service.createTopic(request, () => {
@@ -88,7 +105,7 @@ export const TopicForm = ({ id = undefined, setQuestions }: Props) => {
                 setLoading(false);
             });
         } else {
-            await Service.updateTopic(id, request, () => {
+            await Service.updateTopic(id!, request, () => {
                 toast.success("Topic updated successfully.");
                 navigate(-1);
                 setLoading(false);
@@ -152,8 +169,13 @@ export const TopicForm = ({ id = undefined, setQuestions }: Props) => {
             )}
             <Form.Item>
                 <Button size="large" type="primary" htmlType="submit">
-                    Submit
+                    Save
                 </Button>
+                {isCreating ? <></> : <Button size="large" type="primary" onClick={() => {
+                    handleDelete();
+                }} danger className='ml-3'>
+                    Delete
+                </Button>}
             </Form.Item>
         </Form>}
     </>)

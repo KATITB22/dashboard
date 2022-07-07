@@ -68,16 +68,22 @@ export const ParticipantAttendanceModal = ({
     };
 
     const timeFormat = 'DD MMM YY HH:mm';
-    const startTime = `${moment(selectedEvent.start_date).format(timeFormat)}`
+    const startTime = `${moment(selectedEvent.end_date).format(timeFormat)}`;
     const endTime = `${moment(selectedEvent.end_date).format(timeFormat)}`;
 
     const loadModalContent = () => {
         if (selectedEvent.type === 'Self') {
             if (attend === null) {
-                if (moment().isBefore(selectedEvent.end_date)) {
+                if (moment().isBefore(selectedEvent.start_date)) {
                     return (
                         <p>
                             {`Presensi belum dibuka.`}
+                        </p>
+                    );
+                } if (moment().isBefore(selectedEvent.end_date)) {
+                    return (
+                        <p>
+                            {`Presensi dibuka sampai ${endTime}.`}
                         </p>
                     );
                 } else {

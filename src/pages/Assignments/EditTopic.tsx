@@ -15,15 +15,16 @@ export const QuestionItemList = (item: Question) => {
         return <Checkbox disabled checked>Manual Check</Checkbox>
     }
     const PilihanGanda = () => {
-        if (!item.hidden_metadata || !item.hidden_metadata['correct_answer']) {
+        if (!item.metadata || !item.hidden_metadata || !item.hidden_metadata['correct_answer']) {
             return <Essay />
         }
+        const metadata: any = item.metadata;
         return <>
             <Checkbox disabled>Manual Check</Checkbox>
-            {Object.keys(item.hidden_metadata).map((each) => {
+            {Object.keys(metadata).map((each: any) => {
                 if (!each.includes("pilihan_")) return;
                 const opsi = each.replace("pilihan_", "");
-                return <span className='text-gray-400'>{`${opsi}. ${item.hidden_metadata[each]}`}</span>
+                return <span className='text-gray-400'>{`${opsi}. ${metadata[each]}`}</span>
             })}
             <span className='text-gray-400'>Correct Answer: {item.hidden_metadata['correct_answer'].toLocaleUpperCase()}</span>
         </>
