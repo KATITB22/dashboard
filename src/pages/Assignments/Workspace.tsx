@@ -1,4 +1,4 @@
-import { Button, Col, Row, Form, PageHeader, Spin, Alert, Popconfirm, } from 'antd';
+import { Button, Col, Row, Form, PageHeader, Spin, Alert, Popconfirm, Tag, } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
@@ -26,6 +26,7 @@ export const Workspace = () => {
     if (!id) return null;
 
     const [questions, setQuestions] = useState<AssignmentComponentProps[]>([]);
+    const [scoreData, setScoreData] = useState({});
     const [loading, setLoading] = useState<boolean>(false);
     const [spinning, setSpinning] = useState<boolean>(false);
     const [title, setTitle] = useState<string>("Workspace");
@@ -40,6 +41,35 @@ export const Workspace = () => {
     const [lastUpdate, setLastUpdate] = useState<string>("?");
     const [saving, setSaving] = useState<boolean>(false);
     const [lastSavedAnswer, setLastSavedAnswer] = useState<any>({});
+    const [isChecked, setIsChecked] = useState<boolean>(false);
+
+    const Status = () => {
+        if (!submitTime) return <Tag color="yellow">Belum dikumpul</Tag>;
+
+        if (submitTime.isAfter(time.end)) {
+            const duration = moment.duration(submitTime.diff(time.end));
+            const days = duration.days();
+            const hours = duration.hours();
+            const mins = duration.minutes();
+            const secs = duration.seconds();
+            let waktu = "";
+            if (days > 0) {
+                waktu += `${days} hari `
+            }
+            if (hours > 0) {
+                waktu += `${hours} jam `
+            }
+            if (mins > 0) {
+                waktu += `${mins} menit `
+            }
+            if (secs > 0) {
+                waktu += `${secs} detik`
+            }
+            return <Tag color="red">Telat {waktu}</Tag>;
+        } else {
+            return <Tag color="blue">Tepat waktu</Tag>;
+        }
+    }
 
     const canSave = () => {
         if (!lastSavedAnswer || !data) return true;
@@ -76,6 +106,7 @@ export const Workspace = () => {
         setTitle(response.topic.title);
         setSubmissionId(response.id);
         setLastUpdate(moment().format("DD MMM YY HH:mm:ss"));
+        setIsChecked(response.has_been_checked);
         const start = moment(response.topic.start);
         const end = moment(response.topic.end);
         const timeFormat = "DD MMM YY HH:MM";
@@ -158,7 +189,7 @@ export const Workspace = () => {
 
     return (
         <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
-            <WorkspaceContext.Provider value={{ data, setData, lastUpdate, canSave }}>
+            <WorkspaceContext.Provider value={{ data, setData, lastUpdate, canSave, scoreData, setScoreData }}>
                 <PageHeader onBack={() => navigate(-1)} title={"Workspace: " + title} />
                 <Alert className='max-w-lg' message="Waktu Pengerjaan" type="info" description={`${time.range} WIB`} />
                 <div className='max-w-lg my-4'>
@@ -181,7 +212,7 @@ export const Workspace = () => {
                                         return <Essay key={each.id} {...each} editAnswer={(submitTime === null)} />
                                     }
                                 })}
-                                <Form.Item>
+                                {!isChecked ? <Form.Item>
                                     <Button
                                         size="large"
                                         type="primary"
@@ -196,7 +227,10 @@ export const Workspace = () => {
                                             Unsubmit
                                         </Popconfirm> : 'Submit'}
                                     </Button>
-                                </Form.Item>
+                                </Form.Item> : <></>}
+                                <div className='my-1'>
+                                    <p>Status Pengerjaan: <Status /></p>
+                                </div>
                             </Form>
                         </Col>
                     </Row>

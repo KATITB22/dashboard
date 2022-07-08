@@ -178,6 +178,36 @@ class AssignmentsService extends GenericService {
         this.handleResponse(response, onSuccess, onFail);
     }
 
+
+    public async getTopicSubmissionsMyGroup(
+        topicId: string,
+        pageNumber: number = 1,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.GET(`/entries/${topicId}/group`, {
+            'pageSize': 10,
+            'page': pageNumber
+
+        });
+        if (response instanceof APIErrorObject) {
+            if (!onFail) return;
+
+            return onFail(response);
+        }
+
+        const rawEntries: any[] = response.data;
+        const { page, pageCount, pageSize, total }: { [key: string]: number } = response.metadata;
+        const mappedResponse = {
+            entries: rawEntries,
+            page,
+            pageCount,
+            total,
+            pageSize: +pageSize,
+        };
+        if (onSuccess) onSuccess(mappedResponse);
+    }
+
     public async getTopicSubmissions(
         topicId: string,
         pageNumber: number = 1,

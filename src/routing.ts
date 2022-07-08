@@ -53,12 +53,6 @@ const SubmissionListPage = React.lazy(() =>
     }))
 );
 
-const SubmissionDetailsPage = React.lazy(() =>
-    import('./pages/Submission/SubmissionDetails').then((module) => ({
-        default: module.SubmissionDetails,
-    }))
-);
-
 
 const GroupListPage = React.lazy(() =>
     import('./pages/Group/GroupList').then((module) => ({
@@ -159,7 +153,7 @@ export const Routing: PageRouting[] = [
         component: TopicPage,
     },
     {
-        path: '/assignment/admin',
+        path: '/assignment/super',
         component: TopicAdminPage,
     },
     {
@@ -182,10 +176,6 @@ export const Routing: PageRouting[] = [
         path: '/assignment/:id/submissions',
         component: SubmissionListPage,
     },
-    // {
-    //     path: '/submission/:id',
-    //     component: SubmissionDetailsPage,
-    // },
     {
         path: '/group',
         component: GroupListPage,

@@ -1,86 +1,148 @@
-import { Table, PageHeader, Space, Button } from 'antd';
-import { FolderOpenOutlined } from '@ant-design/icons';
+import { Table, PageHeader, Space, Button, Spin, Tag } from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/lib/table';
-import { useNavigate, Link, useParams } from 'react-router-dom';
+import { useNavigate, Link, useParams, useSearchParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
-import { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Service from '../../service/assignments';
+import moment from 'moment';
+import { defaultFailureCallback } from '../../service';
+import { LastUpdateStatus } from '../../components/Assignments/LastUpdate';
+import { UserContext } from '../../context';
 
-interface DataType {
-    id: number;
-    submission: string;
-    nim: string;
+interface SubmissionListProps {
+    isAdmin?: boolean;
 }
 
-const columns: ColumnsType<DataType> = [
-    {
-        title: 'Submission',
-        dataIndex: 'submission',
-    },
-    {
-        title: 'NIM',
-        dataIndex: 'nim',
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (_, record) => (
-            <Space size="middle">
-                <Link to={`/submissions/${record.id}`}>
-                    <Button
-                        type="primary"
-                        icon={<FolderOpenOutlined />}
-                        size="large"
-                    >
-                        Open
-                    </Button>
-                </Link>
-            </Space>
-        ),
-    },
-];
-
-const data = [
-    {
-        id: 1,
-        submission: 'John Brown',
-        nim: '13519001',
-    },
-    {
-        id: 2,
-        submission: 'John Brown',
-        nim: '13519002',
-    },
-    {
-        id: 3,
-        submission: 'John Brown',
-        nim: '13519003',
-    },
-    {
-        id: 4,
-        submission: 'John Brown',
-        nim: '13519004',
-    },
-    {
-        id: 5,
-        submission: 'John Brown',
-        nim: '13519005',
-    },
-];
-
-export const SubmissionList = () => {
+export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
+    const { user }: any = useContext(UserContext);
+    if (user.role === 'Committee') {
+        isAdmin = true;
+    } else if (user.role === 'Mentor') {
+        isAdmin = false;
+    } else {
+        return <></>;
+    }
     const { id } = useParams();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [page, setPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(10);
+    const [total, setTotal] = useState<number>(0);
+    const [queryParams, setQueryParams] = useSearchParams();
+    const [lastUpdate, setLastUpdate] = useState<string>("");
+    const [data, setData] = useState<any[]>([]);
     if (!id) return null;
     const navigate = useNavigate();
 
+    const refresh = (getPage: boolean = true) => {
+        if (!document.hasFocus()) return;
+
+        if (getPage) {
+            const queryPage = queryParams.get("page");
+            if (queryPage) {
+                const numberedPage = +queryPage;
+                setPage(Number.isNaN(numberedPage) ? 1 : numberedPage);
+            }
+        }
+
+        setLastUpdate(moment().format("DD MMM YYYY HH:mm"));
+        setLoading(true);
+        let fn = Service.getTopicSubmissionsMyGroup
+        if (isAdmin) {
+            fn = Service.getTopicSubmissions
+        }
+        fn(id, page, (data) => {
+            setData(data.entries);
+            setTotal(data.total);
+            setPage(data.page);
+            setPageSize(data.pageSize);
+            setLoading(false);
+        }, (err) => {
+            defaultFailureCallback(err);
+            setLoading(false);
+        });
+    }
+
     useEffect(() => {
-        Service.getTopicSubmissions(id, 1, (response) => console.log(response), (err) => { });
+        refresh();
+        const worker = setInterval(() => refresh(), 30000);
+        return () => {
+            clearInterval(worker);
+        }
     }, []);
 
+    useEffect(() => { refresh(false) }, [page]);
+
+    const columns: ColumnsType<any> = [
+        {
+            title: 'No.',
+            dataIndex: 'idx',
+            key: 'id',
+            render: (_, record, idx) => (<>{+idx + 1 + ((page - 1) * pageSize)}</>),
+        },
+        {
+            title: 'NIM',
+            key: 'nim',
+            dataIndex: 'username',
+        },
+        {
+            title: 'Name',
+            key: 'name',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Group',
+            key: 'group',
+            dataIndex: 'group',
+        },
+        {
+            title: 'Checked',
+            key: 'checked',
+            render: (_, record: any) => {
+                if (record.has_been_checked) {
+                    return <Tag color='green' icon={<CheckCircleOutlined />}>Sudah dinilai</Tag>
+                } else {
+                    return <Tag color='red' icon={<CloseCircleOutlined />}>Belum dinilai</Tag>
+                }
+            },
+        },
+        {
+            title: 'Submit Time',
+            key: 'submit-time',
+            render: (_, record: any) => <>{moment(record.submit_time).format("DD MMM YY HH:mm:ss")}</>,
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="middle">
+                    <Link to={`../assignment/workspace/${record.id}/scoring`}>
+                        <Button
+                            type="primary"
+                            icon={<FolderOpenOutlined />}
+                            size="middle"
+                        >
+                            Open
+                        </Button>
+                    </Link>
+                </Space>
+            ),
+        },
+    ];
+
     return (
-        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
+        <StandardLayout allowedRole={["Committee", "Mentor"]}>
             <PageHeader onBack={() => navigate(-1)} title="List Submission" />
-            <Table columns={columns} dataSource={data} />
-        </StandardLayout>
+            <LastUpdateStatus lastUpdate={lastUpdate} />
+            <Spin tip="Fetching data..." spinning={loading}>
+                <Table columns={columns} dataSource={data} pagination={{
+                    total, current: page, pageSize, showSizeChanger: false, onChange: (e) => {
+                        queryParams.set("page", e.toString());
+                        setQueryParams(queryParams);
+                        setPage(e);
+                    }
+                }} />
+            </Spin>
+        </StandardLayout >
     );
 };

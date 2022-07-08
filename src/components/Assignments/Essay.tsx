@@ -22,10 +22,19 @@ export const Essay = (item: AssignmentComponentProps) => {
         setScoreData({ ...scoreData, [item.id]: e });
     }
 
+    const handleBlur = (e: any) => {
+        if (score == null) {
+            handleScoreChange(0);
+        }
+    }
+
     useEffect(() => {
         setAnswer(data[item.id]);
-        setScore(scoreData[item.id] || 0);
-    }, []);
+        setScore(scoreData[item.id]);
+        if (item.editScore && score === undefined) {
+            handleScoreChange(0);
+        }
+    }, [scoreData, data]);
 
     return (
         <Form.Item label={`${item.question_no}. ${item.question}`} key={item.id}>
@@ -37,7 +46,7 @@ export const Essay = (item: AssignmentComponentProps) => {
                             showCount value={answer} />
                     </Col>
                     <Col span={3}>
-                        <InputNumber addonAfter={item.max_score}
+                        <InputNumber addonAfter={item.max_score} onBlur={handleBlur}
                             onChange={handleScoreChange} min={0} max={item.max_score}
                             value={score} disabled={!item.editScore} />
                     </Col>

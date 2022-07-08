@@ -1,4 +1,4 @@
-import { Button, Col, Row, Form, PageHeader, Spin, Descriptions, Timeline, Popconfirm, Alert } from 'antd';
+import { Button, Col, Row, Form, PageHeader, Spin, Descriptions, Timeline, Popconfirm, Alert, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { StandardLayout } from '../../layout/StandardLayout';
@@ -38,12 +38,14 @@ export const WorkspaceScoring = () => {
     const [user, setUser] = useState<any>({});
     const [lastUpdate, setLastUpdate] = useState<string>("?");
     const [events, setEvents] = useState<any[]>([]);
+    const [submitTime, setSubmitTime] = useState<moment.Moment>(moment());
 
     useEffect(() => {
         setLoading(true);
         Service.getEntry(id, (response) => {
             setTitle(response.topic.title);
             setUser(response.user);
+            setSubmitTime(moment(response.submit_time));
             if (response.events && Array.isArray(response.events) && response.events.length > 0) {
                 const temps = response.events.map((each: any) => ({
                     ...each,
@@ -67,8 +69,6 @@ export const WorkspaceScoring = () => {
             setTime({
                 start, end, range: `${start.format(timeFormat)} - ${end.format(timeFormat)}`
             });
-
-            console.log(response);
             setScoreData(response.scores || {});
             const questions: AssignmentComponentProps[] = response.topic.questions.map((each: any) => {
                 const mappedQuestion = {
@@ -111,6 +111,32 @@ export const WorkspaceScoring = () => {
         });
     }, []);
 
+    const Status = () => {
+        if (submitTime.isAfter(time.end)) {
+            const duration = moment.duration(submitTime.diff(time.end));
+            const days = duration.days();
+            const hours = duration.hours();
+            const mins = duration.minutes();
+            const secs = duration.seconds();
+            let waktu = "";
+            if (days > 0) {
+                waktu += `${days} hari `
+            }
+            if (hours > 0) {
+                waktu += `${hours} jam `
+            }
+            if (mins > 0) {
+                waktu += `${mins} menit `
+            }
+            if (secs > 0) {
+                waktu += `${secs} detik`
+            }
+            return <Tag color="red">Telat {waktu}</Tag>;
+        } else {
+            return <Tag color="blue">Tepat waktu</Tag>;
+        }
+    }
+
     const actionColorMap: any = {
         'Unsubmit': 'red',
         'Submit': 'blue',
@@ -134,13 +160,14 @@ export const WorkspaceScoring = () => {
             <WorkspaceContext.Provider value={{ data, setData, lastUpdate, scoreData, setScoreData }}>
                 <PageHeader onBack={() => navigate(-1)} title={"Workspace: " + title} />
                 <Spin spinning={loading} tip="Loading...">
-                    <Descriptions bordered size="default" title="Information" className='my-5'>
+                    <Descriptions bordered size="default" title="Information" className='my-5' column={4}>
                         <Descriptions.Item label="NIM">{user.username}</Descriptions.Item>
-                        <Descriptions.Item label="Name" span={2}>{user.name}</Descriptions.Item>
+                        <Descriptions.Item label="Name">{user.name}</Descriptions.Item>
                         <Descriptions.Item label="Faculty">{user.faculty}</Descriptions.Item>
                         <Descriptions.Item label="Campus">{user.campus}</Descriptions.Item>
                         <Descriptions.Item label="Sex">{user.sex == 'Unknown' ? 'No Data' : user.sex}</Descriptions.Item>
-                        <Descriptions.Item label="Assignment" span={2}>{title}</Descriptions.Item>
+                        <Descriptions.Item label="Assignment" span={1}>{title}</Descriptions.Item>
+                        <Descriptions.Item label="Status"><Status /></Descriptions.Item>
                         <Descriptions.Item label="Time">{time.range}</Descriptions.Item>
                         <Descriptions.Item label="Activity Log" span={4}>
                             {events.length === 0 ? <>No Data</> :

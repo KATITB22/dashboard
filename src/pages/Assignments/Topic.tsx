@@ -12,12 +12,14 @@ import { defaultFailureCallback } from '../../service';
 import { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { UserContext } from '../../context';
+import { LastUpdateStatus } from '../../components/Assignments/LastUpdate';
 
 interface TopicProps {
     isAdmin?: boolean;
 }
 
 export const Topic = ({ isAdmin = false }: TopicProps) => {
+    const { user }: any = useContext(UserContext);
     const [loading, setLoading] = useState<boolean>(false);
     const [topics, setTopics] = useState<ITopic[]>([]);
     const [page, setPage] = useState<number>(1);
@@ -30,11 +32,11 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
         const start = moment(record.start);
         const end = moment(record.end);
         if (now.isBetween(start, end)) {
-            return "Current";
+            return "Sekarang";
         } else if (now.isAfter(end)) {
-            return "Past";
+            return "Sudah Lewat";
         } else {
-            return "Upcoming";
+            return "Akan Datang";
         }
     }
 
@@ -57,9 +59,9 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
             render: (_, record) => {
                 var status = getRecordStatus(record);
                 const colorMappers: { [key: string]: string } = {
-                    "Past": "red",
-                    "Current": "green",
-                    "Upcoming": "purple",
+                    "Sudah Lewat": "red",
+                    "Sekarang": "green",
+                    "Akan Datang": "purple",
                     "Unknown": "yellow"
                 }
                 return (<Tag className='align-center' color={colorMappers[status]}>{status}</Tag>)
@@ -84,11 +86,11 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
                 render: (_, record) => {
                     return (
                         <Space size="middle" key={`action-` + record.id}>
-                            <Link to={`../assignment/${record.id}`}>
+                            {user.role === 'Committee' ? <Link to={`../assignment/${record.id}`}>
                                 <Button type="primary" icon={<FormOutlined />} size="middle">
                                     Edit
                                 </Button>
-                            </Link>
+                            </Link> : <></>}
                             <Link to={`../assignment/${record.id}/submissions`}>
                                 <Button
                                     type="primary"
@@ -127,15 +129,17 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
             })
     }
 
-    const refresh = () => {
+    const refresh = (getPage: boolean = true) => {
         if (!document.hasFocus()) return;
+        if (getPage) {
+            const queryPage = queryParams.get("page");
+            if (queryPage) {
+                const numberedPage = +queryPage;
+                setPage(Number.isNaN(numberedPage) ? 1 : numberedPage);
+            }
+        }
 
         setLastUpdate(moment().format("DD MMM YYYY HH:mm"));
-        const queryPage = queryParams.get("page");
-        if (queryPage) {
-            const numberedPage = +queryPage;
-            setPage(Number.isNaN(numberedPage) ? 1 : numberedPage);
-        }
         setLoading(true);
         Service.getTopics(page, (data) => {
             setTopics(data.topics);
@@ -155,25 +159,27 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
         return () => {
             clearInterval(worker);
         }
-    }, [page]);
+    }, []);
+
+    useEffect(() => { refresh(false) }, [page]);
 
     topics.sort((a, b) => {
         const statusA = getRecordStatus(a);
         const statusB = getRecordStatus(b);
         const mappers: { [key: string]: number } = {
-            'Upcoming': 2,
-            'Current': 1,
-            'Past': 3
+            'Akan Datang': 2,
+            'Sekarang': 1,
+            'Sudah Lewat': 3
         }
         return mappers[statusA] - mappers[statusB];
     })
 
     return (
-        <StandardLayout allowedRole={["Committee", "Participant"]}>
-            <PageHeader title={(isAdmin) ? 'Admin Assignments Page' : 'Assignments'} />
-            <Alert className='mb-5' showIcon type="info" message="Disclaimer: Fitur ini masih dalam pengembangan dan belum sempurna! Masih dalam tahap uji coba. Mohon maaf apabila terjadi kesalahan." />
-            <div className='mb-3'>Last Data Update: {lastUpdate} WIB</div>
-            {(isAdmin) ? <div className="mb-5">
+        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
+            <PageHeader title='Assignments Page' />
+            <Alert className='mb-5 max-w-lg' showIcon type="warning" message="Disclaimer" description="Fitur ini masih dalam pengembangan dan belum sempurna! Masih dalam tahap uji coba. Mohon maaf apabila terjadi kesalahan." closable />
+            <LastUpdateStatus lastUpdate={lastUpdate} />
+            {(isAdmin && user.role === 'Committee') ? <div className="mb-5">
                 <Link to="../assignment/create">
                     <Button icon={<PlusOutlined />} size="large" type="primary">
                         Create
@@ -195,5 +201,5 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
 
 export const TopicAdmin = () => {
     const { user }: any = useContext(UserContext);
-    return <Topic isAdmin={user.role === 'Committee'} />
+    return <Topic isAdmin={user.role === 'Committee' || user.role === 'Mentor'} />
 };

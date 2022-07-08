@@ -75,11 +75,12 @@ export const EventList = () => {
     ];
 
     useEffect(() => {
+        setLoading(true);
+
         const queryPage = queryParams.get("page");
         if (queryPage && +queryPage) {
             setPage(+queryPage);
         }
-        setLoading(true);
         eventService.getEvents(page, (data) => {
             setEvents(data.events);
             setPage(data.page);
