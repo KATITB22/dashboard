@@ -23,7 +23,7 @@ export const Essay = (item: AssignmentComponentProps) => {
     }
 
     const handleBlur = (e: any) => {
-        if (score == null) {
+        if (score === null || score === undefined) {
             handleScoreChange(0);
         }
     }
@@ -31,9 +31,6 @@ export const Essay = (item: AssignmentComponentProps) => {
     useEffect(() => {
         setAnswer(data[item.id]);
         setScore(scoreData[item.id]);
-        if (item.editScore && score === undefined) {
-            handleScoreChange(0);
-        }
     }, [scoreData, data]);
 
     return (

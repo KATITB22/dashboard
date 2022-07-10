@@ -19,7 +19,7 @@ export const Isian = (item: AssignmentComponentProps) => {
     }
 
     const handleBlur = (e: any) => {
-        if (score == null) {
+        if (score === null || score === undefined) {
             let finalScore = 0;
             if (data[item.id] && item.correct_answer && item.max_score !== undefined) {
                 if (data[item.id].toLowerCase() == item.correct_answer.toString().toLowerCase()) {
@@ -33,16 +33,6 @@ export const Isian = (item: AssignmentComponentProps) => {
     useEffect(() => {
         setAnswer(data[item.id]);
         setScore(scoreData[item.id]);
-        if (item.editScore && score === undefined) {
-            handleScoreChange(0);
-        }
-        if (!scoreData[item.id] && data[item.id] && item.correct_answer && item.max_score !== undefined && item.editScore) {
-            if (data[item.id].toLowerCase() == item.correct_answer.toString().toLowerCase()) {
-                handleScoreChange(item.max_score);
-            } else {
-                handleScoreChange(0);
-            }
-        }
     }, [scoreData, data]);
 
     return (

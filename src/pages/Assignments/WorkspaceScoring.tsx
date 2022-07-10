@@ -69,8 +69,14 @@ export const WorkspaceScoring = () => {
             setTime({
                 start, end, range: `${start.format(timeFormat)} - ${end.format(timeFormat)}`
             });
+            const questionIds: string[] = [];
+            const questionAnswers: any = {};
+            const questionScores: any = {};
+            const scoredQuestionIds: string[] = Object.keys(response.scores);
             setScoreData(response.scores || {});
             const questions: AssignmentComponentProps[] = response.topic.questions.map((each: any) => {
+                questionIds.push(each.id);
+                questionScores[each.id] = each.score;
                 const mappedQuestion = {
                     id: each.id,
                     metadata: each.metadata,
@@ -88,19 +94,35 @@ export const WorkspaceScoring = () => {
 
                 if (mappedQuestion.hidden_metadata.correct_answer) {
                     mappedQuestion.correct_answer = mappedQuestion.hidden_metadata.correct_answer;
+                    questionAnswers[each.id] = mappedQuestion.hidden_metadata.correct_answer;
                 }
 
                 return mappedQuestion;
             });
 
+            if (response.answers) {
+                setData(response.answers);
+            }
+
+            const unscoredQuestions = _.difference(questionIds, scoredQuestionIds);
+            const copied = { ...scoreData };
+            unscoredQuestions.forEach((each) => {
+                copied[each] = 0;
+                if (response.answers[each] && Object.keys(questionAnswers).includes(each)) {
+                    if (questionAnswers[each].toString().toLowerCase() == response.answers[each].toString().toLowerCase()) {
+                        copied[each] = questionScores[each];
+                    }
+                }
+            });
+            scoredQuestionIds.forEach((each) => {
+                copied[each] = response.scores[each];
+            })
+            setScoreData(copied);
+
             if (response.score) {
                 questions.forEach((each) => {
                     each.score = response.score;
                 });
-            }
-
-            if (response.answers) {
-                setData(response.answers);
             }
 
             setQuestions(questions);
