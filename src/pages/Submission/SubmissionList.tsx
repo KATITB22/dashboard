@@ -25,25 +25,23 @@ export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
     }
     const { id } = useParams();
     const [loading, setLoading] = useState<boolean>(false);
-    const [page, setPage] = useState<number>(1);
+    const [queryParams, setQueryParams] = useSearchParams();
+    const queryPage = queryParams.get("page");
+    let currPage = 1;
+    if (queryPage) {
+        const numberedPage = +queryPage;
+        currPage = Number.isNaN(numberedPage) ? 1 : numberedPage;
+    }
+    const [page, setPage] = useState<number>(currPage);
     const [pageSize, setPageSize] = useState<number>(10);
     const [total, setTotal] = useState<number>(0);
-    const [queryParams, setQueryParams] = useSearchParams();
     const [lastUpdate, setLastUpdate] = useState<string>("");
     const [data, setData] = useState<any[]>([]);
     if (!id) return null;
     const navigate = useNavigate();
 
-    const refresh = (getPage: boolean = true) => {
+    const refresh = () => {
         if (!document.hasFocus()) return;
-
-        if (getPage) {
-            const queryPage = queryParams.get("page");
-            if (queryPage) {
-                const numberedPage = +queryPage;
-                setPage(Number.isNaN(numberedPage) ? 1 : numberedPage);
-            }
-        }
 
         setLastUpdate(moment().format("DD MMM YYYY HH:mm"));
         setLoading(true);
@@ -71,7 +69,7 @@ export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
         }
     }, []);
 
-    useEffect(() => { refresh(false) }, [page]);
+    useEffect(() => { refresh() }, [page]);
 
     const columns: ColumnsType<any> = [
         {

@@ -1,5 +1,6 @@
 import { Col, Form, Input, InputNumber, Radio, Row, Space } from "antd";
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { AssignmentComponentProps } from ".";
 import { WorkspaceContext } from "../../context";
 
@@ -38,7 +39,7 @@ export const PilihanGanda = (item: AssignmentComponentProps) => {
 
     const options = ['A', 'B', 'C', 'D', 'E'];
     return (
-        <Form.Item label={`${item.question_no}. ${item.question}`} key={item.id}>
+        <Form.Item label={<ReactMarkdown>{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
             <Input.Group>
                 <Row gutter={[16, 16]} align="middle">
                     <Col

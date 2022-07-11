@@ -186,7 +186,7 @@ class AssignmentsService extends GenericService {
         onFail?: FailureCallbackFunction
     ) {
         const response = await APIClient.GET(`/entries/${topicId}/group`, {
-            'pageSize': 10,
+            'pageSize': 25,
             'page': pageNumber
 
         });
@@ -215,7 +215,7 @@ class AssignmentsService extends GenericService {
         onFail?: FailureCallbackFunction
     ) {
         const response = await APIClient.GET(`/entries/${topicId}`, {
-            'pageSize': 10,
+            'pageSize': 25,
             'page': pageNumber
 
         });

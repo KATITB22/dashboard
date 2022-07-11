@@ -1,5 +1,6 @@
 import { Col, Form, Input, InputNumber, Row } from "antd";
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { AssignmentComponentProps } from ".";
 import { WorkspaceContext } from "../../context";
 
@@ -34,7 +35,7 @@ export const Essay = (item: AssignmentComponentProps) => {
     }, [scoreData, data]);
 
     return (
-        <Form.Item label={`${item.question_no}. ${item.question}`} key={item.id}>
+        <Form.Item label={<ReactMarkdown>{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
             <Input.Group>
                 <Row gutter={[16, 16]} align="middle">
                     <Col xs={24} xl={20}>

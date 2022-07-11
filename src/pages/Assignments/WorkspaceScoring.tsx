@@ -45,6 +45,12 @@ export const WorkspaceScoring = () => {
         Service.getEntry(id, (response) => {
             setTitle(response.topic.title);
             setUser(response.user);
+            if (response.answers === null) {
+                response.answers = {};
+            }
+            if (response.scores === null) {
+                response.scores = {};
+            }
             setSubmitTime(moment(response.submit_time));
             if (response.events && Array.isArray(response.events) && response.events.length > 0) {
                 const temps = response.events.map((each: any) => ({
@@ -99,6 +105,7 @@ export const WorkspaceScoring = () => {
 
                 return mappedQuestion;
             });
+            questions.sort((a, b) => a.question_no - b.question_no);
 
             if (response.answers) {
                 setData(response.answers);
@@ -109,6 +116,10 @@ export const WorkspaceScoring = () => {
             unscoredQuestions.forEach((each) => {
                 copied[each] = 0;
                 if (response.answers[each] && Object.keys(questionAnswers).includes(each)) {
+                    if (questionAnswers[each].toString().toLowerCase() == '*') {
+                        copied[each] = questionScores[each];
+                    }
+
                     if (questionAnswers[each].toString().toLowerCase() == response.answers[each].toString().toLowerCase()) {
                         copied[each] = questionScores[each];
                     }
