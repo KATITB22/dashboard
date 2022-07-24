@@ -121,6 +121,17 @@ const EditProfilePage = React.lazy(() =>
     }))
 )
 
+const JarkomPage = React.lazy(() =>
+    import('./pages/Jarkom/Jarkom').then((module) => ({
+        default: module.Jarkom,
+    }))
+)
+
+const AddJarkomPage = React.lazy(() =>
+    import('./pages/Jarkom/AddJarkom').then((module) => ({
+        default: module.AddJarkom,
+    }))
+)
 interface PageRouting {
     path: string;
     component: LazyExoticComponent<any>;
@@ -134,7 +145,7 @@ const PageNotFoundRouting: PageRouting = {
 export const Routing: PageRouting[] = [
     {
         path: '/',
-        component: DefPage,
+        component: JarkomPage,
     },
     {
         path: '/event/create',
@@ -207,6 +218,10 @@ export const Routing: PageRouting[] = [
     {
         path: '/profile/edit',
         component: EditProfilePage,
+    },
+    {
+        path: '/jarkom',
+        component: AddJarkomPage,
     },
     PageNotFoundRouting,
 ];
