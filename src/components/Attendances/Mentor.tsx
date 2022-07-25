@@ -49,32 +49,44 @@ export const MentorAttendanceModal = ({
     const endTime = `${moment(selectedEvent.end_date).format(timeFormat)}`;
 
     const loadModalContent = () => {
-        if (attend === null) {
-            if (moment().isBefore(selectedEvent.start_date)) {
-                return (
-                    <p>
-                        {`Presensi belum dibuka.`}
-                    </p>
-                );
-            } if (moment().isBefore(selectedEvent.end_date)) {
-                return (
-                    <p>
-                        {`Presensi dibuka sampai ${endTime}.`}
-                    </p>
-                );
+        if (selectedEvent.type === 'Self') {
+            if (attend === null) {
+                if (moment().isBefore(selectedEvent.start_date)) {
+                    return (
+                        <p>
+                            {`Presensi belum dibuka.`}
+                        </p>
+                    );
+                } if (moment().isBefore(selectedEvent.end_date)) {
+                    return (
+                        <p>
+                            {`Presensi dibuka sampai ${endTime}.`}
+                        </p>
+                    );
+                } else {
+                    return (
+                        <p>
+                            {`Yah! Kamu belum presensi dan presensi sudah ditutup sejak ${endTime}. `}
+                        </p>
+                    );
+                }
             } else {
                 return (
                     <p>
-                        {`Yah! Kamu belum presensi dan presensi sudah ditutup sejak ${endTime}. `}
+                        {`Anda sudah presensi pada ${attend.format(timeFormat)}.`}
                     </p>
                 );
             }
         } else {
-            return (
-                <p>
-                    {`Anda sudah presensi pada ${attend.format(timeFormat)}.`}
-                </p>
-            );
+            if (attend === null) {
+                return <p>Presensi untuk acara ini akan dilakukan oleh mentor.</p>;
+            } else {
+                return (
+                    <p>
+                        {`Mentor sudah melakukan presensi untuk anda pada ${attend.format(timeFormat)}.`}
+                    </p>
+                );
+            }
         }
     };
 
@@ -99,4 +111,4 @@ export const MentorAttendanceModal = ({
             {loadModalContent()}
         </Modal>
     );
-}
+};
