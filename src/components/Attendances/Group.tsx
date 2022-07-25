@@ -3,10 +3,9 @@ import type { ColumnsType } from 'antd/lib/table';
 import { TableRowSelection } from 'antd/lib/table/interface';
 import moment from 'moment';
 import { useEffect } from 'react';
-import { MentorProps } from '.';
+import { GroupProps } from '.';
 import { defaultFailureCallback } from '../../service';
 import service, { ITable } from '../../service/attendance';
-
 
 export const GroupAttendanceModal = ({
     visibleModal,
@@ -18,7 +17,7 @@ export const GroupAttendanceModal = ({
     setDataSource,
     selectedRowKeys,
     setSelectedRowKeys,
-}: MentorProps) => {
+}: GroupProps) => {
     const columns: ColumnsType<ITable> = [
         {
             title: 'NIM',

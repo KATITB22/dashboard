@@ -89,6 +89,12 @@ const GroupAttendancePage = React.lazy(() =>
     }))
 );
 
+const MentorAttendancePage = React.lazy(() =>
+    import('./pages/Attendance/MentorAttendance').then((module) => ({
+        default: module.MentorAttendance,
+    }))
+);
+
 const PageNotFound = React.lazy(() =>
     import('./pages/NotFound').then((module) => ({
         default: module.Page,
@@ -195,8 +201,12 @@ export const Routing: PageRouting[] = [
         component: SelfAttendancePage,
     },
     {
-        path: '/attendance/mentor',
+        path: '/attendance/group',
         component: GroupAttendancePage,
+    },
+    {
+        path: '/attendance/mentor',
+        component: MentorAttendancePage,
     },
     {
         path: '/profile',

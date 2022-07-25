@@ -56,6 +56,16 @@ export const GroupAttendance = () => {
         setVisibleModal(true);
     };
 
+    const getType = (event: IEvent) => {
+        const currentDate = moment();
+
+        if (currentDate.isBetween(event.start_date, event.end_date)) {
+            return 'success';
+        } else {
+            return 'error';
+        }
+    };
+
     const dateCellRender = (newValue: Moment) => {
         const eventData = eventList.filter((event) =>
             event.start_date.isSame(newValue, 'date')
@@ -93,16 +103,6 @@ export const GroupAttendance = () => {
 
     const disableDate = (newDate: Moment) =>
         !newDate.isSame(selectedDate, 'month');
-
-    const getType = (event: IEvent) => {
-        const currentDate = moment();
-
-        if (currentDate.isBetween(event.start_date, event.end_date)) {
-            return 'success';
-        } else {
-            return 'error';
-        }
-    };
 
     useEffect(() => {
         setLoadingPage(true);

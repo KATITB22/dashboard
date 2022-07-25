@@ -1,6 +1,6 @@
 import { IEvent, ITable } from '../../service/attendance';
 
-export interface ParticipantProps {
+export interface SelfProps {
     visibleModal: boolean;
     selectedEvent: IEvent;
     loadingOk: boolean;
@@ -8,7 +8,7 @@ export interface ParticipantProps {
     handleCancel: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-export interface MentorProps {
+export interface GroupProps {
     visibleModal: boolean;
     selectedEvent: IEvent;
     loadingOk: boolean;

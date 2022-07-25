@@ -3,12 +3,12 @@ import { Badge, Button, Calendar, PageHeader, Spin } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
-import { ParticipantAttendanceModal } from '../../components/Attendances/Participant';
+import { MentorAttendanceModal } from '../../components/Attendances/Mentor';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
 import service, { IEvent } from '../../service/attendance';
 
-export const ParticipantAttendance = () => {
+export const MentorAttendance = () => {
     const [loadingPage, setLoadingPage] = useState(true);
     const [loadingOkModalButton, setLoadingOkModalButton] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
@@ -107,10 +107,10 @@ export const ParticipantAttendance = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole={"Participant"}>
+        <StandardLayout allowedRole={"Mentor"}>
             <Spin tip="Loading..." spinning={loadingPage}>
                 <PageHeader
-                    title="Participant Attendance"
+                    title="Mentor Attendance"
                 />
                 <Calendar
                     value={date}
@@ -120,7 +120,7 @@ export const ParticipantAttendance = () => {
                     dateCellRender={dateCellRender}
                 />
                 {visibleModal && (
-                    <ParticipantAttendanceModal
+                    <MentorAttendanceModal
                         visibleModal={visibleModal}
                         selectedEvent={selectedEvent}
                         handleOk={handleOkModalButton}
@@ -133,4 +133,4 @@ export const ParticipantAttendance = () => {
             </Spin>
         </StandardLayout>
     );
-};
+}
