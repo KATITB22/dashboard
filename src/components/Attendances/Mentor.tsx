@@ -79,11 +79,11 @@ export const MentorAttendanceModal = ({
             }
         } else {
             if (attend === null) {
-                return <p>Presensi untuk acara ini akan dilakukan oleh mentor.</p>;
+                return <p>Presensi untuk acara ini akan dilakukan pada laman group.</p>;
             } else {
                 return (
                     <p>
-                        {`Mentor sudah melakukan presensi untuk anda pada ${attend.format(timeFormat)}.`}
+                        {`Anda sudah presensi pada ${attend.format(timeFormat)}.`}
                     </p>
                 );
             }
