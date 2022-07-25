@@ -3,13 +3,12 @@ import { Badge, Button, Calendar, PageHeader, Spin } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
-import { MentorAttendanceModal } from '../../components/AttendanceModal';
+import { GroupAttendanceModal } from '../../components/Attendances/Group';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
 import service, { IEvent, ITable } from '../../service/attendance';
-import { getType } from './helper';
 
-export const MentorAttendance = () => {
+export const GroupAttendance = () => {
     const [loadingPage, setLoadingPage] = useState(true);
     const [loadingOkModalButton, setLoadingOkModalButton] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
@@ -95,6 +94,16 @@ export const MentorAttendance = () => {
     const disableDate = (newDate: Moment) =>
         !newDate.isSame(selectedDate, 'month');
 
+    const getType = (event: IEvent) => {
+        const currentDate = moment();
+
+        if (currentDate.isBetween(event.start_date, event.end_date)) {
+            return 'success';
+        } else {
+            return 'error';
+        }
+    };
+
     useEffect(() => {
         setLoadingPage(true);
         service.getEvents(
@@ -123,7 +132,7 @@ export const MentorAttendance = () => {
                     dateCellRender={dateCellRender}
                 />
                 {visibleModal && (
-                    <MentorAttendanceModal
+                    <GroupAttendanceModal
                         visibleModal={visibleModal}
                         selectedEvent={selectedEvent}
                         handleOk={handleOkModalButton}

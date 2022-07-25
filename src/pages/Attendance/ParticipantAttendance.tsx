@@ -3,16 +3,12 @@ import { Badge, Button, Calendar, PageHeader, Spin } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ParticipantAttendanceModal } from '../../components/AttendanceModal';
+import { ParticipantAttendanceModal } from '../../components/Attendances/Participant';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
 import service, { IEvent } from '../../service/attendance';
-import { getType } from './helper';
 
 export const ParticipantAttendance = () => {
-    const navigate = useNavigate();
-
     const [loadingPage, setLoadingPage] = useState(true);
     const [loadingOkModalButton, setLoadingOkModalButton] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
@@ -85,6 +81,16 @@ export const ParticipantAttendance = () => {
 
     const disableDate = (newDate: Moment) =>
         !newDate.isSame(selectedDate, 'month');
+
+    const getType = (event: IEvent) => {
+        const currentDate = moment();
+
+        if (currentDate.isBetween(event.start_date, event.end_date)) {
+            return 'success';
+        } else {
+            return 'error';
+        }
+    };
 
     useEffect(() => {
         setLoadingPage(true);

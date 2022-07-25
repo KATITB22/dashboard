@@ -53,7 +53,6 @@ const SubmissionListPage = React.lazy(() =>
     }))
 );
 
-
 const GroupListPage = React.lazy(() =>
     import('./pages/Group/GroupList').then((module) => ({
         default: module.GroupList,
@@ -75,7 +74,6 @@ const GroupUploadPage = React.lazy(() =>
 const EventListPage = React.lazy(() =>
     import('./pages/Event/EventList').then((module) => ({
         default: module.EventList,
-
     }))
 );
 
@@ -86,8 +84,8 @@ const SelfAttendancePage = React.lazy(() =>
 );
 
 const GroupAttendancePage = React.lazy(() =>
-    import('./pages/Attendance/MentorAttendance').then((module) => ({
-        default: module.MentorAttendance,
+    import('./pages/Attendance/GroupAttendance').then((module) => ({
+        default: module.GroupAttendance,
     }))
 );
 
@@ -113,13 +111,13 @@ const ProfilePage = React.lazy(() =>
     import('./pages/Profile/Profile').then((module) => ({
         default: module.Profile,
     }))
-)
+);
 
 const EditProfilePage = React.lazy(() =>
     import('./pages/Profile/EditProfile').then((module) => ({
         default: module.EditProfile,
     }))
-)
+);
 
 interface PageRouting {
     path: string;
