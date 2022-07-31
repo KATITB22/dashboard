@@ -19,6 +19,9 @@ jobs:
                   if [[ ${{ github.event.ref }} =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
                       echo ::set-output name=match::true
                   fi
+            - name: Get the version
+              id: get-version
+              run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
             - name: Run builder script over SSH
               if: steps.check-tag.outputs.match == 'true'
               uses: appleboy/ssh-action@master
@@ -29,7 +32,10 @@ jobs:
                   key: ${{ secrets.KEY }}
                   script: |
                       cd ~/builder/dashboard
+                      rm -rf ~/builder/dashboard/src
                       git pull
+                      git checkout tags/{{ steps.get-version.outputs.VERSION }}
+                      git restore .
                       yarn install
                       yarn build
     deploy:
