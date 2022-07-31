@@ -30,8 +30,8 @@ jobs:
                   script: |
                       cd ~/builder/dashboard
                       git pull
-                      npm install
-                      npm build
+                      yarn install
+                      yarn build
     deploy:
         needs: ['build']
         runs-on: ubuntu-latest
