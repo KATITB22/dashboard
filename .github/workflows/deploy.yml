@@ -53,4 +53,4 @@ jobs:
                       rm -rf ~/deus/web/dashboard
                       mkdir ~/deus/web/dashboard
                       cp -r ~/builder/dashboard/dist/* ~/deus/web/dashboard
-                      chown -r 644 ~/deus/web/dashboard
+                      chown -R 644 ~/deus/web/dashboard
