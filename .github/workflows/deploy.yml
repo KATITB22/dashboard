@@ -5,19 +5,12 @@ name: dashboard-deploy
 on:
     push:
         tags:
-            - v**
+            - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: nowsprinting/check-version-format-action@v3
-              id: version
-              with:
-                  prefix: 'v'
-
-            - name: Version Tag Validation
-              if: steps.version.outputs.is_valid == 'true'
             - name: Checkout
               uses: actions/checkout@master
             - name: Run builder script over SSH
