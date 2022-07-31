@@ -1,0 +1,48 @@
+# Deploy
+
+name: dashboard-deploy
+
+on:
+    push:
+        tags:
+            - v**
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: nowsprinting/check-version-format-action@v3
+              id: version
+              with:
+                  prefix: 'v'
+
+            - name: Version Tag Validation
+              if: steps.version.outputs.is_valid == 'true'
+            - name: Checkout
+              uses: actions/checkout@master
+            - name: Run builder script over SSH
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.DEUS_HOST }}
+                  port: 22
+                  username: ${{ secrets.DEUS_USERNAME }}
+                  key: ${{ secrets.KEY }}
+                  script: |
+                      cd ~/builder/dashboard
+                      git pull
+                      npm install
+                      npm build
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Run deployment script over SSH
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.DEUS_HOST }}
+                  port: 22
+                  username: ${{ secrets.DEUS_USERNAME }}
+                  key: ${{ secrets.KEY }}
+                  script: |
+                      rm -rf ~/deus/web/dashboard
+                      mkdir ~/deus/web/dashboard
+                      cp -r ~/builder/dashboard/dist ~/deus/web/dashboard
