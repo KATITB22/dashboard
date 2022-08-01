@@ -6,7 +6,8 @@
         "preinstall": "npx only-allow yarn",
         "dev": "vite",
         "build": "tsc && vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "ci": "yarn install --immutable --immutable-cache --check-cache"
     },
     "dependencies": {
         "@ant-design/icons": "^4.7.0",

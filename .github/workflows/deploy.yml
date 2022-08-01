@@ -37,7 +37,7 @@ jobs:
                       git checkout tags/${{ steps.get-version.outputs.VERSION }}
                       git restore .
                       yarn install
-                      yarn build
+                      yarn build --mode production
     deploy:
         needs: ['build']
         runs-on: ubuntu-latest
