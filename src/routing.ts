@@ -53,7 +53,6 @@ const SubmissionListPage = React.lazy(() =>
     }))
 );
 
-
 const GroupListPage = React.lazy(() =>
     import('./pages/Group/GroupList').then((module) => ({
         default: module.GroupList,
@@ -75,7 +74,6 @@ const GroupUploadPage = React.lazy(() =>
 const EventListPage = React.lazy(() =>
     import('./pages/Event/EventList').then((module) => ({
         default: module.EventList,
-
     }))
 );
 
@@ -113,25 +111,25 @@ const ProfilePage = React.lazy(() =>
     import('./pages/Profile/Profile').then((module) => ({
         default: module.Profile,
     }))
-)
+);
 
 const EditProfilePage = React.lazy(() =>
     import('./pages/Profile/EditProfile').then((module) => ({
         default: module.EditProfile,
     }))
-)
+);
 
 const JarkomPage = React.lazy(() =>
     import('./pages/Jarkom/Jarkom').then((module) => ({
         default: module.Jarkom,
     }))
-)
+);
 
 const AddJarkomPage = React.lazy(() =>
     import('./pages/Jarkom/AddJarkom').then((module) => ({
         default: module.AddJarkom,
     }))
-)
+);
 interface PageRouting {
     path: string;
     component: LazyExoticComponent<any>;
@@ -145,7 +143,7 @@ const PageNotFoundRouting: PageRouting = {
 export const Routing: PageRouting[] = [
     {
         path: '/',
-        component: JarkomPage,
+        component: DefPage,
     },
     {
         path: '/event/create',

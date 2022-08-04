@@ -7,8 +7,7 @@ class APIClient {
 
     public readonly COOKIE_DOMAIN: string = import.meta.env.VITE_COOKIE_DOMAIN;
 
-    private token: string =
-        '';
+    private token: string = '';
 
     constructor() {
         const cookie = new Cookies();
@@ -23,6 +22,13 @@ class APIClient {
     private async isTokenValid(): Promise<any> {
         const response = await this.GET('/users/my-account');
         if (response instanceof APIErrorObject) {
+            if (
+                this.token.length > 0 &&
+                response.getMessage() === 'Invalid credentials'
+            ) {
+                this.token = '';
+                this.deleteCookie('token');
+            }
             return {};
         }
         return response;

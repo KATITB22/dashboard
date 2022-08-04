@@ -25,4 +25,8 @@ export class APIErrorObject {
     public toString(): string {
         return `${this.errorName}: ${this.message}`;
     }
+
+    public getMessage(): string {
+        return this.message;
+    }
 }
