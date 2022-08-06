@@ -130,6 +130,13 @@ const AddJarkomPage = React.lazy(() =>
         default: module.AddJarkom,
     }))
 );
+
+const SurveyPage = React.lazy(() => 
+    import('./pages/Survey/Survey').then((module) => ({
+        default: module.Survey,
+    }))
+);
+
 interface PageRouting {
     path: string;
     component: LazyExoticComponent<any>;
@@ -220,6 +227,10 @@ export const Routing: PageRouting[] = [
     {
         path: '/jarkom',
         component: AddJarkomPage,
+    },
+    {
+        path: '/survey',
+        component: SurveyPage,
     },
     PageNotFoundRouting,
 ];
