@@ -29,6 +29,11 @@ export const Survey = () => {
   const [current, setCurrent] = useState(0);
   let SurveyForm = steps[current].content
 
+  const onChange = (value: number) => {
+    console.log('onChange:', current);
+    setCurrent(value);
+  };
+
   const next = () => {
     setCurrent(current + 1);
   };
@@ -52,7 +57,7 @@ export const Survey = () => {
       </div>
 
       <div className="mt-10">
-        <Steps current={current}>
+        <Steps current={current} onChange={onChange}>
           {steps.map(item => (
               <Steps.Step key={item.title} title={item.title} />
           ))}
