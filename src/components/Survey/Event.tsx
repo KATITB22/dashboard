@@ -1,27 +1,19 @@
-import { useState, useContext } from "react";
 import { Radio, RadioChangeEvent, Space } from "antd"
-import { SurveyContext } from "../../context";
 
-export const Event = () => {
-  const { data, setData }: any = useContext(SurveyContext)
+interface Props {
+  data: Record<string, any>
+  setData: (args: Record<string, any>) =>  void
+}
 
-  const [value, setValue] = useState<Record<string, any>>(data.event);
-
-
-  const changeMenarik = (e: RadioChangeEvent) => {
-    setValue({...value, acara_menarik: e.target.value})
-    setData({...data, event: value})
-  }
-
-  const changeBosan = (e: RadioChangeEvent) => {
-    setValue({...value, acara_bosan: e.target.value})
-    setData({...data, event: value})
+export const Event = ({data, setData}: Props) => {
+  const onChange = (e: RadioChangeEvent, key: string) => {
+    setData({...data, [key]: e.target.value})
   }
 
   return (
     <div className="py-10">
       <h1>Menurutmu, acara OSKM apa yang paling menarik?</h1>
-      <Radio.Group className="my-5" onChange={changeMenarik} value={value["acara_menarik"]}>
+      <Radio.Group className="my-5" onChange={(e) => onChange(e, "menarik")} value={data["menarik"]}>
         <Space direction="vertical">
           <Radio value={"A"}>Option A</Radio>
           <Radio value={"B"}>Option B</Radio>
@@ -30,7 +22,7 @@ export const Event = () => {
       </Radio.Group>
 
       <h1>Menurutmu, acara OSKM apa yang paling membosankan?</h1>
-      <Radio.Group className="my-5" onChange={changeBosan} value={value["acara_bosan"]}>
+      <Radio.Group className="my-5" onChange={(e) => onChange(e, "bosan")} value={data["bosan"]}>
         <Space direction="vertical">
           <Radio value={"A"}>Option A</Radio>
           <Radio value={"B"}>Option B</Radio>

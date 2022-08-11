@@ -1,17 +1,20 @@
-import { useState } from "react";
 import { Radio, RadioChangeEvent, Space } from "antd";
 
-export const Article = () => {
-  const [value, setValue] = useState(1);
+interface Props {
+  data: Record<string, any>
+  setData: (args: Record<string, any>) =>  void
+}
 
-  const onChange = (e: RadioChangeEvent) => {
-    setValue(e.target.value);
+export const Article = ({data, setData}: Props) => {
+
+  const onChange = (e: RadioChangeEvent, key: string) => {
+    setData({...data, [key]: e.target.value});
   };
 
   return (
     <div className="py-10">
       <h1>Menurutmu, artikel OSKM apa yang paling menarik?</h1>
-      <Radio.Group className="my-5" onChange={onChange} value={value}>
+      <Radio.Group className="my-5" onChange={(e) => onChange(e, "menarik")} value={data["menarik"]}>
         <Space direction="vertical">
           <Radio value={1}>Option A</Radio>
           <Radio value={2}>Option B</Radio>
