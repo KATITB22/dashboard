@@ -1,5 +1,7 @@
-import React from "react";
+import { createContext } from "react";
 
-export const UserContext = React.createContext({});
+export const UserContext = createContext({});
 
-export const WorkspaceContext = React.createContext({});
+export const WorkspaceContext = createContext({});
+
+export const SurveyContext = createContext({});
