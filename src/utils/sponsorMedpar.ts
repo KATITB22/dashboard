@@ -68,6 +68,10 @@ import JPNN from '../resource/sponsor_medpar/Batch-1/XL/JPNN.png';
 import Kompasiana from '../resource/sponsor_medpar/Batch-1/XL/Kompasiana/Kompasiana-Biru.png';
 import Republika from '../resource/sponsor_medpar/Batch-1/XL/Republika.jpg';
 
+import SwaraRadio from '../resource/sponsor_medpar/batch-2/L/swara-radio.jpeg';
+import FunRadio from '../resource/sponsor_medpar/batch-2/M/fun-radio.png';
+import PolbanNews from '../resource/sponsor_medpar/batch-2/M/polban-news.png';
+
 export interface SponsorMedparData {
   name: string;
   src: string;
@@ -128,12 +132,15 @@ export const medpar: SponsorMedparData[] = [
   { name: 'Mara FM', src: MaraFM, size: 'M' },
   { name: 'MMTC Radio', src: MMTCRadio, size: 'M' },
   { name: 'Telkomsel Radio', src: TRadio, size: 'M' },
+  { name: 'Fun Radio', src: FunRadio, size: 'M' },
+  { name: 'Polban News', src: PolbanNews, size: 'M' },
   { name: '8EH Radio ITB', src: LapanEH, size: 'L' },
   { name: 'Bahana FM', src: BahanaFM, size: 'L' },
   { name: 'Boulevard', src: Boulevard, size: 'L' },
   { name: 'Hearo', src: Hearo, size: 'L' },
   { name: 'LFM', src: LFM, size: 'L' },
   { name: 'Mave Magazine', src: MaveMagazine, size: 'L' },
+  { name: 'Swara Radio', src: SwaraRadio, size: 'L' },
   { name: 'GNFI', src: GNFI, size: 'XL' },
   { name: 'Inilah Koran', src: InilahKoran, size: 'XL' },
   { name: 'JPNN', src: JPNN, size: 'XL' },
