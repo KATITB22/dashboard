@@ -133,7 +133,7 @@ export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
         },
     ];
     return (
-        <StandardLayout allowedRole={['Committee', 'Mentor']}>
+        <StandardLayout allowedRole={['Committee', 'Mentor']} title={"Submissions"}>
             <PageHeader onBack={() => navigate(-1)} title="List Submission" />
             <LastUpdateStatus lastUpdate={lastUpdate} />
             <Spin tip="Fetching data..." spinning={loading}>

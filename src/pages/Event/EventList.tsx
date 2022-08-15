@@ -94,7 +94,7 @@ export const EventList = () => {
     }, [page]);
 
     return (
-        <StandardLayout allowedRole={"Committee"}>
+        <StandardLayout allowedRole={"Committee"} title={"Event List"} >
             <Spin tip="Fetching data..." spinning={loading}>
                 <PageHeader title="List Event" />
                 <div className='ml-3 mb-3'>

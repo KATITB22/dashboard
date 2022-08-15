@@ -188,7 +188,7 @@ export const Workspace = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
+        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]} title={"Workspace"} >
             <WorkspaceContext.Provider value={{ data, setData, lastUpdate, canSave, scoreData, setScoreData }}>
                 <PageHeader onBack={() => navigate(-1)} title={"Workspace: " + title} />
                 <Alert className='max-w-lg' message="Waktu Pengerjaan" type="info" description={`${time.range} WIB`} />

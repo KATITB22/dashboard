@@ -42,7 +42,7 @@ export const GroupList = () => {
     }, [page]);
 
     return (
-        <StandardLayout allowedRole={["Committee"]}>
+        <StandardLayout allowedRole={["Committee"]} title={"Group List"} >
             <PageHeader onBack={() => navigate(-1)} title="Group List" />
             <Spin tip="Fetching data..." spinning={isLoading}>
                 <Table

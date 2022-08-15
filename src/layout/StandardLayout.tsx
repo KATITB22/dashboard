@@ -7,6 +7,7 @@ import {
     HomeOutlined,
     LogoutOutlined,
 } from '@ant-design/icons';
+import { Helmet } from 'react-helmet';
 import { NavTab } from '../components/NavTab';
 import { UserContext } from '../context';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +15,6 @@ import Partner from '../components/Partner';
 import AuthService from '../service/auth';
 
 import Logo from '../resource/logo.png';
-import Vistock from '../resource/DashboardUjung.png';
 import { medpar, sponsor } from '../utils/sponsorMedpar';
 
 const { Content, Footer, Sider } = Layout;
@@ -36,6 +36,7 @@ function getItem(
 export interface StandardLayoutProps {
     children?: JSX.Element | JSX.Element[] | string | string[];
     allowedRole: string | string[];
+    title?: string;
 }
 
 const Logout = () => {
@@ -93,7 +94,8 @@ const style: React.CSSProperties = {
 
 export const StandardLayout = ({
     children = undefined,
-    allowedRole
+    allowedRole,
+    title
 }: StandardLayoutProps) => {
     const navigate = useNavigate();
     const { user }: any = useContext(UserContext);
@@ -120,54 +122,58 @@ export const StandardLayout = ({
         />
     }
 
-    return (<>
-        <Layout style={{ minHeight: '100vh' }}>
-            <Sider
-                collapsible
-                collapsed={collapsed}
-                onCollapse={(value) => setCollapsed(value)}
-                style={{ minHeight: '100vh', zIndex: 2 }}
+    return (
+        <>
+            <Helmet>
+                <title>{title ? `${title} - DEVA: Dashboard OSKM ITB 2022`: "DEVA: Dashboard OSKM ITB 2022"}</title>
+            </Helmet>
+            <Layout style={{ minHeight: '100vh' }}>
+                <Sider
+                    collapsible
+                    collapsed={collapsed}
+                    onCollapse={(value) => setCollapsed(value)}
+                    style={{ minHeight: '100vh', zIndex: 2 }}
 
-            >
-                <div className="flex justify-center my-2 md:my-3 flex-wrap">
-                    <div className='w-3/4'>
-                        <img src={Logo} className="shadow rounded-full max-w-full h-auto align-middle border-none" />
+                >
+                    <div className="flex justify-center my-2 md:my-3 flex-wrap">
+                        <div className='w-3/4'>
+                            <img src={Logo} className="shadow rounded-full max-w-full h-auto align-middle border-none" />
+                        </div>
                     </div>
-                </div>
-                <Menu
-                    theme="dark"
-                    selectedKeys={[]}
-                    mode="inline"
-                    items={sidebarMaping[user.role]}
-                />
-            </Sider>
-            <Layout>
-                <Content style={{ margin: '0 16px' }}>
-                    <div
-                        className="text-xl p-6 min-h-screen"
-                    >
-                        {children}
-                    </div>
-                </Content>
-                <hr />
-                <Footer style={{ textAlign: 'center', zIndex: 1 }}>
-                    <div>
-                        <h1 className='text-2xl mb-5'>Sponsor</h1>
-                        <Partner partner={sponsor} />
-                    </div>
-                    <div>
-                        <h1 className='text-2xl my-5'>Media Partner</h1>
-                        <Partner partner={medpar} />
-                    </div>
-                    <div className='mt-10'>
-                        Dashboard KAT © 2022.<br /> Created by IT KAT '22.
-                    </div>
-                </Footer>
+                    <Menu
+                        theme="dark"
+                        selectedKeys={[]}
+                        mode="inline"
+                        items={sidebarMaping[user.role]}
+                    />
+                </Sider>
+                <Layout>
+                    <Content style={{ margin: '0 16px' }}>
+                        <div
+                            className="text-xl p-6 min-h-screen"
+                        >
+                            {children}
+                        </div>
+                    </Content>
+                    <hr />
+                    <Footer style={{ textAlign: 'center', zIndex: 1 }}>
+                        <div>
+                            <h1 className='text-2xl mb-5'>Sponsor</h1>
+                            <Partner partner={sponsor} />
+                        </div>
+                        <div>
+                            <h1 className='text-2xl my-5'>Media Partner</h1>
+                            <Partner partner={medpar} />
+                        </div>
+                        <div className='mt-10'>
+                            Dashboard KAT © 2022.<br /> Created by IT KAT '22.
+                        </div>
+                    </Footer>
+                </Layout>
+                <BackTop>
+                    <div style={style}>UP</div>
+                </BackTop>
             </Layout>
-            <BackTop>
-                <div style={style}>UP</div>
-            </BackTop>
-        </Layout>
-    </>
+        </>
     );
 };
