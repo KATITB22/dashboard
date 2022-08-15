@@ -11,6 +11,7 @@ import { NavTab } from '../components/NavTab';
 import { UserContext } from '../context';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../resource/logo.png';
+import Stone2 from '../resource/stone-2.png';
 import AuthService from '../service/auth';
 
 const { Content, Footer, Sider } = Layout;
@@ -144,6 +145,11 @@ export const StandardLayout = ({
                         style={{ padding: 24, minHeight: 360 }}
                     >
                         {children}
+                        <div className='absolute bottom-0  right-[-1rem] hidden md:block w-[250px]'>
+                            <div className=''>
+                                <img src={Stone2} />
+                            </div>
+                        </div>
                     </div>
                 </Content>
                 <hr />
@@ -155,13 +161,6 @@ export const StandardLayout = ({
                 <div style={style}>UP</div>
             </BackTop>
         </Layout>
-        {/* <div className='flex justify-center'>
-            <div className='fixed z-1 bottom-0 w-[95vw] border border-red-500 flex flex-row text-center translate-x-10'>
-                <div className='w-2/12 translate-y-[-5]'>
-                    <img src={House} />
-                </div>
-            </div>
-        </div> */}
     </>
     );
 };
