@@ -144,19 +144,21 @@ export const StandardLayout = ({
             <Layout>
                 <Content style={{ margin: '0 16px' }}>
                     <div
-                        className="text-xl"
-                        style={{ padding: 24, minHeight: 360 }}
+                        className="text-xl p-6 min-h-screen"
                     >
                         {children}
-                        {/* <div className='hidden md:flex absolute justify-end bottom-0 z-10 h-2/5 right-0'>
-                            <img className='h-full' draggable="false" src={Vistock} />
-                        </div> */}
                     </div>
                 </Content>
                 <hr />
                 <Footer style={{ textAlign: 'center', zIndex: 1 }}>
-                    <Partner partner={sponsor} />
-                    <Partner partner={medpar} />
+                    <div>
+                        <h1 className='text-2xl mb-5'>Sponsor</h1>
+                        <Partner partner={sponsor} />
+                    </div>
+                    <div>
+                        <h1 className='text-2xl my-5'>Media Partner</h1>
+                        <Partner partner={medpar} />
+                    </div>
                     <div className='mt-10'>
                         Dashboard KAT © 2022.<br /> Created by IT KAT '22.
                     </div>
