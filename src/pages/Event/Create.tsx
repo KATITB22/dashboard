@@ -61,7 +61,7 @@ export const CreateEvent = () => {
     };
 
     return (
-        <StandardLayout allowedRole={"Committee"}>
+        <StandardLayout allowedRole={"Committee"} title={"Create Event"} >
             <PageHeader onBack={() => navigate(-1)} title="Create Event" />
             <Form
                 layout="vertical"

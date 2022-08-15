@@ -14,7 +14,7 @@ function App() {
     const [loading, setLoading] = useState<boolean>(true);
     const [isLoggedIn, setLoggedIn] = useState<boolean | null>(null);
     const [user, setUser] = useState({});
-    document.title = 'Dashboard - KAT ITB 2022'
+    
     useEffect(() => {
         APIClient.checkToken().then((result) => {
             setUser(result);

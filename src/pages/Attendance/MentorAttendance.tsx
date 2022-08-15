@@ -110,7 +110,7 @@ export const MentorAttendance = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole={"Mentor"}>
+        <StandardLayout allowedRole={"Mentor"} title={"Mentor Attendance"} >
             <Spin tip="Loading..." spinning={loadingPage}>
                 <PageHeader
                     title="Group Attendance"

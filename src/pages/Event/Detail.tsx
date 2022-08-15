@@ -58,7 +58,7 @@ export const EventDetail = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole={"Committee"}>
+        <StandardLayout allowedRole={"Committee"} title={"Event Detail"} >
             <PageHeader onBack={() => navigate(-1)} title="Event Detail" />
             {loading ? (
                 <Spin tip="Loading..." />

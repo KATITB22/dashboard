@@ -101,7 +101,7 @@ export const ParticipantAttendance = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole={"Participant"}>
+        <StandardLayout allowedRole={"Participant"} title={"Participant Attendance"} >
             <Spin tip="Loading..." spinning={loadingPage}>
                 <PageHeader
                     title="Participant Attendance"

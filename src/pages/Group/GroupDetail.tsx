@@ -48,7 +48,7 @@ export const GroupDetail = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole={["Committee", "Mentor"]}>
+        <StandardLayout allowedRole={["Committee", "Mentor"]} title={"Kelompok " + groupName} >
             <>
                 <PageHeader onBack={() => navigate(-1)} title="Group Detail" />
                 <Header>Kelompok {groupName}</Header>
