@@ -12,7 +12,6 @@ import { UserContext } from '../context';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../resource/logo.png';
 import AuthService from '../service/auth';
-import { sleep } from '../utils/sleep';
 
 const { Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
