@@ -10,9 +10,12 @@ import {
 import { NavTab } from '../components/NavTab';
 import { UserContext } from '../context';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../resource/logo.png';
-import Stone2 from '../resource/stone-2.png';
+import Partner from '../components/Partner';
 import AuthService from '../service/auth';
+
+import Logo from '../resource/logo.png';
+import Vistock from '../resource/DashboardUjung.png';
+import { medpar, sponsor } from '../utils/sponsorMedpar';
 
 const { Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -145,16 +148,18 @@ export const StandardLayout = ({
                         style={{ padding: 24, minHeight: 360 }}
                     >
                         {children}
-                        <div className='absolute bottom-0  right-[-1rem] hidden md:block w-[250px]'>
-                            <div className=''>
-                                <img draggable="false" src={Stone2} />
-                            </div>
-                        </div>
+                        {/* <div className='hidden md:flex absolute justify-end bottom-0 z-10 h-2/5 right-0'>
+                            <img className='h-full' draggable="false" src={Vistock} />
+                        </div> */}
                     </div>
                 </Content>
                 <hr />
                 <Footer style={{ textAlign: 'center', zIndex: 1 }}>
-                    Dashboard KAT © 2022.<br /> Created by IT KAT '22.
+                    <Partner partner={sponsor} />
+                    <Partner partner={medpar} />
+                    <div className='mt-10'>
+                        Dashboard KAT © 2022.<br /> Created by IT KAT '22.
+                    </div>
                 </Footer>
             </Layout>
             <BackTop>
