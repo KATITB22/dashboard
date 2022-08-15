@@ -147,7 +147,7 @@ export const StandardLayout = ({
                         {children}
                         <div className='absolute bottom-0  right-[-1rem] hidden md:block w-[250px]'>
                             <div className=''>
-                                <img src={Stone2} />
+                                <img draggable="false" src={Stone2} />
                             </div>
                         </div>
                     </div>
