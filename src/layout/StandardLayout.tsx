@@ -10,9 +10,12 @@ import {
 import { NavTab } from '../components/NavTab';
 import { UserContext } from '../context';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../resource/logo.png';
+import Partner from '../components/Partner';
 import AuthService from '../service/auth';
-import { sleep } from '../utils/sleep';
+
+import Logo from '../resource/logo.png';
+import Vistock from '../resource/DashboardUjung.png';
+import { medpar, sponsor } from '../utils/sponsorMedpar';
 
 const { Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -141,28 +144,30 @@ export const StandardLayout = ({
             <Layout>
                 <Content style={{ margin: '0 16px' }}>
                     <div
-                        className="text-xl"
-                        style={{ padding: 24, minHeight: 360 }}
+                        className="text-xl p-6 min-h-screen"
                     >
                         {children}
                     </div>
                 </Content>
                 <hr />
                 <Footer style={{ textAlign: 'center', zIndex: 1 }}>
-                    Dashboard KAT © 2022.<br /> Created by IT KAT '22.
+                    <div>
+                        <h1 className='text-2xl mb-5'>Sponsor</h1>
+                        <Partner partner={sponsor} />
+                    </div>
+                    <div>
+                        <h1 className='text-2xl my-5'>Media Partner</h1>
+                        <Partner partner={medpar} />
+                    </div>
+                    <div className='mt-10'>
+                        Dashboard KAT © 2022.<br /> Created by IT KAT '22.
+                    </div>
                 </Footer>
             </Layout>
             <BackTop>
                 <div style={style}>UP</div>
             </BackTop>
         </Layout>
-        {/* <div className='flex justify-center'>
-            <div className='fixed z-1 bottom-0 w-[95vw] border border-red-500 flex flex-row text-center translate-x-10'>
-                <div className='w-2/12 translate-y-[-5]'>
-                    <img src={House} />
-                </div>
-            </div>
-        </div> */}
     </>
     );
 };
