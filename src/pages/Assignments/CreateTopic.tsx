@@ -7,7 +7,7 @@ export const CreateTopic = () => {
     const navigate = useNavigate();
 
     return (
-        <StandardLayout allowedRole={"Committee"} title={"Create Topic"} >
+        <StandardLayout allowedRole={"SuperCommittee"} title={"Create Topic"} >
             <PageHeader onBack={() => navigate(-1)} title="Create Topic" />
             <TopicForm />
         </StandardLayout>
