@@ -58,12 +58,12 @@ export const SamitraReports = () => {
     const getReports = async () => {
         try {
             const res = (await samitraService.getReports()) as ReportsResponse;
-            const reports = res.reports.map((report) => ({
-                ...report,
-                seen_by: report.seen_by || '-',
-                key: report.id,
-            }));
             if (res) {
+                const reports = res.reports.map((report) => ({
+                    ...report,
+                    seen_by: report.seen_by || '-',
+                    key: report.id,
+                }));
                 setReportsData(() => [...reports]);
             }
         } catch (error) {
