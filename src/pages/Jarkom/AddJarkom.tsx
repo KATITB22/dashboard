@@ -28,7 +28,7 @@ export const AddJarkom = () => {
     }
 
     return (
-        <StandardLayout allowedRole={"Committee"} title={"Add Jarkom"} >
+        <StandardLayout allowedRole={"SuperCommittee"} title={"Add Jarkom"} >
             <PageHeader onBack={() => navigate(-1)} title="Add Jarkom" />
             <Form
                 layout="vertical"

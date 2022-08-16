@@ -48,7 +48,19 @@ const Logout = () => {
     }}>Logout</div>)
 };
 
+const itemsUnit: MenuItem[] = [
+    getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
+    getItem(<NavTab url="../profile">Profile</NavTab>, '1', <ContactsOutlined />),
+    getItem(<Logout />, "99", <LogoutOutlined />)
+]
+
 const itemsCommittee: MenuItem[] = [
+    getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
+    getItem(<NavTab url="../profile">Profile</NavTab>, '1', <ContactsOutlined />),
+    getItem(<Logout />, "99", <LogoutOutlined />)
+];
+
+const itemsSuperCommittee: MenuItem[] = [
     getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
     getItem(<NavTab url="../event">Event</NavTab>, '1', <CalendarOutlined />),
     getItem('Group', '2', <ContactsOutlined />, [
@@ -79,6 +91,8 @@ const sidebarMaping: { [key: string]: MenuItem[] } = {
     'Mentor': itemsMentor,
     'Participant': itemsParticipant,
     'Committee': itemsCommittee,
+    'SuperCommittee': itemsSuperCommittee,
+    'Unit': itemsUnit
 }
 
 const style: React.CSSProperties = {

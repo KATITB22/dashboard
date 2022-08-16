@@ -13,14 +13,19 @@ const faculty = [
     "FSRD",
     "FTI",
     "FTMD",
-    "FTTM",
     "FTSL",
+    "FTTM",
+    "FTTM-C",
     "SAPPK",
     "SBM",
     "SF",
     "SITH",
+    "SITH-R",
+    "SITH-S",
     "STEI",
-    "-",
+    "STEI-K",
+    "STEI-R",
+    "-"
 ]
 
 const campus = [
@@ -122,7 +127,7 @@ export const EditProfile = () => {
     };
 
     return (
-        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]} title={"Edit Profile"} >
+        <StandardLayout allowedRole={["SuperCommittee", "Committee", "Mentor", "Participant", "Unit"]} title={"Edit Profile"} >
             <PageHeader onBack={() => navigate(-1)} title="Edit Profile" />
             <Form
                 layout="vertical"

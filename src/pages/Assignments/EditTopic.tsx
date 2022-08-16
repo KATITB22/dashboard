@@ -67,7 +67,7 @@ export const EditTopic = () => {
     questions.sort((a, b) => a.question_no - b.question_no);
 
     return (
-        <StandardLayout allowedRole={"Committee"} title={"Edit Topic"} >
+        <StandardLayout allowedRole={"SuperCommittee"} title={"Edit Topic"} >
             <PageHeader onBack={() => navigate(-1)} title="Edit Topic" />
             <TopicForm id={id} setQuestions={setQuestions} />
             <Divider orientation="left">Pertanyaan</Divider>

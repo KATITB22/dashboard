@@ -189,7 +189,7 @@ export const WorkspaceScoring = () => {
     };
 
     return (
-        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]} title={"Workspace Scoring"} >
+        <StandardLayout allowedRole={["SuperCommittee", "Mentor", "Participant"]} title={"Workspace Scoring"} >
             <WorkspaceContext.Provider value={{ data, setData, lastUpdate, scoreData, setScoreData }}>
                 <PageHeader onBack={() => navigate(-1)} title={"Workspace: " + title} />
                 <Spin spinning={loading} tip="Loading...">
