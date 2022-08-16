@@ -6,6 +6,7 @@ import {
     FileTextOutlined,
     HomeOutlined,
     LogoutOutlined,
+    WechatOutlined,
 } from '@ant-design/icons';
 import { Helmet } from 'react-helmet';
 import { NavTab } from '../components/NavTab';
@@ -57,6 +58,10 @@ const itemsCommittee: MenuItem[] = [
     ]),
     getItem(<NavTab url="../assignment/super">Assignment</NavTab>, '3', <FileTextOutlined />),
     getItem(<NavTab url="../profile">Profile</NavTab>, '4', <ContactsOutlined />),
+    getItem('Samitra', '5', <WechatOutlined />, [
+        getItem(<NavTab url="../samitra/bans">Bans</NavTab>, '5a'),
+        getItem(<NavTab url="../samitra/reports">Reports</NavTab>, '5b')
+    ]),
     getItem(<Logout />, "99", <LogoutOutlined />)
 ];
 

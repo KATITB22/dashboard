@@ -130,6 +130,18 @@ const AddJarkomPage = React.lazy(() =>
         default: module.AddJarkom,
     }))
 );
+
+const SamitraBanPage = React.lazy(() =>
+    import('./pages/Samitra/SamitraBans').then((module) => ({
+        default: module.SamitraBans,
+    }))
+);
+
+const SamitraReportPage = React.lazy(() =>
+    import('./pages/Samitra/SamitraReports').then((module) => ({
+        default: module.SamitraReports,
+    }))
+);
 interface PageRouting {
     path: string;
     component: LazyExoticComponent<any>;
@@ -220,6 +232,14 @@ export const Routing: PageRouting[] = [
     {
         path: '/jarkom',
         component: AddJarkomPage,
+    },
+    {
+        path: '/samitra/bans',
+        component: SamitraBanPage,
+    },
+    {
+        path: '/samitra/reports',
+        component: SamitraReportPage,
     },
     PageNotFoundRouting,
 ];
