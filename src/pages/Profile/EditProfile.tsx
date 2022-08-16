@@ -127,7 +127,7 @@ export const EditProfile = () => {
     };
 
     return (
-        <StandardLayout allowedRole={["SuperCommittee", "Committee", "Mentor", "Participant"]} title={"Edit Profile"} >
+        <StandardLayout allowedRole={["SuperCommittee", "Committee", "Mentor", "Participant", "Unit"]} title={"Edit Profile"} >
             <PageHeader onBack={() => navigate(-1)} title="Edit Profile" />
             <Form
                 layout="vertical"

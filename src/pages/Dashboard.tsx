@@ -9,7 +9,7 @@ export const Dashboard = () => {
 
 
     return (
-        <StandardLayout allowedRole={["SuperCommittee", "Committee", "Mentor", "Participant"]}>
+        <StandardLayout allowedRole={["SuperCommittee", "Committee", "Mentor", "Participant", "Unit"]}>
             <PageHeader title="KAT ITB 2022 Dashboard" />
             <div className='mt-3 flex flex-col'>
                 <Alert

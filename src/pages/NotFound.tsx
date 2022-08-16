@@ -4,7 +4,7 @@ import { StandardLayout } from "../layout/StandardLayout"
 
 export const Page = () => {
     const navigate = useNavigate();
-    return <StandardLayout allowedRole={["Participant", "Mentor", "Committee", "SuperCommittee"]}>
+    return <StandardLayout allowedRole={["Participant", "Mentor", "Committee", "SuperCommittee", "Unit"]}>
         <Result
             status="error"
             title="Page not found."

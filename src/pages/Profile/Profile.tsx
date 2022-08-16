@@ -65,7 +65,7 @@ export const Profile = () => {
         },
     ];
     return (
-        <StandardLayout allowedRole={["SuperCommittee", "Committee", "Participant", "Mentor"]} title={"Profile"} >
+        <StandardLayout allowedRole={["SuperCommittee", "Committee", "Participant", "Mentor", "Unit"]} title={"Profile"} >
             <PageHeader title="Profile" />
             <Form
                 layout="vertical"
