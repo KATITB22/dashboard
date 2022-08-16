@@ -149,7 +149,7 @@ export const MentorAttendanceModal = ({
 }: MentorProps) => {
     const columns: ColumnsType<ITable> = [
         {
-            title: 'NIM',
+            title: 'NIM/No. Registrasi',
             dataIndex: 'nim',
         },
         {

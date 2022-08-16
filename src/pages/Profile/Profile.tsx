@@ -39,7 +39,7 @@ export const Profile = () => {
             render: (_: any, record: any, idx: number) => <>{idx + 1 + (page - 1) * 10}</>
         },
         {
-            title: 'NIM',
+            title: 'NIM/No. Registrasi',
             dataIndex: 'username',
             key: 'nim',
         },
@@ -78,7 +78,7 @@ export const Profile = () => {
                     <Input placeholder={user.name} />
                 </Form.Item>
                 <Form.Item
-                    label="NIM"
+                    label="NIM/No. Registrasi"
                 >
                     <Input placeholder={user.username} />
                 </Form.Item>

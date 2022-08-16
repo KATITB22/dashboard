@@ -82,7 +82,7 @@ export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
             render: (_, record, idx) => (<>{+idx + 1 + ((page - 1) * pageSize)}</>),
         },
         {
-            title: 'NIM',
+            title: 'NIM/No. Registrasi',
             key: 'nim',
             dataIndex: 'username',
         },

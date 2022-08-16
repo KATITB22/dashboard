@@ -194,7 +194,7 @@ export const WorkspaceScoring = () => {
                 <PageHeader onBack={() => navigate(-1)} title={"Workspace: " + title} />
                 <Spin spinning={loading} tip="Loading...">
                     <Descriptions bordered size="default" title="Information" className='my-5' column={4}>
-                        <Descriptions.Item label="NIM">{user.username}</Descriptions.Item>
+                        <Descriptions.Item label="NIM/No. Registrasi">{user.username}</Descriptions.Item>
                         <Descriptions.Item label="Name">{user.name}</Descriptions.Item>
                         <Descriptions.Item label="Faculty">{user.faculty}</Descriptions.Item>
                         <Descriptions.Item label="Campus">{user.campus}</Descriptions.Item>
