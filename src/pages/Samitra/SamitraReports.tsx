@@ -80,7 +80,6 @@ export const SamitraReports = () => {
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
-        console.log('Selected', selectedRowKeys);
     };
 
     const rowSelection = {
@@ -92,7 +91,6 @@ export const SamitraReports = () => {
     const markSeen = async () =>
         Promise.all(
             selectedRowKeys.map(async (id) => {
-                console.log('Handling id', id);
                 await samitraService.markSeen(id as number);
             })
         );
@@ -111,7 +109,7 @@ export const SamitraReports = () => {
     };
 
     return (
-        <StandardLayout allowedRole="Committee" title="Samitra Ban">
+        <StandardLayout allowedRole="SuperCommittee" title="Samitra Ban">
             <Button
                 className="mb-4"
                 type="primary"

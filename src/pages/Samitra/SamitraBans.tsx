@@ -50,7 +50,7 @@ export const SamitraBans = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole="Committee" title="Samitra Ban">
+        <StandardLayout allowedRole="SuperCommittee" title="Samitra Ban">
             <Form
                 form={form}
                 layout="horizontal"
