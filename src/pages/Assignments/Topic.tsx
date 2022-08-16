@@ -86,7 +86,7 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
                 render: (_, record) => {
                     return (
                         <Space size="middle" key={`action-` + record.id}>
-                            {user.role === 'Committee' ? <Link to={`../assignment/${record.id}`}>
+                            {user.role === 'SuperCommittee' ? <Link to={`../assignment/${record.id}`}>
                                 <Button type="primary" icon={<FormOutlined />} size="middle">
                                     Edit
                                 </Button>
@@ -179,7 +179,7 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
             <PageHeader title='Assignments Page' />
             <Alert className='mb-5 max-w-lg' showIcon type="warning" message="Disclaimer" description="Fitur ini masih dalam pengembangan dan belum sempurna! Masih dalam tahap uji coba. Mohon maaf apabila terjadi kesalahan." closable />
             <LastUpdateStatus lastUpdate={lastUpdate} />
-            {(isAdmin && user.role === 'Committee') ? <div className="mb-5">
+            {(isAdmin && user.role === 'SuperCommittee') ? <div className="mb-5">
                 <Link to="../assignment/create">
                     <Button icon={<PlusOutlined />} size="large" type="primary">
                         Create
@@ -201,5 +201,5 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
 
 export const TopicAdmin = () => {
     const { user }: any = useContext(UserContext);
-    return <Topic isAdmin={user.role === 'Committee' || user.role === 'Mentor'} />
+    return <Topic isAdmin={user.role === 'SuperCommittee' || user.role === 'Mentor'} />
 };

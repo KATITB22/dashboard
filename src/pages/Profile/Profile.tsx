@@ -13,9 +13,10 @@ export const Profile = () => {
     const [page, setPage] = useState<number>(1);
     const [members, setMembers] = useState<any[]>([]);
     const [isCommittee, setIsCommittee] = useState<boolean>(false);
+    const nonMember = ["SuperCommittee", "Committee", "Unit"];
 
     useEffect(() => {
-        setIsCommittee((user.role === 'Committee'));
+        setIsCommittee(nonMember.includes(user.role));
         if (!isCommittee)
             GroupService.getMyGroup((res) => {
                 const data: any[] = [];

@@ -17,7 +17,7 @@ interface SubmissionListProps {
 
 export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
     const { user }: any = useContext(UserContext);
-    if (user.role === 'Committee') {
+    if (user.role === 'SuperCommittee') {
         isAdmin = true;
     } else if (user.role === 'Mentor') {
         isAdmin = false;
