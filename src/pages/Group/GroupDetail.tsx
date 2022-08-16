@@ -23,7 +23,7 @@ export const GroupDetail = () => {
             render: (_: any, record: any, idx: number) => <>{idx + 1 + (page - 1) * 10}</>
         },
         {
-            title: 'NIM',
+            title: 'NIM/No. Registrasi',
             dataIndex: 'nim',
             key: 'nim',
         },

@@ -31,7 +31,7 @@ export const Login = ({ setState }: { setState: Function }) => {
             },
             (error) => {
                 if (error.toString().includes("Invalid identifier")) {
-                    toast.error("NIM atau password salah atau tidak ditemukan!");
+                    toast.error("NIM/No. Registrasi atau password salah atau tidak ditemukan!");
                 } else {
                     toast.error(error.toString());
                 }
@@ -61,13 +61,13 @@ export const Login = ({ setState }: { setState: Function }) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your NIM!',
+                                        message: 'Please input your NIM/Registration Number!',
                                     },
                                 ]}
                             >
                                 <Input
                                     prefix={<UserOutlined />}
-                                    placeholder="NIM"
+                                    placeholder="NIM/No. Registrasi"
                                 />
                             </Form.Item>
                             <Form.Item

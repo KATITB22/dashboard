@@ -57,8 +57,8 @@ export const SamitraBans = () => {
                 wrapperCol={{ span: 10 }}
                 onFinish={handleBan}
             >
-                <Form.Item label="NIM/Nomor registrasi" name="username">
-                    <Input placeholder="Input NIM/Nomor registrasi" />
+                <Form.Item label="NIM/No. Registrasi" name="username">
+                    <Input placeholder="Input NIM/No. Registrasi" />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
