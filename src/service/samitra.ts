@@ -55,15 +55,40 @@ class SamitraService {
 
     public async getReports() {
         try {
-            const res = await this.samitraApi.get('/reports', {
+            const unseenRes = await this.samitraApi.get('/reports/unseen', {
                 headers: {
                     Authorization: `Bearer ${this.token}`,
                 },
             });
-            return res.data;
+            const seenRes = await this.samitraApi.get('/reports/seen', {
+                headers: {
+                    Authorization: `Bearer ${this.token}`,
+                },
+            });
+            const reports = [
+                ...unseenRes.data.reports,
+                ...seenRes.data.reports,
+            ];
+            return { reports };
         } catch (error) {
             console.error(error);
             return null;
+        }
+    }
+
+    public async markSeen(id: number) {
+        try {
+            await this.samitraApi.post(
+                '/reports/mark-seen',
+                { id },
+                {
+                    headers: {
+                        Authorization: `Bearer ${this.token}`,
+                    },
+                }
+            );
+        } catch (error) {
+            console.error(error);
         }
     }
 }

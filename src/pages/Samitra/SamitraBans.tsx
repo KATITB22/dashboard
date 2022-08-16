@@ -27,7 +27,9 @@ export const SamitraBans = () => {
 
     const getBannedList = async () => {
         const res = (await samitraService.getBanList()) as BanListResponse[];
-        setBansData(() => [...res]);
+        if (res) {
+            setBansData(() => [...res]);
+        }
     };
 
     const handleBan = async ({ username }: { username: string }) => {

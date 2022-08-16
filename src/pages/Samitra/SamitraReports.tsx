@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { StandardLayout } from '../../layout/StandardLayout';
 import samitraService from '../../service/samitra';
@@ -9,6 +9,7 @@ interface ReportData {
     issuer_id: string;
     issued_id: string;
     reason: string;
+    seen_by?: string;
 }
 
 interface ReportsResponse {
@@ -44,14 +45,27 @@ export const SamitraReports = () => {
             title: 'Reason',
             dataIndex: 'reason',
             name: 'reason',
-            width: '55%',
+            width: '50%',
+        },
+        {
+            title: 'Seen by',
+            dataIndex: 'seen_by',
+            name: 'seen_by',
+            width: '10%',
         },
     ];
 
     const getReports = async () => {
         try {
             const res = (await samitraService.getReports()) as ReportsResponse;
-            setReportsData(() => [...res.reports]);
+            const reports = res.reports.map((report) => ({
+                ...report,
+                seen_by: report.seen_by || '-',
+                key: report.id,
+            }));
+            if (res) {
+                setReportsData(() => [...reports]);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -61,9 +75,57 @@ export const SamitraReports = () => {
         getReports();
     }, []);
 
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        setSelectedRowKeys(newSelectedRowKeys);
+        console.log('Selected', selectedRowKeys);
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
+    const hasSelected = selectedRowKeys.length > 0;
+
+    const markSeen = async () =>
+        Promise.all(
+            selectedRowKeys.map(async (id) => {
+                console.log('Handling id', id);
+                await samitraService.markSeen(id as number);
+            })
+        );
+
+    const handleMarkSeen = async () => {
+        setLoading(true);
+        try {
+            await markSeen();
+            getReports();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+        setSelectedRowKeys([]);
+    };
+
     return (
         <StandardLayout allowedRole="Committee" title="Samitra Ban">
-            <Table dataSource={reportsData} columns={tableColumn} />
+            <Button
+                className="mb-4"
+                type="primary"
+                onClick={handleMarkSeen}
+                disabled={!hasSelected}
+                loading={loading}
+            >
+                Mark as seen
+            </Button>
+            <Table
+                rowSelection={rowSelection}
+                dataSource={reportsData}
+                columns={tableColumn}
+            />
         </StandardLayout>
     );
 };
