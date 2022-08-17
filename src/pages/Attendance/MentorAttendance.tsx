@@ -1,5 +1,5 @@
 import type { BadgeProps } from 'antd';
-import { Badge, Button, Calendar, PageHeader, Spin } from 'antd';
+import { Badge, Button, Calendar, PageHeader, Spin, Collapse  } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
@@ -8,6 +8,8 @@ import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
 import service, { IEvent, ITable } from '../../service/attendance';
 import { getType } from './helper';
+
+const { Panel } = Collapse;
 
 export const MentorAttendance = () => {
     const [loadingPage, setLoadingPage] = useState(true);
@@ -21,10 +23,10 @@ export const MentorAttendance = () => {
         end_date: moment(),
         type: '',
     });
-    const [date, setDate] = useState(moment());
-    const [selectedDate, setSelectedDate] = useState(moment());
     const [dataSource, setDataSource] = useState<ITable[]>([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+    const currentDate = moment(new Date()).format('MM-DD-YYYY')
 
     const handleOkModalButton = () => {
         setLoadingOkModalButton(true);
@@ -62,11 +64,16 @@ export const MentorAttendance = () => {
             event.start_date.isSame(newValue, 'date')
         );
 
+        if (eventData.length === 0) {
+            return <p>Tidak ditemukan acara pada saat ini.</p>
+        }
+
         return (
             <ul>
                 {eventData.map((event) => (
-                    <li key={event.id}>
+                    <li key={event.id} className="mb-2" >
                         <Button
+                            className='w-full md:w-1/2'
                             type="primary"
                             onClick={() => {
                                 handleEventClick(event);
@@ -82,18 +89,6 @@ export const MentorAttendance = () => {
             </ul>
         );
     };
-
-    const onSelectCell = (newDate: Moment) => {
-        setDate(newDate);
-        setSelectedDate(newDate);
-    };
-
-    const onPanelChange = (newDate: Moment) => {
-        setDate(newDate);
-    };
-
-    const disableDate = (newDate: Moment) =>
-        !newDate.isSame(selectedDate, 'month');
 
     useEffect(() => {
         setLoadingPage(true);
@@ -115,13 +110,17 @@ export const MentorAttendance = () => {
                 <PageHeader
                     title="Group Attendance"
                 />
-                <Calendar
-                    value={date}
-                    onSelect={onSelectCell}
-                    onPanelChange={onPanelChange}
-                    disabledDate={disableDate}
-                    dateCellRender={dateCellRender}
-                />
+                <Collapse bordered={false} defaultActiveKey={currentDate}>
+                    <Panel header="17 Agustus 2022" key={moment(new Date('August 17, 2022')).format('MM-DD-YYYY')}>
+                        {dateCellRender(moment(new Date('August 17, 2022')))}
+                    </Panel>
+                    <Panel header="18 Agustus 2022" key={moment(new Date('August 18, 2022')).format('MM-DD-YYYY')}>
+                        {dateCellRender(moment(new Date('August 18, 2022')))}
+                    </Panel>
+                    <Panel header="19 Agustus 2022" key={moment(new Date('August 19, 2022')).format('MM-DD-YYYY')}>
+                        {dateCellRender(moment(new Date('August 19, 2022')))}
+                    </Panel>
+                </Collapse>
                 {visibleModal && (
                     <MentorAttendanceModal
                         visibleModal={visibleModal}
