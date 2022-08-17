@@ -48,7 +48,7 @@ export const QuestionItemList = (item: Question) => {
 
     return (
         <>
-            <div className="flex flex-col">
+            <div className="flex flex-col whitespace-pre-line">
                 <span>{item.question_no}. {item.question}
                     <Tag className='ml-5' color="lime">Score: {item.score}</Tag>
                     <Tag className='ml-1' color={colorMappers[item.metadata.type]}>{item.metadata.type}</Tag>
