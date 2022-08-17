@@ -39,8 +39,11 @@ export const PilihanGanda = (item: AssignmentComponentProps) => {
 
     const options = ['A', 'B', 'C', 'D', 'E'];
     return (
-        <Form.Item label={<ReactMarkdown>{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
+        <Form.Item key={item.id}>
             <Input.Group>
+                <Row>
+                    <ReactMarkdown className="whitespace-pre-line">{`[${item.question_no}] ${item.question}`}</ReactMarkdown>
+                </Row>
                 <Row gutter={[16, 16]} align="middle">
                     <Col
                         xs={24} xl={20}>

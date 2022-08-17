@@ -35,7 +35,7 @@ export const Essay = (item: AssignmentComponentProps) => {
     }, [scoreData, data]);
 
     return (
-        <Form.Item label={<ReactMarkdown>{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
+        <Form.Item label={<ReactMarkdown className="whitespace-pre-line">{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
             <Input.Group>
                 <Row gutter={[16, 16]} align="middle">
                     <Col xs={24} xl={20}>
