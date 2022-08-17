@@ -1,18 +1,11 @@
 import { Col, Form, Input, InputNumber, Row, } from "antd";
 import React, { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
 import { AssignmentComponentProps } from ".";
 import { WorkspaceContext } from "../../context";
 
-export const Isian = (item: AssignmentComponentProps) => {
-    const [answer, setAnswer] = useState<string | undefined>(undefined);
+export const Scoring = (item: AssignmentComponentProps) => {
     const [score, setScore] = useState<number | undefined>(undefined);
-    const { data, setData, scoreData, setScoreData }: any = React.useContext(WorkspaceContext);
-
-    const handleChange = (e: any) => {
-        setAnswer(e.target.value);
-        setData({ ...data, [item.id]: e.target.value });
-    }
+    const { data, scoreData, setScoreData }: any = React.useContext(WorkspaceContext);
 
     const handleScoreChange = (e: any) => {
         setScore(e);
@@ -32,28 +25,19 @@ export const Isian = (item: AssignmentComponentProps) => {
     }
 
     useEffect(() => {
-        setAnswer(data[item.id]);
         setScore(scoreData[item.id]);
     }, [scoreData, data]);
 
     return (
-        <Form.Item label={<ReactMarkdown>{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
+        <Form.Item key={item.id} label={`Komponen Penilaian: ${item.question}`}>
             <Input.Group>
                 <Row gutter={[16, 16]} align="middle">
-                    <Col xs={24} xl={20}>
-                        <Input onBlur={handleChange} onChange={handleChange} disabled={!item.editAnswer} maxLength={150}
-                            showCount value={answer} />
-                    </Col>
-                    {item.max_score > 0 ? 
                     <Col span={3}>
                         <InputNumber addonAfter={item.max_score}
                             onChange={handleScoreChange} onBlur={handleBlur} min={0} max={item.max_score}
                             value={score} disabled={!item.editScore} />
-                    </Col> : <></>}
+                    </Col>
                 </Row>
-                {item.correct_answer ? <Row gutter={[16, 16]} align="middle">
-                    <p className="text-gray-400">Correct Answer: {item.correct_answer}</p>
-                </Row> : <></>}
             </Input.Group>
         </Form.Item>
     );

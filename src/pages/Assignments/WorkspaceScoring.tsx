@@ -12,6 +12,7 @@ import moment from 'moment';
 import { AssignmentComponentProps } from '../../components/Assignments';
 import { WorkspaceContext } from '../../context';
 import { toast } from 'react-toastify';
+import { Scoring } from '../../components/Assignments/Scoring';
 
 interface Time {
     start: moment.Moment;
@@ -227,6 +228,8 @@ export const WorkspaceScoring = () => {
                                         return <Isian key={each.id} {...each} />
                                     } else if (each.type === 'PILIHAN GANDA') {
                                         return <PilihanGanda key={each.id} {...each} />
+                                    } else if (each.type === 'SCORING'){
+                                        return <Scoring key={each.id} {...each}/>
                                     } else {
                                         return <Essay key={each.id} {...each} />
                                     }

@@ -55,9 +55,9 @@ export const PilihanGanda = (item: AssignmentComponentProps) => {
                             </Space>
                         </Radio.Group>
                     </Col>
-                    <Col span={3}>
+                    {item.max_score > 0 ? <Col span={3}>
                         <InputNumber addonAfter={item.max_score} onBlur={handleBlur} onChange={handleScoreChange} min={0} max={item.max_score} value={score} disabled={!item.editScore} />
-                    </Col>
+                    </Col> : <></>}
                 </Row>
                 {item.correct_answer ? <Row gutter={[16, 16]} align="middle">
                     <p className="text-gray-400">Correct Answer: {item.correct_answer}</p>
