@@ -177,7 +177,7 @@ export const Topic = ({ isAdmin = false }: TopicProps) => {
     return (
         <StandardLayout allowedRole={["SuperCommittee", "Mentor", "Participant"]} title={"Assignments"} >
             <PageHeader title='Assignments Page' />
-            <Alert className='mb-5 max-w-lg' showIcon type="warning" message="Disclaimer" description="Fitur ini masih dalam pengembangan dan belum sempurna! Masih dalam tahap uji coba. Mohon maaf apabila terjadi kesalahan." closable />
+            {/* <Alert className='mb-5 max-w-lg' showIcon type="warning" message="Disclaimer" description="Fitur ini masih dalam pengembangan dan belum sempurna! Masih dalam tahap uji coba. Mohon maaf apabila terjadi kesalahan." closable /> */}
             <LastUpdateStatus lastUpdate={lastUpdate} />
             {(isAdmin && user.role === 'SuperCommittee') ? <div className="mb-5">
                 <Link to="../assignment/create">
