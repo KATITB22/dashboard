@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, PageHeader, Spin, Steps } from "antd";
 import { StandardLayout } from "../../layout/StandardLayout";
 import { Event, Article, Assignment, Friend } from "../../components/Survey";
@@ -14,7 +14,7 @@ interface SurveyData {
 
 export const Survey = () => {
   const [current, setCurrent] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [event, setEvent] = useState<Record<string, any>>({})
   const [article, setArticle] = useState<Record<string, any>>({})
   const [assignment, setAssignment] = useState<Record<string, any>>({})
@@ -57,9 +57,14 @@ export const Survey = () => {
       setLoading(false)
       toast.success("Berhasil melakukan submit!");
     }, (err) => {
+      setLoading(false)
       toast.error("Gagal melakukan submit! " + err.toString())
     })
   }
+
+  useEffect(() => {
+    console.log(friend)
+  }, [friend])
 
   return (
     <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
