@@ -35,7 +35,7 @@ export const Essay = (item: AssignmentComponentProps) => {
     }, [scoreData, data]);
 
     return (
-        <Form.Item label={<ReactMarkdown>{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
+        <Form.Item label={<ReactMarkdown className="whitespace-pre-line">{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
             <Input.Group>
                 <Row gutter={[16, 16]} align="middle">
                     <Col xs={24} xl={20}>
@@ -43,11 +43,11 @@ export const Essay = (item: AssignmentComponentProps) => {
                             maxLength={4000} rows={3} autoSize={{ minRows: 2, maxRows: 6 }}
                             showCount value={answer} />
                     </Col>
-                    <Col span={3}>
+                    {item.max_score > 0 ? <Col span={3}>
                         <InputNumber addonAfter={item.max_score} onBlur={handleBlur}
                             onChange={handleScoreChange} min={0} max={item.max_score}
                             value={score} disabled={!item.editScore} />
-                    </Col>
+                    </Col> : <></>}
                 </Row>
                 {item.correct_answer ? <Row gutter={[16, 16]} align="middle">
                     <p className="text-gray-400">Correct Answer: {item.correct_answer}</p>

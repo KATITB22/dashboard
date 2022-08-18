@@ -13,9 +13,10 @@ export const Profile = () => {
     const [page, setPage] = useState<number>(1);
     const [members, setMembers] = useState<any[]>([]);
     const [isCommittee, setIsCommittee] = useState<boolean>(false);
+    const nonMember = ["SuperCommittee", "Committee", "Unit"];
 
     useEffect(() => {
-        setIsCommittee((user.role === 'Committee'));
+        setIsCommittee(nonMember.includes(user.role));
         if (!isCommittee)
             GroupService.getMyGroup((res) => {
                 const data: any[] = [];
@@ -39,7 +40,7 @@ export const Profile = () => {
             render: (_: any, record: any, idx: number) => <>{idx + 1 + (page - 1) * 10}</>
         },
         {
-            title: 'NIM',
+            title: 'NIM/No. Registrasi',
             dataIndex: 'username',
             key: 'nim',
         },
@@ -65,7 +66,7 @@ export const Profile = () => {
         },
     ];
     return (
-        <StandardLayout allowedRole={["Committee", "Participant", "Mentor"]}>
+        <StandardLayout allowedRole={["SuperCommittee", "Committee", "Participant", "Mentor", "Unit"]} title={"Profile"} >
             <PageHeader title="Profile" />
             <Form
                 layout="vertical"
@@ -78,7 +79,7 @@ export const Profile = () => {
                     <Input placeholder={user.name} />
                 </Form.Item>
                 <Form.Item
-                    label="NIM"
+                    label="NIM/No. Registrasi"
                 >
                     <Input placeholder={user.username} />
                 </Form.Item>

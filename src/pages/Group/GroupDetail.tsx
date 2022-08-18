@@ -23,7 +23,7 @@ export const GroupDetail = () => {
             render: (_: any, record: any, idx: number) => <>{idx + 1 + (page - 1) * 10}</>
         },
         {
-            title: 'NIM',
+            title: 'NIM/No. Registrasi',
             dataIndex: 'nim',
             key: 'nim',
         },
@@ -48,7 +48,7 @@ export const GroupDetail = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole={["Committee", "Mentor"]}>
+        <StandardLayout allowedRole={["SuperCommittee", "Mentor"]} title={"Kelompok " + groupName} >
             <>
                 <PageHeader onBack={() => navigate(-1)} title="Group Detail" />
                 <Header>Kelompok {groupName}</Header>

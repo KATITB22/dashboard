@@ -119,15 +119,27 @@ const EditProfilePage = React.lazy(() =>
     }))
 );
 
-const JarkomPage = React.lazy(() =>
-    import('./pages/Jarkom/Jarkom').then((module) => ({
-        default: module.Jarkom,
+// const JarkomPage = React.lazy(() =>
+//     import('./pages/Jarkom/Jarkom').then((module) => ({
+//         default: module.Jarkom,
+//     }))
+// );
+
+// const AddJarkomPage = React.lazy(() =>
+//     import('./pages/Jarkom/AddJarkom').then((module) => ({
+//         default: module.AddJarkom,
+//     }))
+// );
+
+const SamitraBanPage = React.lazy(() =>
+    import('./pages/Samitra/SamitraBans').then((module) => ({
+        default: module.SamitraBans,
     }))
 );
 
-const AddJarkomPage = React.lazy(() =>
-    import('./pages/Jarkom/AddJarkom').then((module) => ({
-        default: module.AddJarkom,
+const SamitraReportPage = React.lazy(() =>
+    import('./pages/Samitra/SamitraReports').then((module) => ({
+        default: module.SamitraReports,
     }))
 );
 
@@ -224,9 +236,17 @@ export const Routing: PageRouting[] = [
         path: '/profile/edit',
         component: EditProfilePage,
     },
+    // {
+    //     path: '/jarkom',
+    //     component: AddJarkomPage,
+    // },
     {
-        path: '/jarkom',
-        component: AddJarkomPage,
+        path: '/samitra/bans',
+        component: SamitraBanPage,
+    },
+    {
+        path: '/samitra/reports',
+        component: SamitraReportPage,
     },
     {
         path: '/survey',

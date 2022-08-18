@@ -12,6 +12,7 @@ import moment from 'moment';
 import { AssignmentComponentProps } from '../../components/Assignments';
 import { WorkspaceContext } from '../../context';
 import { toast } from 'react-toastify';
+import { Scoring } from '../../components/Assignments/Scoring';
 
 interface Time {
     start: moment.Moment;
@@ -189,12 +190,12 @@ export const WorkspaceScoring = () => {
     };
 
     return (
-        <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
+        <StandardLayout allowedRole={["SuperCommittee", "Mentor", "Participant"]} title={"Workspace Scoring"} >
             <WorkspaceContext.Provider value={{ data, setData, lastUpdate, scoreData, setScoreData }}>
                 <PageHeader onBack={() => navigate(-1)} title={"Workspace: " + title} />
                 <Spin spinning={loading} tip="Loading...">
                     <Descriptions bordered size="default" title="Information" className='my-5' column={4}>
-                        <Descriptions.Item label="NIM">{user.username}</Descriptions.Item>
+                        <Descriptions.Item label="NIM/No. Registrasi">{user.username}</Descriptions.Item>
                         <Descriptions.Item label="Name">{user.name}</Descriptions.Item>
                         <Descriptions.Item label="Faculty">{user.faculty}</Descriptions.Item>
                         <Descriptions.Item label="Campus">{user.campus}</Descriptions.Item>
@@ -227,6 +228,8 @@ export const WorkspaceScoring = () => {
                                         return <Isian key={each.id} {...each} />
                                     } else if (each.type === 'PILIHAN GANDA') {
                                         return <PilihanGanda key={each.id} {...each} />
+                                    } else if (each.type === 'SCORING'){
+                                        return <Scoring key={each.id} {...each}/>
                                     } else {
                                         return <Essay key={each.id} {...each} />
                                     }

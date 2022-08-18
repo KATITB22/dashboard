@@ -48,7 +48,7 @@ export const QuestionItemList = (item: Question) => {
 
     return (
         <>
-            <div className="flex flex-col">
+            <div className="flex flex-col whitespace-pre-line">
                 <span>{item.question_no}. {item.question}
                     <Tag className='ml-5' color="lime">Score: {item.score}</Tag>
                     <Tag className='ml-1' color={colorMappers[item.metadata.type]}>{item.metadata.type}</Tag>
@@ -67,7 +67,7 @@ export const EditTopic = () => {
     questions.sort((a, b) => a.question_no - b.question_no);
 
     return (
-        <StandardLayout allowedRole={"Committee"}>
+        <StandardLayout allowedRole={"SuperCommittee"} title={"Edit Topic"} >
             <PageHeader onBack={() => navigate(-1)} title="Edit Topic" />
             <TopicForm id={id} setQuestions={setQuestions} />
             <Divider orientation="left">Pertanyaan</Divider>

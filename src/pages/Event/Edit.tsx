@@ -80,7 +80,7 @@ export const EditEvent = () => {
     };
 
     return (
-        <StandardLayout allowedRole={"Committee"}>
+        <StandardLayout allowedRole={"SuperCommittee"} title={"Edit Event"} >
             <PageHeader onBack={() => navigate(-1)} title="Edit Event" />
             {empty ? (
                 <Spin tip="Loading..." />

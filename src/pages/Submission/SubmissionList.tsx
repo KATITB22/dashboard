@@ -17,7 +17,7 @@ interface SubmissionListProps {
 
 export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
     const { user }: any = useContext(UserContext);
-    if (user.role === 'Committee') {
+    if (user.role === 'SuperCommittee') {
         isAdmin = true;
     } else if (user.role === 'Mentor') {
         isAdmin = false;
@@ -82,7 +82,7 @@ export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
             render: (_, record, idx) => (<>{+idx + 1 + ((page - 1) * pageSize)}</>),
         },
         {
-            title: 'NIM',
+            title: 'NIM/No. Registrasi',
             key: 'nim',
             dataIndex: 'username',
         },
@@ -133,7 +133,7 @@ export const SubmissionList = ({ isAdmin }: SubmissionListProps) => {
         },
     ];
     return (
-        <StandardLayout allowedRole={['Committee', 'Mentor']}>
+        <StandardLayout allowedRole={['SuperCommittee', 'Mentor']} title={"Submissions"}>
             <PageHeader onBack={() => navigate(-1)} title="List Submission" />
             <LastUpdateStatus lastUpdate={lastUpdate} />
             <Spin tip="Fetching data..." spinning={loading}>

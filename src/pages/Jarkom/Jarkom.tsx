@@ -25,7 +25,7 @@ export const Jarkom = () => {
     ]);
     const navigate = useNavigate();
     return (
-        <StandardLayout allowedRole={"Committee"}>
+        <StandardLayout allowedRole={["SuperCommittee", "Committee"]} title={"Jarkom"} >
             <PageHeader title="KAT ITB 2022 Jarkom" />
             <div className='mb-3'>
                 <Button type="primary"

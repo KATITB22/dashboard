@@ -37,18 +37,22 @@ export const Isian = (item: AssignmentComponentProps) => {
     }, [scoreData, data]);
 
     return (
-        <Form.Item label={<ReactMarkdown>{`[${item.question_no}] ${item.question}`}</ReactMarkdown>} key={item.id}>
+        <Form.Item key={item.id}>
             <Input.Group>
+                <Row>
+                    <ReactMarkdown className="whitespace-pre-line">{`[${item.question_no}] ${item.question}`}</ReactMarkdown>
+                </Row>
                 <Row gutter={[16, 16]} align="middle">
                     <Col xs={24} xl={20}>
                         <Input onBlur={handleChange} onChange={handleChange} disabled={!item.editAnswer} maxLength={150}
                             showCount value={answer} />
                     </Col>
+                    {item.max_score > 0 ? 
                     <Col span={3}>
                         <InputNumber addonAfter={item.max_score}
                             onChange={handleScoreChange} onBlur={handleBlur} min={0} max={item.max_score}
                             value={score} disabled={!item.editScore} />
-                    </Col>
+                    </Col> : <></>}
                 </Row>
                 {item.correct_answer ? <Row gutter={[16, 16]} align="middle">
                     <p className="text-gray-400">Correct Answer: {item.correct_answer}</p>

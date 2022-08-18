@@ -1,18 +1,17 @@
 import type { BadgeProps } from 'antd';
-import { Badge, Button, Calendar, PageHeader, Spin } from 'antd';
+import { Badge, Button, PageHeader, Spin, Collapse } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ParticipantAttendanceModal } from '../../components/AttendanceModal';
 import { StandardLayout } from '../../layout/StandardLayout';
 import { defaultFailureCallback } from '../../service';
 import service, { IEvent } from '../../service/attendance';
 import { getType } from './helper';
 
-export const ParticipantAttendance = () => {
-    const navigate = useNavigate();
+const { Panel } = Collapse;
 
+export const ParticipantAttendance = () => {
     const [loadingPage, setLoadingPage] = useState(true);
     const [loadingOkModalButton, setLoadingOkModalButton] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
@@ -24,8 +23,8 @@ export const ParticipantAttendance = () => {
         end_date: moment(),
         type: '',
     });
-    const [date, setDate] = useState(moment());
-    const [selectedDate, setSelectedDate] = useState(moment());
+
+    const currentDate = moment(new Date()).format('MM-DD-YYYY')
 
     const handleOkModalButton = () => {
         setLoadingOkModalButton(true);
@@ -53,11 +52,16 @@ export const ParticipantAttendance = () => {
             event.start_date.isSame(newValue, 'date')
         );
 
+        if (eventData.length === 0) {
+            return <p>Tidak ditemukan acara pada saat ini.</p>
+        }
+
         return (
             <ul>
                 {eventData.map((event) => (
-                    <li key={event.id}>
+                    <li key={event.id} className="mb-2" >
                         <Button
+                            className='w-full md:w-1/2'
                             type="primary"
                             onClick={() => {
                                 handleEventClick(event);
@@ -74,18 +78,6 @@ export const ParticipantAttendance = () => {
         );
     };
 
-    const onSelectCell = (newDate: Moment) => {
-        setDate(newDate);
-        setSelectedDate(newDate);
-    };
-
-    const onPanelChange = (newDate: Moment) => {
-        setDate(newDate);
-    };
-
-    const disableDate = (newDate: Moment) =>
-        !newDate.isSame(selectedDate, 'month');
-
     useEffect(() => {
         setLoadingPage(true);
         service.getEvents(
@@ -101,18 +93,22 @@ export const ParticipantAttendance = () => {
     }, []);
 
     return (
-        <StandardLayout allowedRole={"Participant"}>
+        <StandardLayout allowedRole={"Participant"} title={"Participant Attendance"} >
             <Spin tip="Loading..." spinning={loadingPage}>
                 <PageHeader
                     title="Participant Attendance"
                 />
-                <Calendar
-                    value={date}
-                    onSelect={onSelectCell}
-                    onPanelChange={onPanelChange}
-                    disabledDate={disableDate}
-                    dateCellRender={dateCellRender}
-                />
+                <Collapse bordered={false} defaultActiveKey={currentDate}>
+                    <Panel header="17 Agustus 2022" key={moment(new Date('August 17, 2022')).format('MM-DD-YYYY')}>
+                        {dateCellRender(moment(new Date('August 17, 2022')))}
+                    </Panel>
+                    <Panel header="18 Agustus 2022" key={moment(new Date('August 18, 2022')).format('MM-DD-YYYY')}>
+                        {dateCellRender(moment(new Date('August 18, 2022')))}
+                    </Panel>
+                    <Panel header="19 Agustus 2022" key={moment(new Date('August 19, 2022')).format('MM-DD-YYYY')}>
+                        {dateCellRender(moment(new Date('August 19, 2022')))}
+                    </Panel>
+                </Collapse>
                 {visibleModal && (
                     <ParticipantAttendanceModal
                         visibleModal={visibleModal}
