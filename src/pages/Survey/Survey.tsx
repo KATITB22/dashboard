@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Alert, Button, PageHeader, Spin, Steps } from "antd";
 import { StandardLayout } from "../../layout/StandardLayout";
 import { Event, Article, Assignment, Friend } from "../../components/Survey";
-import service from "../../service/survey";
+import SurveyService from "../../service/survey";
+import GroupService from '../../service/group';
 import { toast } from "react-toastify";
 
 interface SurveyData {
@@ -19,6 +20,7 @@ export const Survey = () => {
   const [article, setArticle] = useState<Record<string, any>>({})
   const [assignment, setAssignment] = useState<Record<string, any>>({})
   const [friend, setFriend] = useState<Record<string, any>>({})
+  const [friendList, setFriendList] = useState<any[]>([])
 
   const steps = [
     {
@@ -34,15 +36,80 @@ export const Survey = () => {
       content: <Assignment data={assignment} setData={setAssignment} />,
     },
     {
-      title: 'Temen Kelompok',
-      content: <Friend data={friend} setData={setFriend} />,
+      title: 'Teman Kelompok',
+      content: <Friend data={friend} setData={setFriend} friendList={friendList} />,
     },
   ];
 
   let SurveyForm = steps[current].content
 
+  const validateEvent = () => {
+    if (event['menarik']) {
+      setCurrent(current + 1)
+      return
+    }
+
+    toast.error("Tolong isi semua pertanyaan dahulu untuk bagian ini")
+  }
+
+  const validateArticle = () => {
+    if (article['menarik']) {
+      setCurrent(current + 1)
+      return
+    }
+
+    toast.error("Tolong isi semua pertanyaan dahulu untuk bagian ini")
+  }
+
+  const validateAssignment = () => {
+    if (assignment['menarik']) {
+      setCurrent(current + 1)
+      return
+    }
+
+    toast.error("Tolong isi semua pertanyaan dahulu untuk bagian ini")
+  }
+
+  const validateFriend = (nim: number) => {
+    if (!friend[nim]["bacot_kalem"]) {
+      return false
+    }
+
+    if (!friend[nim]["serius_bercanda"]) {
+      return false
+    }
+
+    if (!friend[nim]["strict_ngalir"]) {
+      return false
+    }
+
+    if (!friend[nim]["ambis_santuy"]) {
+      return false
+    }
+
+    if (!friend[nim]["logis_feeling"]) {
+      return false
+    }
+    
+    if (!friend[nim]["komentar"]) {
+      return false
+    }
+
+    return true
+  }
+
   const nextPage = () => {
-    setCurrent(current + 1);
+    switch(current) {
+      case 0:
+        validateEvent();
+        break;
+      case 1:
+        validateArticle();
+        break;
+      case 2:
+        validateAssignment();
+        break;
+    }
   };
   
   const prevPage = () => {
@@ -51,9 +118,18 @@ export const Survey = () => {
 
   const handleSubmit = async () => {
     setLoading(true)
+
+    for (let i = 0; i < friendList.length; i++) {
+      if (!validateFriend(friendList[i].username)) {
+        toast.error("Survey belum dijawab untuk " + friendList[i].name)
+        setLoading(false)
+        return
+      }
+    }
+
     const surveyData : SurveyData = {event, article, assignment, friend}
 
-    await service.postSurvey(surveyData, () => {
+    await SurveyService.postSurvey(surveyData, () => {
       setLoading(false)
       toast.success("Berhasil melakukan submit!");
     }, (err) => {
@@ -63,8 +139,22 @@ export const Survey = () => {
   }
 
   useEffect(() => {
-    console.log(friend)
-  }, [friend])
+    GroupService.getMyGroup((res) => {
+      const data: any[] = [];
+      const friendRecord : Record<string, any> = {}
+
+      res.members.forEach((each: any) => {
+        each.role = "Member";
+        friendRecord[each.username] = {}
+        data.push(each);
+      });
+
+      setFriend(friendRecord)
+      setFriendList(data);
+    }, (err) => {
+      toast.error("Gagal mengambil daftar kelompok! " + err.toString())
+    });
+  }, [])
 
   return (
     <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>

@@ -7,7 +7,7 @@ class SurveyService extends GenericService {
         onSuccess?: SuccessCallbackFunction,
         onFail?: FailureCallbackFunction
     ) {
-        const response = await APIClient.POST(`/insights`, {data: {user: 1, answer: item}});
+        const response = await APIClient.POST(`/insights`, {answer: item});
         this.handleResponse(response, onSuccess, onFail);
     }
 
