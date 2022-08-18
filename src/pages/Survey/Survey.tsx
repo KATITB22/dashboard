@@ -14,6 +14,7 @@ interface SurveyData {
 }
 
 export const Survey = () => {
+  const [completed, setCompleted] = useState<boolean>(false);
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(false);
   const [event, setEvent] = useState<Record<string, any>>({})
@@ -139,6 +140,14 @@ export const Survey = () => {
   }
 
   useEffect(() => {
+    SurveyService.getSurvey((response) => {
+      if (response.answer) {
+        setCompleted(true)
+      }
+    }, (err) => {
+      toast.error("Error mengambil survey: " + err.toString())
+    })
+
     GroupService.getMyGroup((res) => {
       const data: any[] = [];
       const friendRecord : Record<string, any> = {}
@@ -169,12 +178,21 @@ export const Survey = () => {
           type="info"
           />
       </div>
-
+      {completed ? 
+        <div className="h-96 flex justify-center items-center">
+          <h1>Anda sudah mengisi survei ini.</h1> 
+        </div>
+        : 
+        <></> 
+      }
       {loading ? 
         <div className="flex justify-center items-center">
           <Spin tip="Submitting..." spinning={loading}></Spin>
         </div>
         :
+        <></>
+      }
+      {!completed && !loading ? 
         <div className="mt-10">
           <Steps current={current}>
             {steps.map(item => (
@@ -200,6 +218,8 @@ export const Survey = () => {
             )}
           </div>
         </div>
+        :
+        <></>
       }
     </StandardLayout>
   )

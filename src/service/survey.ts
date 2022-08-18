@@ -11,7 +11,13 @@ class SurveyService extends GenericService {
         this.handleResponse(response, onSuccess, onFail);
     }
 
-    public async getSurvey() {}
+    public async getSurvey(
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.GET(`/insights`);
+        this.handleResponse(response, onSuccess, onFail);
+    }
 }
 
 const service = new SurveyService();
