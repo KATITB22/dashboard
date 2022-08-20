@@ -6,7 +6,6 @@ interface Props {
 }
 
 const events = [
-  'Opening Ceremony',
   'Talkshow "Tantangan Masa Kini"',
   'Treasure Hunt',
   'Talkshow "KM ITB"',
@@ -14,7 +13,7 @@ const events = [
   'Forum Lapangan',
   'Interaksi Fakultas',
   'Webinar "Kontribusi Membangun Indonesia"',
-  'Closing Ceremony'
+  'Main Samitra'
 ]
 
 export const Event = ({data, setData}: Props) => {

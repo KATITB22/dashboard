@@ -174,7 +174,7 @@ export const Survey = () => {
           className='my-3'
           message="Announcement"
           description={
-            <p>Mohon isi form survei berikut sebagai bentuk feedback agar acara OSKM dapat menjadi lebih baik</p>
+            <p>Form survei ini bersifat wajib. Hasil survei akan digunakan untuk konten yang akan datang (nantikan 28 Agustus 2022 hehe). Tidak mengisi akan mengakibatkan tidak mendapatkan konten pada tanggal terkait.</p>
           }
           type="info"
           />
