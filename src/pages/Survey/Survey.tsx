@@ -129,6 +129,7 @@ export const Survey = () => {
 
     await SurveyService.postSurvey(surveyData, () => {
       setLoading(false)
+      setCompleted(true)
       toast.success("Berhasil melakukan submit!");
     }, (err) => {
       setLoading(false)
