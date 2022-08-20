@@ -14,11 +14,14 @@ interface SurveyData {
 }
 
 export const Survey = () => {
+  const deadline = new Date('August 22, 2022 23:59:59')
+  const closed = deadline < new Date()
+
   const [completed, setCompleted] = useState<boolean>(false);
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(false);
   const [event, setEvent] = useState<Record<string, any>>({})
-  const [article, setArticle] = useState<Record<string, any>>({})
+  // const [article, setArticle] = useState<Record<string, any>>({})
   const [assignment, setAssignment] = useState<Record<string, any>>({})
   const [friend, setFriend] = useState<Record<string, any>>({})
   const [friendList, setFriendList] = useState<any[]>([])
@@ -180,21 +183,28 @@ export const Survey = () => {
           type="info"
           />
       </div>
-      {completed ? 
+      {closed ? 
+        <div className="h-96 flex justify-center items-center">
+          <h1>Survey telah ditutup.</h1> 
+        </div>
+        : 
+        <></> 
+      }
+      {!closed && completed ? 
         <div className="h-96 flex justify-center items-center">
           <h1>Anda sudah mengisi survei ini.</h1> 
         </div>
         : 
         <></> 
       }
-      {loading ? 
+      {!closed && loading ? 
         <div className="flex justify-center items-center">
           <Spin tip="Submitting..." spinning={loading}></Spin>
         </div>
         :
         <></>
       }
-      {!completed && !loading ? 
+      {!closed && !completed && !loading ? 
         <div className="mt-10">
           <Steps current={current}>
             {steps.map(item => (
