@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 interface SurveyData {
   event: Record<string, any>
-  article: Record<string, any>
+  // article: Record<string, any>
   assignment: Record<string, any>
   friend: Record<string, any>
 }
@@ -28,10 +28,10 @@ export const Survey = () => {
       title: 'Acara',
       content: <Event data={event} setData={setEvent} />,
     },
-    {
-      title: 'Artikel',
-      content: <Article data={article} setData={setArticle} />,
-    },
+    // {
+    //   title: 'Artikel',
+    //   content: <Article data={article} setData={setArticle} />,
+    // },
     {
       title: 'Tugas',
       content: <Assignment data={assignment} setData={setAssignment} />,
@@ -53,14 +53,14 @@ export const Survey = () => {
     toast.error("Tolong isi semua pertanyaan dahulu untuk bagian ini")
   }
 
-  const validateArticle = () => {
-    if (article['menarik']) {
-      setCurrent(current + 1)
-      return
-    }
+  // const validateArticle = () => {
+  //   if (article['menarik']) {
+  //     setCurrent(current + 1)
+  //     return
+  //   }
 
-    toast.error("Tolong isi semua pertanyaan dahulu untuk bagian ini")
-  }
+  //   toast.error("Tolong isi semua pertanyaan dahulu untuk bagian ini")
+  // }
 
   const validateAssignment = () => {
     if (assignment['menarik']) {
@@ -105,9 +105,6 @@ export const Survey = () => {
         validateEvent();
         break;
       case 1:
-        validateArticle();
-        break;
-      case 2:
         validateAssignment();
         break;
     }
@@ -128,7 +125,7 @@ export const Survey = () => {
       }
     }
 
-    const surveyData : SurveyData = {event, article, assignment, friend}
+    const surveyData : SurveyData = {event, assignment, friend}
 
     await SurveyService.postSurvey(surveyData, () => {
       setLoading(false)
@@ -140,6 +137,8 @@ export const Survey = () => {
   }
 
   useEffect(() => {
+    setLoading(true)
+    
     SurveyService.getSurvey((response) => {
       if (response.answer) {
         setCompleted(true)
@@ -163,10 +162,12 @@ export const Survey = () => {
     }, (err) => {
       toast.error("Gagal mengambil daftar kelompok! " + err.toString())
     });
+
+    setLoading(false)
   }, [])
 
   return (
-    <StandardLayout allowedRole={["Committee", "Mentor", "Participant"]}>
+    <StandardLayout allowedRole={["Mentor", "Participant"]}>
       <PageHeader title="Survey" />
       <div className='mt-3 flex flex-col'>
         <Alert

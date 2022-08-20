@@ -5,6 +5,17 @@ interface Props {
   setData: (args: Record<string, any>) =>  void
 }
 
+const events = [
+  'Opening Ceremony',
+  'Talkshow "Tantangan Masa Kini"',
+  'Treasure Hunt',
+  'Talkshow "KM ITB"',
+  'Mentoring',
+  'Forum Lapangan',
+  'Webinar "Kontribusi Membangun Indonesia"',
+  'Closing Ceremony'
+]
+
 export const Event = ({data, setData}: Props) => {
   const onChange = (e: RadioChangeEvent, key: string) => {
     setData({...data, [key]: e.target.value})
@@ -15,9 +26,9 @@ export const Event = ({data, setData}: Props) => {
       <h1>Menurutmu, acara OSKM apa yang paling menarik?</h1>
       <Radio.Group className="my-5" onChange={(e) => onChange(e, "menarik")} value={data["menarik"]}>
         <Space direction="vertical">
-          <Radio value={"A"}>Option A</Radio>
-          <Radio value={"B"}>Option B</Radio>
-          <Radio value={"C"}>Option C</Radio>
+          {events.map((event, index) => (
+            <Radio value={event} key={index}>{event}</Radio>
+          ))}
         </Space>
       </Radio.Group>
     </div>
