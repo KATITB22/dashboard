@@ -29,7 +29,7 @@ export const Friend = ({data, setData, friendList}: Props) => {
       <Collapse defaultActiveKey={['0']}>
         {friendList.map((friend) => (
           <Collapse.Panel header={friend.name} key={friend.username}>
-            <h1>Bacot - Kalem</h1>
+            <h1>Bacot - Kalem (Wajib)</h1>
             <Radio.Group 
               className="my-5" 
               onChange={(e) => onChange(e, friend.username, "bacot_kalem")} 
@@ -39,7 +39,7 @@ export const Friend = ({data, setData, friendList}: Props) => {
               <Radio value={"Kalem"}>Kalem</Radio>
             </Radio.Group>
 
-            <h1>Serius - Bercanda</h1>
+            <h1>Serius - Bercanda (Wajib)</h1>
             <Radio.Group 
               className="my-5" 
               onChange={(e) => onChange(e, friend.username, "serius_bercanda")} 
@@ -49,7 +49,7 @@ export const Friend = ({data, setData, friendList}: Props) => {
               <Radio value={"Bercanda"}>Bercanda</Radio>
             </Radio.Group>
             
-            <h1>Strict - Ngalir</h1>
+            <h1>Strict - Ngalir (Wajib)</h1>
             <Radio.Group 
               className="my-5" 
               onChange={(e) => onChange(e, friend.username, "strict_ngalir")} 
@@ -59,7 +59,7 @@ export const Friend = ({data, setData, friendList}: Props) => {
               <Radio value={"Ngalir"}>Ngalir</Radio>
             </Radio.Group>
             
-            <h1>Ambis - Santuy</h1>
+            <h1>Ambis - Santuy (Wajib)</h1>
             <Radio.Group 
               className="my-5" 
               onChange={(e) => onChange(e, friend.username, "ambis_santuy")} 
@@ -69,7 +69,7 @@ export const Friend = ({data, setData, friendList}: Props) => {
               <Radio value={"Santuy"}>Santuy</Radio>
             </Radio.Group>
             
-            <h1>Logis - Feeling</h1>
+            <h1>Logis - Feeling (Wajib)</h1>
             <Radio.Group 
               className="my-5" 
               onChange={(e) => onChange(e, friend.username, "logis_feeling")} 
@@ -79,7 +79,7 @@ export const Friend = ({data, setData, friendList}: Props) => {
               <Radio value={"Feeling"}>Feeling</Radio>
             </Radio.Group>
 
-            <h1>Komentar</h1>
+            <h1>Kesan Pesan atau Komentar (Opsional)</h1>
             <Input.TextArea 
               className="my-5 p-3" 
               onChange={(e) => onChange(e, friend.username, "komentar")} 
