@@ -142,6 +142,13 @@ const SamitraReportPage = React.lazy(() =>
         default: module.SamitraReports,
     }))
 );
+
+const SurveyPage = React.lazy(() => 
+    import('./pages/Survey/Survey').then((module) => ({
+        default: module.Survey,
+    }))
+);
+
 interface PageRouting {
     path: string;
     component: LazyExoticComponent<any>;
@@ -240,6 +247,10 @@ export const Routing: PageRouting[] = [
     {
         path: '/samitra/reports',
         component: SamitraReportPage,
+    },
+    {
+        path: '/survey',
+        component: SurveyPage,
     },
     PageNotFoundRouting,
 ];
