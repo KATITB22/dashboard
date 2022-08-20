@@ -95,10 +95,6 @@ export const Survey = () => {
       return false
     }
     
-    if (!friend[nim]["komentar"]) {
-      return false
-    }
-
     return true
   }
 
