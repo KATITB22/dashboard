@@ -120,6 +120,9 @@ export const MentorAttendance = () => {
                     <Panel header="19 Agustus 2022" key={moment(new Date('August 19, 2022')).format('MM-DD-YYYY')}>
                         {dateCellRender(moment(new Date('August 19, 2022')))}
                     </Panel>
+                    <Panel header="20 Agustus 2022" key={moment(new Date('August 20, 2022')).format('MM-DD-YYYY')}>
+                        {dateCellRender(moment(new Date('August 20, 2022')))}
+                    </Panel>
                 </Collapse>
                 {visibleModal && (
                     <MentorAttendanceModal
