@@ -12,6 +12,7 @@ const events = [
   'Talkshow "KM ITB"',
   'Mentoring',
   'Forum Lapangan',
+  'Interaksi Fakultas',
   'Webinar "Kontribusi Membangun Indonesia"',
   'Closing Ceremony'
 ]
