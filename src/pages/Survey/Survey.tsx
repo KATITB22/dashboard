@@ -14,7 +14,7 @@ interface SurveyData {
 }
 
 export const Survey = () => {
-  const deadline = new Date('August 23, 2022 19:00:59')
+  const deadline = new Date('August 24, 2022 20:00:59')
   const closed = deadline < new Date()
 
   const [completed, setCompleted] = useState<boolean>(false);
