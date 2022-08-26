@@ -25,6 +25,7 @@ export const Scoring = () => {
     // Unit Data
     const [unitScore, setUnitScore] = useState(0);
     const [usernameUnit, setUsernameUnit] = useState('');
+    const [score, setScore] = useState(0);
 
     useEffect(() => {
         const getUnitScore = async () => {
@@ -46,7 +47,7 @@ export const Scoring = () => {
         if (document.hasFocus()) {
             interval = setInterval(() => {
                 getUnitScore();
-            }, 10000);
+            }, 3000);
         } else {
             clearInterval(interval);
         }
@@ -57,7 +58,11 @@ export const Scoring = () => {
     // Participant Data
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
-    const [score, setScore] = useState('');
+    const [giveScore, setGiveScore] = useState(0);
+
+    const handleGiveScore = (e: any) => {
+        setGiveScore(e.target.value);
+    };
 
     const handleSearch = (e: any) => {
         setSearch(e.target.value);
@@ -65,6 +70,11 @@ export const Scoring = () => {
 
     const handleSubmit = async () => {
         setLoading(true);
+        if (!search) {
+            setLoading(false);
+            toast.warning('Enter the search box');
+            return;
+        }
         await unitService.findParticipant(
             search,
             (data) => {
@@ -80,12 +90,16 @@ export const Scoring = () => {
     };
 
     const handleScore = async () => {
+        if (!giveScore) {
+            toast.warning('Enter a score to give');
+            return;
+        }
         await unitService.updateScore(
             username,
             usernameUnit,
-            10,
+            Number(giveScore),
             (res) => {
-                toast.success('Successfully give 10 points!');
+                toast.success(`Successfully give ${giveScore} points!`);
             },
             (err) => defaultFailureCallback(err)
         );
@@ -146,13 +160,25 @@ export const Scoring = () => {
                                         <p>{score}</p>
                                     </div>
                                 </div>
-                                <Button
-                                    type="primary"
-                                    className="w-full"
-                                    onClick={handleScore}
-                                >
-                                    Give Score
-                                </Button>
+                                <Form>
+                                    <Form.Item rules={[{ required: true }]}>
+                                        <Input
+                                            placeholder="Masukkan jumlah poin"
+                                            name="poin"
+                                            onChange={handleGiveScore}
+                                            type="number"
+                                        />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Button
+                                            type="primary"
+                                            className="w-full"
+                                            onClick={handleScore}
+                                        >
+                                            Give Score
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
                             </Space>
                         </Card>
                     </Spin>
