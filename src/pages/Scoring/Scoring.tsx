@@ -72,7 +72,7 @@ export const Scoring = () => {
         setLoading(true);
         if (!search) {
             setLoading(false);
-            toast.warning('Enter the search box');
+            toast.warning('Search box not filled');
             return;
         }
         await unitService.findParticipant(
@@ -91,7 +91,7 @@ export const Scoring = () => {
 
     const handleScore = async () => {
         if (!giveScore) {
-            toast.warning('Enter a score to give');
+            toast.warning('Score box not filled');
             return;
         }
         await unitService.updateScore(
