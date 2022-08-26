@@ -143,9 +143,15 @@ const SamitraReportPage = React.lazy(() =>
     }))
 );
 
-const SurveyPage = React.lazy(() => 
+const SurveyPage = React.lazy(() =>
     import('./pages/Survey/Survey').then((module) => ({
         default: module.Survey,
+    }))
+);
+
+const ScoringPage = React.lazy(() =>
+    import('./pages/Scoring/Scoring').then((module) => ({
+        default: module.Scoring,
     }))
 );
 
@@ -251,6 +257,10 @@ export const Routing: PageRouting[] = [
     {
         path: '/survey',
         component: SurveyPage,
+    },
+    {
+        path: '/scoring',
+        component: ScoringPage,
     },
     PageNotFoundRouting,
 ];

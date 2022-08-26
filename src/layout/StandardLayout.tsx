@@ -42,23 +42,37 @@ export interface StandardLayoutProps {
 
 const Logout = () => {
     const navigate = useNavigate();
-    return (<div onClick={async () => {
-        AuthService.logout();
-        navigate("../");
-        window.location.reload();
-    }}>Logout</div>)
+    return (
+        <div
+            onClick={async () => {
+                AuthService.logout();
+                navigate('../');
+                window.location.reload();
+            }}
+        >
+            Logout
+        </div>
+    );
 };
 
 const itemsUnit: MenuItem[] = [
     getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
-    getItem(<NavTab url="../profile">Profile</NavTab>, '1', <ContactsOutlined />),
-    getItem(<Logout />, "99", <LogoutOutlined />)
-]
+    getItem(
+        <NavTab url="../profile">Profile</NavTab>,
+        '1',
+        <ContactsOutlined />
+    ),
+    getItem(<Logout />, '99', <LogoutOutlined />),
+];
 
 const itemsCommittee: MenuItem[] = [
     getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
-    getItem(<NavTab url="../profile">Profile</NavTab>, '1', <ContactsOutlined />),
-    getItem(<Logout />, "99", <LogoutOutlined />)
+    getItem(
+        <NavTab url="../profile">Profile</NavTab>,
+        '1',
+        <ContactsOutlined />
+    ),
+    getItem(<Logout />, '99', <LogoutOutlined />),
 ];
 
 const itemsSuperCommittee: MenuItem[] = [
@@ -66,41 +80,74 @@ const itemsSuperCommittee: MenuItem[] = [
     getItem(<NavTab url="../event">Event</NavTab>, '1', <CalendarOutlined />),
     getItem('Group', '2', <ContactsOutlined />, [
         getItem(<NavTab url="../group">List</NavTab>, '2a'),
-        getItem(<NavTab url="../group/upload">Upload</NavTab>, '2b')
+        getItem(<NavTab url="../group/upload">Upload</NavTab>, '2b'),
     ]),
-    getItem(<NavTab url="../assignment/super">Assignment</NavTab>, '3', <FileTextOutlined />),
-    getItem(<NavTab url="../profile">Profile</NavTab>, '4', <ContactsOutlined />),
+    getItem(
+        <NavTab url="../assignment/super">Assignment</NavTab>,
+        '3',
+        <FileTextOutlined />
+    ),
+    getItem(
+        <NavTab url="../profile">Profile</NavTab>,
+        '4',
+        <ContactsOutlined />
+    ),
     getItem('Samitra', '5', <WechatOutlined />, [
         getItem(<NavTab url="../samitra/bans">Bans</NavTab>, '5a'),
-        getItem(<NavTab url="../samitra/reports">Reports</NavTab>, '5b')
+        getItem(<NavTab url="../samitra/reports">Reports</NavTab>, '5b'),
     ]),
-    getItem(<Logout />, "99", <LogoutOutlined />)
+    getItem(<NavTab url="../scoring">Scoring</NavTab>, '6'),
+    getItem(<Logout />, '99', <LogoutOutlined />),
 ];
 
 const itemsMentor: MenuItem[] = [
     getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
-    getItem(<NavTab url="../attendance/mentor">Attendance</NavTab>, '1', <CalendarOutlined />),
-    getItem(<NavTab url="../assignment/super">Assignment</NavTab>, '2', <FileTextOutlined />),
+    getItem(
+        <NavTab url="../attendance/mentor">Attendance</NavTab>,
+        '1',
+        <CalendarOutlined />
+    ),
+    getItem(
+        <NavTab url="../assignment/super">Assignment</NavTab>,
+        '2',
+        <FileTextOutlined />
+    ),
     getItem(<NavTab url="../survey">Survey</NavTab>, '3', <FileTextOutlined />),
-    getItem(<NavTab url="../profile">Profile</NavTab>, '4', <ContactsOutlined />),
-    getItem(<Logout />, "99", <LogoutOutlined />)
+    getItem(
+        <NavTab url="../profile">Profile</NavTab>,
+        '4',
+        <ContactsOutlined />
+    ),
+    getItem(<Logout />, '99', <LogoutOutlined />),
 ];
 const itemsParticipant: MenuItem[] = [
     getItem(<NavTab url="../">Home</NavTab>, '0', <HomeOutlined />),
-    getItem(<NavTab url="../attendance">Attendance</NavTab>, '1', <CalendarOutlined />),
-    getItem(<NavTab url="../assignment">Assignment</NavTab>, '2', <FileTextOutlined />),
+    getItem(
+        <NavTab url="../attendance">Attendance</NavTab>,
+        '1',
+        <CalendarOutlined />
+    ),
+    getItem(
+        <NavTab url="../assignment">Assignment</NavTab>,
+        '2',
+        <FileTextOutlined />
+    ),
     getItem(<NavTab url="../survey">Survey</NavTab>, '3', <FileTextOutlined />),
-    getItem(<NavTab url="../profile">Profile</NavTab>, '4', <ContactsOutlined />),
-    getItem(<Logout />, "99", <LogoutOutlined />)
+    getItem(
+        <NavTab url="../profile">Profile</NavTab>,
+        '4',
+        <ContactsOutlined />
+    ),
+    getItem(<Logout />, '99', <LogoutOutlined />),
 ];
 
 const sidebarMaping: { [key: string]: MenuItem[] } = {
-    'Mentor': itemsMentor,
-    'Participant': itemsParticipant,
-    'Committee': itemsCommittee,
-    'SuperCommittee': itemsSuperCommittee,
-    'Unit': itemsUnit
-}
+    Mentor: itemsMentor,
+    Participant: itemsParticipant,
+    Committee: itemsCommittee,
+    SuperCommittee: itemsSuperCommittee,
+    Unit: itemsUnit,
+};
 
 const style: React.CSSProperties = {
     height: 40,
@@ -116,7 +163,7 @@ const style: React.CSSProperties = {
 export const StandardLayout = ({
     children = undefined,
     allowedRole,
-    title
+    title,
 }: StandardLayoutProps) => {
     const navigate = useNavigate();
     const { user }: any = useContext(UserContext);
@@ -128,25 +175,31 @@ export const StandardLayout = ({
             rolePermitted = true;
         }
     } else {
-        rolePermitted = (allowedRole === user.role);
+        rolePermitted = allowedRole === user.role;
     }
 
     if (!(rolePermitted && renderChild)) {
-        children = <Result
-            status="warning"
-            title="You have no permission to open this page."
-            extra={
-                <Button type="primary" onClick={() => navigate("../")}>
-                    Back
-                </Button>
-            }
-        />
+        children = (
+            <Result
+                status="warning"
+                title="You have no permission to open this page."
+                extra={
+                    <Button type="primary" onClick={() => navigate('../')}>
+                        Back
+                    </Button>
+                }
+            />
+        );
     }
 
     return (
         <>
             <Helmet>
-                <title>{title ? `${title} - DEVA: Dashboard OSKM ITB 2022`: "DEVA: Dashboard OSKM ITB 2022"}</title>
+                <title>
+                    {title
+                        ? `${title} - DEVA: Dashboard OSKM ITB 2022`
+                        : 'DEVA: Dashboard OSKM ITB 2022'}
+                </title>
             </Helmet>
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider
@@ -154,11 +207,13 @@ export const StandardLayout = ({
                     collapsed={collapsed}
                     onCollapse={(value) => setCollapsed(value)}
                     style={{ minHeight: '100vh', zIndex: 2 }}
-
                 >
                     <div className="flex justify-center my-2 md:my-3 flex-wrap">
-                        <div className='w-3/4'>
-                            <img src={Logo} className="shadow rounded-full max-w-full h-auto align-middle border-none" />
+                        <div className="w-3/4">
+                            <img
+                                src={Logo}
+                                className="shadow rounded-full max-w-full h-auto align-middle border-none"
+                            />
                         </div>
                     </div>
                     <Menu
@@ -170,24 +225,23 @@ export const StandardLayout = ({
                 </Sider>
                 <Layout>
                     <Content style={{ margin: '0 16px' }}>
-                        <div
-                            className="text-xl p-6 min-h-screen"
-                        >
+                        <div className="text-xl p-6 min-h-screen">
                             {children}
                         </div>
                     </Content>
                     <hr />
                     <Footer style={{ textAlign: 'center', zIndex: 1 }}>
                         <div>
-                            <h1 className='text-2xl mb-5'>Sponsor</h1>
+                            <h1 className="text-2xl mb-5">Sponsor</h1>
                             <Partner partner={sponsor} />
                         </div>
                         <div>
-                            <h1 className='text-2xl my-5'>Media Partner</h1>
+                            <h1 className="text-2xl my-5">Media Partner</h1>
                             <Partner partner={medpar} />
                         </div>
-                        <div className='mt-10'>
-                            Dashboard KAT © 2022.<br /> Created by IT KAT '22.
+                        <div className="mt-10">
+                            Dashboard KAT © 2022.
+                            <br /> Created by IT KAT '22.
                         </div>
                     </Footer>
                 </Layout>
