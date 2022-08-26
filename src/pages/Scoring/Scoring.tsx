@@ -131,7 +131,7 @@ export const Scoring = () => {
                     </Button>
                 </Form.Item>
             </Form>
-            {name && (
+            {name ? (
                 <Spin tip="Finding Participant..." spinning={loading}>
                     <Card title={name} className="w-1/2">
                         <Space direction="vertical" className="w-full">
@@ -155,6 +155,8 @@ export const Scoring = () => {
                         </Space>
                     </Card>
                 </Spin>
+            ) : (
+                ''
             )}
         </StandardLayout>
     );
