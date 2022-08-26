@@ -38,7 +38,20 @@ export const Scoring = () => {
                 }
             );
         };
+
         getUnitScore();
+
+        let interval: any = null;
+
+        if (document.hasFocus()) {
+            interval = setInterval(() => {
+                getUnitScore();
+            }, 10000);
+        } else {
+            clearInterval(interval);
+        }
+
+        return () => clearInterval(interval);
     });
 
     // Participant Data
@@ -71,7 +84,9 @@ export const Scoring = () => {
             username,
             usernameUnit,
             10,
-            (res) => toast.success('Successfully give 10 points!'),
+            (res) => {
+                toast.success('Successfully give 10 points!');
+            },
             (err) => defaultFailureCallback(err)
         );
     };
@@ -130,7 +145,11 @@ export const Scoring = () => {
                                     <p>{score}</p>
                                 </div>
                             </div>
-                            <Button className="w-full" onClick={handleScore}>
+                            <Button
+                                type="primary"
+                                className="w-full"
+                                onClick={handleScore}
+                            >
                                 Give Score
                             </Button>
                         </Space>

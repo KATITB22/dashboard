@@ -155,6 +155,12 @@ const ScoringPage = React.lazy(() =>
     }))
 );
 
+const LiveStatusPage = React.lazy(() =>
+    import('./pages/Live/Live').then((module) => ({
+        default: module.LiveStatus,
+    }))
+);
+
 interface PageRouting {
     path: string;
     component: LazyExoticComponent<any>;
@@ -261,6 +267,10 @@ export const Routing: PageRouting[] = [
     {
         path: '/scoring',
         component: ScoringPage,
+    },
+    {
+        path: '/live',
+        component: LiveStatusPage,
     },
     PageNotFoundRouting,
 ];

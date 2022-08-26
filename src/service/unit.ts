@@ -45,6 +45,29 @@ class UnitService extends GenericService {
         );
         this.handleResponse(response, onSuccess, onFail);
     }
+
+    public async getLiveStatus(
+        unit: string,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const response = await APIClient.GET(`/units/live?name=${unit}`);
+        this.handleResponse(response, onSuccess, onFail);
+    }
+
+    public async updateLiveStatus(
+        unit: string,
+        status: boolean,
+        onSuccess?: SuccessCallbackFunction,
+        onFail?: FailureCallbackFunction
+    ) {
+        const data = {
+            name: unit,
+            status,
+        };
+        const response = await APIClient.PUT('/units/live', data);
+        this.handleResponse(response, onSuccess, onFail);
+    }
 }
 
 const unitService = new UnitService();

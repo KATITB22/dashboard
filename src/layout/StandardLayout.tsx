@@ -7,6 +7,8 @@ import {
     HomeOutlined,
     LogoutOutlined,
     WechatOutlined,
+    TrophyOutlined,
+    DesktopOutlined,
 } from '@ant-design/icons';
 import { Helmet } from 'react-helmet';
 import { NavTab } from '../components/NavTab';
@@ -62,6 +64,12 @@ const itemsUnit: MenuItem[] = [
         '1',
         <ContactsOutlined />
     ),
+    getItem(<NavTab url="../scoring">Scoring</NavTab>, '2', <TrophyOutlined />),
+    getItem(
+        <NavTab url="../live">Live Status</NavTab>,
+        '3',
+        <DesktopOutlined />
+    ),
     getItem(<Logout />, '99', <LogoutOutlined />),
 ];
 
@@ -96,7 +104,12 @@ const itemsSuperCommittee: MenuItem[] = [
         getItem(<NavTab url="../samitra/bans">Bans</NavTab>, '5a'),
         getItem(<NavTab url="../samitra/reports">Reports</NavTab>, '5b'),
     ]),
-    getItem(<NavTab url="../scoring">Scoring</NavTab>, '6'),
+    getItem(<NavTab url="../scoring">Scoring</NavTab>, '6', <TrophyOutlined />),
+    getItem(
+        <NavTab url="../live">Live Status</NavTab>,
+        '7',
+        <DesktopOutlined />
+    ),
     getItem(<Logout />, '99', <LogoutOutlined />),
 ];
 
