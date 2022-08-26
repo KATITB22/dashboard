@@ -17,7 +17,7 @@ export const Profile = () => {
 
     useEffect(() => {
         setIsCommittee(nonMember.includes(user.role));
-        if (!isCommittee)
+        if (!nonMember.includes(user.role))
             GroupService.getMyGroup((res) => {
                 const data: any[] = [];
                 res.leaders.forEach((each: any) => {
