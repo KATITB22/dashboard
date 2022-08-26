@@ -96,68 +96,68 @@ export const Scoring = () => {
             allowedRole={['SuperCommittee', 'Unit']}
             title="Scoring"
         >
-            <PageHeader onBack={() => navigate(-1)} title="Scoring List" />
-            <Typography.Title level={2}>
-                Your Score {unitScore}
-            </Typography.Title>
-            <Form
-                layout="vertical"
-                labelCol={{ span: 12 }}
-                wrapperCol={{ span: 12 }}
-            >
-                <Form.Item
-                    label="Participant's Name / Registration No."
-                    rules={[
-                        {
-                            required: true,
-                            message:
-                                "Please enter participant's name / registration number",
-                        },
-                    ]}
+            <>
+                <PageHeader onBack={() => navigate(-1)} title="Scoring List" />
+                <Typography.Title level={2}>
+                    Your Score {unitScore}
+                </Typography.Title>
+                <Form
+                    layout="vertical"
+                    labelCol={{ span: 12 }}
+                    wrapperCol={{ span: 12 }}
                 >
-                    <Input
-                        name="participant"
-                        placeholder="Enter participants's name or registration number"
-                        onChange={handleSearch}
-                    />
-                </Form.Item>
-                <Form.Item>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        onClick={handleSubmit}
+                    <Form.Item
+                        label="Participant's Name / Registration No."
+                        rules={[
+                            {
+                                required: true,
+                                message:
+                                    "Please enter participant's name / registration number",
+                            },
+                        ]}
                     >
-                        Search
-                    </Button>
-                </Form.Item>
-            </Form>
-            {name ? (
-                <Spin tip="Finding Participant..." spinning={loading}>
-                    <Card title={name} className="w-1/2">
-                        <Space direction="vertical" className="w-full">
-                            <div className="flex gap-8">
-                                <div>
-                                    <p>NIM / No. Registrasi :</p>
-                                    <p>Score :</p>
+                        <Input
+                            name="participant"
+                            placeholder="Enter participants's name or registration number"
+                            onChange={handleSearch}
+                        />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            onClick={handleSubmit}
+                        >
+                            Search
+                        </Button>
+                    </Form.Item>
+                </Form>
+                {name && (
+                    <Spin tip="Finding Participant..." spinning={loading}>
+                        <Card title={name} className="w-1/2">
+                            <Space direction="vertical" className="w-full">
+                                <div className="flex gap-8">
+                                    <div>
+                                        <p>NIM / No. Registrasi :</p>
+                                        <p>Score :</p>
+                                    </div>
+                                    <div>
+                                        <p>{username}</p>
+                                        <p>{score}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p>{username}</p>
-                                    <p>{score}</p>
-                                </div>
-                            </div>
-                            <Button
-                                type="primary"
-                                className="w-full"
-                                onClick={handleScore}
-                            >
-                                Give Score
-                            </Button>
-                        </Space>
-                    </Card>
-                </Spin>
-            ) : (
-                ''
-            )}
+                                <Button
+                                    type="primary"
+                                    className="w-full"
+                                    onClick={handleScore}
+                                >
+                                    Give Score
+                                </Button>
+                            </Space>
+                        </Card>
+                    </Spin>
+                )}
+            </>
         </StandardLayout>
     );
 };
