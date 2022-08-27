@@ -37,7 +37,7 @@ export const LiveStatus = () => {
         if (document.hasFocus()) {
             interval = setInterval(() => {
                 getIsLive();
-            }, 30000);
+            }, 1000);
         } else {
             clearInterval(interval);
         }
